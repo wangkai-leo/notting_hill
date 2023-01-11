@@ -1,0 +1,71 @@
+<style lang="less">
+
+</style>
+
+<template>
+  <view>
+    <view class="common-title">
+      {{ label }} <text wx:if="{{(user.is_server||user.is_sale||user.is_server_offline)}}">（跟进{{ntvalue[ntkey].length}}次）</text>
+      <slot></slot>
+    </view>
+    <view class="common-pannel">
+      <view class="customer-log-btn">
+        <view>
+          跟进日志
+          <image class="option-log-arrows" src="../../images/arrows-down.png" mode="widthFix" lazy-load="false">
+          </image>
+        </view>
+        <view>
+          <view class="customer-log-detail">
+            <view class="customer-ld-box">
+              <block wx:for="{{ntvalue[ntkey]}}" wx:key="">
+                <view class="customer-ld-list">
+                  <view class="customer-ld-header">
+                    <view class="customer-ld-date">{{ item.create_date }}</view>
+                    <view class="customer-ld-status">{{ item.status_time_name }}</view>
+                  </view>
+                  <view class="customer-ld-content">{{ item.status_remark }}</view>
+                  <view class="remark-create-user" wx:if="{{item.created_name!='-'}}">跟进人：{{item.created_name}}</view>
+                </view>
+              </block>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class Index extends wepy.component {
+  props = {
+    label: {
+      type: String
+    },
+    ntvalue: {
+      type: Object,
+      twoWay: true
+    },
+    ntkey: {
+      type: String
+    },
+  }
+  watch = {
+  }
+  components = {
+  };
+  data = {
+    user:null,
+    department:''
+  };
+  methods = {
+  };
+  onLoad(options) {
+    this.user = wepy.getStorageSync('user');
+    this.department=wepy.getStorageSync('office_line')
+  }
+  onShow() {
+  }
+}
+</script>

@@ -1,0 +1,43 @@
+@import "./../../../components/header.wxss";
+@import "./../../../components/css.wxss";
+.common-lab {
+  width: 230rpx;
+}
+.server-msg-box {
+  background: #f9f9f9;
+  padding: 35rpx 20rpx;
+  border-radius: 10rpx;
+  font-size: 26rpx;
+  margin: 20rpx 0rpx 0rpx;
+  overflow: hidden;
+}
+.server-msg-line {
+  overflow: hidden;
+  margin-bottom: 20rpx;
+  color: #555;
+}
+.server-name {
+  font-size: 26rpx;
+  color: #333;
+  padding: 40rpx 0rpx 15rpx;
+}
+.server-msg-title {
+  font-size: 22rpx;
+}
+.meun-change-btn,
+.meun-back-btn {
+  position: relative;
+  display: inline-block;
+  color: #87a6e7;
+  margin-left: 20rpx;
+}
+.menu-ch-btns {
+  float: right;
+}
+.server-msg-title-del,
+.server-msg-title-del .meun-change-btn {
+  color: #999;
+}
+.customer-order-btn {
+  position: relative;
+}

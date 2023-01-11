@@ -1,0 +1,59 @@
+
+    <view>
+        
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="full-wrapper">
+            <view class="sale-tab-box-audit">
+                <view class="full-tab-item {{tab_index==0?'sale-tab-item-check':''}}" bindtap="toggleTab" data-index="0">试菜审核</view>
+                <view class="full-tab-item {{tab_index==1?'sale-tab-item-check':''}}" bindtap="toggleTab" data-index="1">任务单审核</view>
+            </view>
+            <!--|订单审核-->
+            <view class="box-con"  wx:if="{{tab_index==0}}">
+                <block wx:for="{{review_list}}" wx:key="">
+                    <view class="customer-info" bindtap="goToTasteDetail" data-tryid="{{item.id}}" data-id="{{item.user_id}}">
+                        <view class="customer-info-header">
+                            <view class="customer-num">编号：{{item.order_id_str}}</view>
+                        </view>
+                        <view class="customer-info-msgs" data-id="{{item.order_id}}">
+                            <view class="customer-item">客户姓名：<text>{{item.client_name}}</text></view>
+                            <view class="customer-item">申请人：<text>{{item.planner_name}}</text></view>
+                        </view>
+                    </view>
+                </block>
+            </view>
+            <!--订单审核|-->
+            <!--|转让-->
+            <view class="box-con"  wx:if="{{tab_index==1}}">
+                <block wx:for="{{task_list}}" wx:key="">
+                    <view class="customer-info" bindtap="goToTaskDetail" data-id="{{item.order_id}}" data-orderstr="{{item.order_id_str}}">
+                        <view class="customer-info-header">
+                            <view class="customer-num">编号：{{item.order_id_str}}</view>
+                        </view>
+                        <view class="customer-info-msgs" data-id="{{item.order_id}}">
+                            <view class="customer-item">客户姓名：<text>{{item.client_name}}</text></view>
+                            <view class="customer-item">申请人：<text>{{item.planner_name}}</text></view>
+                        </view>
+                    </view>
+                </block>
+            </view>
+            <!--转让|-->
+        </view>
+    </view>

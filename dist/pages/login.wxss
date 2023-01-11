@@ -1,0 +1,26 @@
+@import "./../components/css.wxss";
+.logo {
+  margin-top: 185px;
+  width: 429rpx;
+}
+.form-box {
+  margin: 200rpx auto 0rpx auto;
+  width: 575rpx;
+}
+.form-input {
+  border-bottom: #c29c70 solid 1rpx;
+  margin-bottom: 70rpx;
+  padding: 10rpx 0rpx;
+}
+input {
+  font-size: 26rpx;
+}
+.login-btn {
+  width: 570rpx;
+  height: 90rpx;
+  border-radius: 45px;
+  background-color: #c29c70;
+  color: #fff;
+  text-align: center;
+  line-height: 90rpx;
+}

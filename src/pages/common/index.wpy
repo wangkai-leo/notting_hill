@@ -1,0 +1,342 @@
+<style lang="less">
+.loading {
+  width: 750rpx;
+  position: absolute;
+}
+
+.loading-box {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.logo {
+  position: absolute;
+  width: 429rpx;
+  z-index: 5;
+  left: 50%;
+  margin-left: -225rpx;
+  top: 300rpx;
+}
+
+.text-msg-box {
+  width: 100%;
+  position: absolute;
+  z-index: 4;
+  bottom: 130rpx;
+}
+
+.text-msg {
+  text-align: center;
+  font-size: 32rpx;
+  color: #fff;
+  margin-bottom: 5rpx;
+}
+
+.text-msg-l {
+  margin-bottom: 45rpx;
+}
+
+.text-msg-l-dio {
+  animation: text-msg-l-dio 1200ms linear infinite;
+  margin-left: 5rpx;
+}
+
+.text-msg-l-dio-b {
+  animation-delay: 300ms;
+}
+
+.text-msg-l-dio-c {
+  animation-delay: 600ms;
+}
+
+@keyframes text-msg-l-dio {
+  0% {
+    opacity: 0;
+  }
+
+  49% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.customer-create-btn {
+  position: fixed;
+  bottom: 20rpx;
+  z-index: 999;
+  left: 33rpx;
+}
+
+.select-content {
+  padding-bottom: 100rpx;
+}
+
+.common-wrapper {
+  margin: 375rpx auto 0 auto;
+  height: 1000rpx;
+}
+</style>
+
+<template>
+  <view class="container">
+    <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+    <view class="select-top" id="top_header">
+      <view class="select-box">
+        <image class="select-icon" src="../../images/select-icon.png" mode="widthFix" lazy-load="false"></image>
+        <input @confirm="bindInputSearch" class="select-input" value="" type="text" placeholder="请输入订单编号\客户手机\客户姓名"
+          placeholder-class="placeholder"></input>
+      </view>
+    </view>
+    <view class="common-top">
+      <view class="common-content">
+      </view>
+    </view>
+    <scroll-view scroll-y class="common-wrapper" @scrolltolower="loadMore" style="height:{{vi_height}}px">
+      <view class="customer_count" wx:if="{{department=='artcenter' && userList.length>0}}">订单数：{{ userList.length }}</view>
+      <!--列表-->
+      <block wx:for="{{userList}}" wx:key="">
+        <!--|客服和销售-->
+        <view class="customer-info"
+          wx:if="{{user.is_server||user.is_server_offline||(user.is_sale&&item.user_status!=20)}}">
+          <view class="customer-info-header">
+            <view class="customer-num">编号：{{ item.order_id }}</view>
+            <view class="customer-date">{{ item.status_time }}</view>
+          </view>
+          <view class="customer-info-msgs" @tap="goToDetail" data-id="{{item.id}}">
+            <view class="customer-item">接单销售：<text>{{ item.sales_name }}</text></view>
+            <view class="customer-item">客资意向：<text>{{ item.intention_name }}</text></view>
+            <view class="customer-item">渠道来源：<text>{{ item.channel_name }}</text></view>
+            <view class="customer-item">客资状态：<text>{{ item.status_name }}</text></view>
+            <view class="customer-item">订单状态：<text>{{ item.order_status_text }}</text></view>
+          </view>
+          <view class="customer-log-btn">
+            <view @tap="toggleDisplay" data-index="{{index}}">
+              跟进日志
+              <image class="option-log-arrows"
+                src="{{item.is_hide?'../../images/arrows-right.png':'../../images/arrows-down.png'}}" mode="widthFix"
+                lazy-load="false">
+              </image>
+            </view>
+            <view wx:if="{{!item.is_hide}}">
+              <view class="customer-log-detail">
+                <view class="customer-ld-box">
+                  <block wx:for="{{item.status_log}}" wx:key="">
+                    <view class="customer-ld-list">
+                      <view class="customer-ld-header">
+                        <view class="customer-ld-date">{{ item.log_time }}</view>
+                        <view class="customer-ld-status">{{ item.status_time_name }}</view>
+                      </view>
+                      <view class="customer-ld-content">{{ item.status_remark }}</view>
+                    </view>
+                  </block>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <!--客服和销售|-->
+
+        <!--｜策划-->
+        <view class="customer-info" wx:if="{{user.is_scheme}}">
+          <view class="customer-info-header">
+            <view class="customer-num">客资编号：{{ item.order_id }}</view>
+          </view>
+          <view class="customer-info-msgs" @tap="goToSchemeDetail" data-id="{{item.user_id}}">
+            <view class="customer-item">客户姓名：<text>{{ item.client_name }}</text></view>
+            <view class="customer-item">婚礼日期：<text>{{ item.schedule_date }}</text></view>
+            <view class="customer-item">销 售：<text>{{ item.sales_name }}</text></view>
+            <view class="customer-item">策 划：<text>{{ item.planner_name }}</text></view>
+            <view class="customer-item">任务状态：<text>{{ item.order_status_text }}</text></view>
+          </view>
+        </view>
+        <!--策划｜-->
+
+        <!--｜运营-->
+        <view class="customer-info" wx:if="{{user.is_excute}}">
+          <view class="customer-info-header">
+            <view class="customer-num">客资编号：{{ item.order_id_str }}</view>
+          </view>
+          <view class="customer-info-msgs" @tap="goToExcuteDetail" data-id="{{item.order_id}}"
+            data-tid="{{item.order_id_str}}">
+            <view class="customer-item">客户姓名：<text>{{ item.client_name }}</text></view>
+            <view class="customer-item">策 划：<text>{{ item.planner_name }}</text></view>
+            <view class="customer-item">婚礼日期：<text>{{ item.schedule_date }}</text></view>
+          </view>
+        </view>
+        <!--运营|-->
+
+      </block>
+    </scroll-view>
+    <!--列表-->
+    <view class="customer-create-btn" @tap="navigatorToServicePublish"
+      wx:if="{{user.is_server||user.is_server_offline}}">发布客资</view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import rq from '../../common/utils/request';
+import tool from '../../common/utils/tool';
+import css from '../../components/css';
+import header from '../../components/header';
+export default class Index extends wepy.page {
+  components = {
+    css: css, //样式表
+    header: header
+  };
+  data = {
+    isback: false,
+    isopacity: true,
+    title: '客资',
+    loading: true,
+    is_hide: true,
+    userList: [],
+    sourceList: [],
+    user: null,
+    user_act: 0, //0 客服 1销售 策划
+
+    page: 1,
+    keyword: '',
+    have_more: true,
+    vi_height: 500,
+    department: ''
+  };
+  methods = {
+    loadMore() {
+      this.getUserLIst();
+    },
+    bindInputSearch(e) {
+      this.page = 1;
+      this.keyword = e.detail.value;
+      this.have_more = true;
+      this.userList = [];
+      this.getUserLIst();
+    },
+    goToExcuteDetail(e) {
+      let id = e.currentTarget.dataset.id;
+      let tid = e.currentTarget.dataset.tid;
+      wepy.navigateTo({
+        url: '/pages/common/execute/task?order_id_str=' + tid + '&id=' + id
+      });
+    },
+    goToDetail(e) {
+      let id = e.currentTarget.dataset.id;
+      if (this.user.is_server || this.user.is_server_offline) {
+        wepy.navigateTo({
+          url: '/pages/common/server/customer?id=' + id
+        });
+      } else if (this.user.is_sale) {
+        wepy.navigateTo({
+          url: '/pages/common/sale/customer?id=' + id
+        });
+      }
+    },
+    toggleDisplay(e) {
+      let index = e.currentTarget.dataset.index;
+      this.userList[index].is_hide = !this.userList[index].is_hide;
+    },
+    navigatorToServicePublish() {
+      wepy.navigateTo({
+        url: '/pages/common/server/publish'
+      });
+    },
+    goToSchemeDetail(e) {
+      let id = e.currentTarget.dataset.id;
+      let url = '/pages/' + this.department + '/scheme/customer?id=' + id
+      wepy.navigateTo({
+        url: url
+      });
+    }
+  };
+  onLoad(options) {
+    let that = this;
+    that.loading = false;
+    that.department = wepy.getStorageSync('office_line');
+  }
+  onReady() {
+    let that = this;
+    wx.getSystemInfo({
+      success(res) {
+        let w_height = res.windowHeight;
+        var query = wx.createSelectorQuery();
+        query.select('#top_header').boundingClientRect(function (result) {
+          let vi_height = w_height - result.height - 73;
+          that.vi_height = vi_height;
+          that.$apply();
+        }).exec();
+      }
+    })
+  }
+  getUserLIst() {
+    let that = this;
+    if (!that.have_more) {
+      return false;
+    }
+    that.have_more = false;
+    let user = this.user = wepy.getStorageSync('user');
+    if (!user) {
+      wepy.redirectTo({
+        url: 'login'
+      });
+    } else {
+      let api_name = '';
+      user.is_server || user.is_server_offline ? api_name = 'getServerUserInfo' : '';
+      user.is_sale ? api_name = 'gotSalesUserInfo' : '';
+      user.is_scheme ? api_name = 'getPlanUserInfo' : '';
+      user.is_excute ? api_name = 'getOperationUsers' : '';
+      wepy.showLoading({
+        title: 'Loading...', //提示的内容,
+        mask: true, //显示透明蒙层，防止触摸穿透,
+        success: res => { }
+      });
+      rq.get(api_name, {
+        200: result => {
+          wepy.hideLoading();
+          if (result.data.userList) {
+            result.data.userList.forEach(element => {
+              element['is_hide'] = true;
+              that.userList.push(element);
+            });
+            if (result.data.userList.length >= 20) {
+              that.have_more = true;
+            }
+          }
+          if (result.data.data) {
+            result.data.data.forEach(element => {
+              element['is_hide'] = true;
+              that.userList.push(element);
+            });
+            if (result.data.data.length >= 20) {
+              that.have_more = true;
+            }
+          }
+          that.loading = false;
+          that.page++;
+          that.sourceList = that.userList;
+          that.$apply();
+        }
+      }, {
+        page: that.page,
+        keyword: that.keyword
+      })
+    }
+  }
+  onShow() {
+    let that = this;
+    that.have_more = true;
+    that.page = 1;
+    that.sourceList = that.userList = [];
+    that.getUserLIst();
+  }
+}
+</script>

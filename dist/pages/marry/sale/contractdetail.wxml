@@ -1,0 +1,90 @@
+
+    <view>
+        
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <!--|基本信息-->
+            <view>
+                <view class="common-title">合同编号</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <!-- <view class="common-tip-line">{{contract_info.contract_id}}</view> -->
+                        <input disabled class="common-tip-line" value="{{contract_info.contract_id}}" bindinput="bindInputContractId"/>
+                    </view>
+                </view>
+                <view class="common-title">合同状态</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <input disabled class="common-tip-line" value="{{contract_info.contract_status_text}}" bindinput="bindInputContractType"/>
+                    </view>
+                </view>
+                <view class="common-title">合同名称</view>
+                <view class="common-pannel">
+                    <!-- <view class="common-list" bindtap="goToContractEdit"> -->
+                    <view class="common-list">
+                        <input disabled class="common-tip-line" value="{{contract_info.contract_name}}" bindinput="bindInputContractName" type="text" placeholder="请输入"/>
+                    </view>
+                </view>
+                <view class="common-title">合同凭证 {{show_img_arr.length}}/9</view>
+                <view class="common-pannel">
+                    <view class="common-pic-box">
+                        <view class="server-name"  wx:if="{{show_img_arr.length<=0}}">暂无</view>
+                        <block  wx:for="{{show_img_arr}}" wx:key="">
+                            <image bindtap="viewCheck" data-index="{{index}}" class="common-add-pic" src="{{item}}" mode="aspectFill" lazy-load="false">
+                            </image>
+                        </block>
+                    </view>
+                </view>
+                <view class="common-title">审批信息</view>
+                <view class="common-pannel">
+                    <view class="server-name" wx:if="{{review.length<=0}}">暂无</view>
+                    <block wx:for="{{review}}" wx:key="">
+                        <view class="common-list">
+                            <view class="common-lab">{{item.employee_name}}</view>
+                            <view class="common-tip">{{item.review_status_text}}</view>
+                        </view>
+                    </block>
+                </view>
+                <view class="common-title" wx:if="{{review_reason}}">驳回原因</view>
+                <view class="common-pannel" wx:if="{{review_reason}}">
+                    <textarea disabled class="common-area" value="{{review_reason}}"/>
+                </view>
+                <view class="common-title">日志信息</view>
+                <view class="common-pannel common-pannel-c">
+                    <block wx:for="{{log}}" wx:key="">
+                        <view class="server-msg-box">
+                            <view class="server-msg-line">
+                                <view class="server-msg-title">{{item.status_date}} <text class="common-time-name">{{item.status_time_name}}</text></view>
+                            </view>
+                            <view class="server-msg-line">
+                                <view class="server-msg-title">操作人：{{item.employee_name}}</view>
+                            </view>
+                            <view class="server-msg-line">
+                                <view class="server-msg-title">原因：{{item.status_remark}}</view>
+                            </view>
+                        </view>
+                    </block>
+                </view>
+            </view>
+            <!--基本信息|-->
+            <view class="customer-order-btn" bindtap="goToContractEdit" wx:if="{{contract_info.contract_status==3}}">编辑</view>
+        </view>
+    </view>

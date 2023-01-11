@@ -1,0 +1,95 @@
+
+<style lang="less">
+.upload-none{
+  font-size:24rpx;
+}
+</style>
+
+<template>
+  <view class="common-title">{{ label }} <text wx:if="{{!readonly}}">{{ save_obj[ntkey].length }}/{{ size }}</text></view>
+  <view class="common-pannel">
+    <view class="common-pic-box">
+      <view class="upload-none" wx:if="{{readonly&&(!save_obj||save_obj[ntkey].length==0)}}">暂无</view>
+      <block wx:for="{{save_obj[ntkey]}}" wx:key="index">
+        <view class="common-add-pic">
+          <image @tap="viewCheck" data-index="{{index}}" class="common-add-pic-img" src="{{item}}" mode="aspectFill"
+            lazy-load="false">
+          </image>
+          <image wx:if="{{!readonly}}" @tap="deleteImg" data-index="{{index}}" class="capi-del"
+            src="../../images/delete-icon.png" mode="scaleToFill" lazy-load="false">
+          </image>
+        </view>
+      </block>
+      <image wx:if="{{!readonly&&save_obj[ntkey].length<size}}" @tap="uploadFile" class="common-add-pic"
+        src="../../images/add-pic.png" mode="aspectFill" lazy-load="false">
+      </image>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import G from '../../common/global.js';
+import api from '../../common/api.js';
+import file from '../../common/utils/file';
+import C from '../../common/config';
+export default class Fnav extends wepy.component {
+  props = {
+    readonly: {
+      type: Boolean,
+      default: false,
+      twoWay: true
+    },
+    label: {
+      type: String
+    },
+    size: {
+      type: String
+    },
+    ntkey: {
+      type: String
+    },
+    save_obj: {
+      type: Object,
+      twoWay: true
+    },
+  }
+  components = {};
+  data = {
+  };
+  methods = {
+    deleteImg(e) {
+      let index = e.currentTarget.dataset.index;
+      this.save_obj[this.ntkey].splice(index, 1);
+    },
+    viewCheck(e) {
+      if(this.save_obj[this.ntkey].length<=0||(this.save_obj[this.ntkey].length==1&&this.save_obj[this.ntkey][0]=="")){
+        return;
+      }
+        wepy.previewImage({
+          current: this.save_obj[this.ntkey][e.currentTarget.dataset.index],
+          urls: this.save_obj[this.ntkey] //需要预览的图片链接列表,
+        });
+    },
+    uploadFile() {
+      let that = this;
+      wx.chooseImage({
+        count: that.size - that.save_obj[that.ntkey].length, //最多可以选择的图片张数,
+        success: res => {
+          file.upLoadImgs(C.ENV_URL + 'uploadCommProof', res.tempFilePaths, 0, [], [], function (names, urls) {
+            that.save_obj[that.ntkey] = that.save_obj[that.ntkey].concat(urls);
+            that.$apply();
+          });
+        },
+        fail: () => { },
+        complete: () => { }
+      });
+    },
+  };
+  onLoad(options) {
+  }
+  events = {
+
+  };
+}
+</script>

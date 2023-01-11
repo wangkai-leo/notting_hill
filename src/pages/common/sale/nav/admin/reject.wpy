@@ -1,0 +1,124 @@
+<style lang="less">
+    .common-tip {
+        color: #222;
+    }
+    .full-tab-item {
+        width: 50%;
+    }
+    .box-con{
+        margin-top:50rpx;
+    }
+</style>
+
+<template>
+    <view>
+        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="full-wrapper">
+            <view class="sale-tab-box-audit">
+                <view class="full-tab-item {{tab_index==0?'sale-tab-item-check':''}}" @tap="toggleTab" data-index="0">驳回订单</view>
+                <view class="full-tab-item {{tab_index==1?'sale-tab-item-check':''}}" @tap="toggleTab" data-index="1">驳回支付</view>
+            </view>
+            <!--|订单审核-->
+            <view class="box-con" wx:if="{{tab_index==0}}">
+                <block wx:for="{{customer_reject}}" wx:key="">
+                    <view class="customer-info" @tap="goToSaleCustomer" data-id="{{item.id}}">
+                        <view class="customer-info-header">
+                            <view class="customer-num">编号：{{item.order_id_str}}</view>
+                        </view>
+                        <view class="customer-info-msgs" data-id="{{item.order_id}}">
+                            <view class="customer-item">新人姓名：<text>{{item.client_name}}</text></view>
+                            <view class="customer-item">客资意向：<text>{{item.intention_name}}</text></view>
+                            <view class="customer-item">渠道来源：<text>{{item.channel_name}}</text></view>
+                            <view class="customer-item">客资状态：<text>{{item.user_status_text}}</text></view>
+                        </view>
+                    </view>
+                </block>
+            </view>
+            <!--订单审核|-->
+            <!--|转让-->
+            <view class="box-con" wx:if="{{tab_index==1}}">
+                <block wx:for="{{pay_reject}}" wx:key="">
+                    <view class="customer-info" @tap="goToOderPay" data-id="{{item.id}}">
+                        <view class="customer-info-header">
+                            <view class="customer-num">编号：{{item.order_id_str}}</view>
+                        </view>
+                        <view class="customer-info-msgs" data-id="{{item.order_id}}">
+                            <view class="customer-item">新人姓名：<text>{{item.client_name}}</text></view>
+                            <view class="customer-item">金额：<text>{{item.deposit_amount}}</text></view>
+                        </view>
+                    </view>
+                </block>
+            </view>
+            <!--转让|-->
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import G from '../../../../../common/global';
+    import rq from '../../../../../common/utils/request';
+    import tool from '../../../../../common/utils/tool';
+    import validate from '../../../../../common/utils/validate';
+    import storage from '../../../../../common/utils/storage';
+    import dat from '../../../../../common/utils/date';
+    import file from '../../../../../common/utils/file';
+    import css from '../../../../../components/css';
+    import header from '../../../../../components/header';
+    export default class Index extends wepy.page {
+        components = {
+            css: css, //样式表
+            header: header
+        };
+        data = {
+            isopacity: true,
+            title: '业务审核',
+            isback: true,
+            customer_reject: null,
+            pay_reject:null,
+
+            tab_index: 0,
+            id: -1
+        };
+        methods = {
+            goToOderPay(e){
+                let id = e.currentTarget.dataset.id;
+                wepy.navigateTo({ url: '/pages/common/sale/orderpay?order_deposit_id='+id });
+            },
+            goToSaleCustomer(e){
+                let id = e.currentTarget.dataset.id;
+                    wepy.navigateTo({
+                        url: '/pages/common/sale/customer?id=' + id
+                    });
+            },
+            toggleTab(e) {
+                this.tab_index = e.currentTarget.dataset.index;
+            }
+        };
+        onLoad(options) {
+            options = tool.decodeQrCodeParam(options);
+            let that = this;
+            that.id = options.id
+        }
+        onShow() {
+            let that = this;
+            rq.get('getRejectOrder', {
+                200: result => {
+                    that.customer_reject = result.data.data;
+                    that.$apply();
+                }
+            }, {})
+
+            rq.get('getRejectPay', {
+                200: result => {
+                    that.pay_reject=result.data.data;
+                    that.$apply();
+                }
+            }, {})
+        }
+    }
+</script>

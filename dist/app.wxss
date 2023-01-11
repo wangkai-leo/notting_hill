@@ -1,0 +1,42 @@
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+/**弹出层样式 start**/
+.leo-over-bg {
+  position: fixed;
+  background: rgba(0, 0, 0, 0.6);
+  top: 0rpx;
+  left: 0rpx;
+  z-index: 888;
+  width: 100%;
+  height: 100%;
+}
+.leo-over-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}
+.leo-over-pannle {
+  position: relative;
+  background: #fff;
+  width: 650rpx;
+  height: 640rpx;
+  margin-left: -325rpx;
+  margin-top: -320rpx;
+  border-radius: 20rpx;
+  padding-top: 20rpx;
+}
+.leo-close-btn-cou {
+  position: fixed;
+  width: 50rpx;
+  height: 50rpx;
+  position: absolute;
+  right: 20rpx;
+  font-weight: bold;
+}
+/**弹出层样式 end**/

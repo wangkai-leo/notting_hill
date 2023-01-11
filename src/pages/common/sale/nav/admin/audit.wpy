@@ -1,0 +1,123 @@
+<style lang="less">
+    .common-tip {
+        color: #222;
+    }
+    .full-tab-item {
+        width: 50%;
+    }
+    .box-con{
+        margin-top:50rpx;
+    }
+</style>
+
+<template>
+    <view>
+        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="full-wrapper">
+            <view class="sale-tab-box-audit">
+                <view class="full-tab-item {{tab_index==0?'sale-tab-item-check':''}}" @tap="toggleTab" data-index="0">订单审核</view>
+                <view class="full-tab-item {{tab_index==1?'sale-tab-item-check':''}}" @tap="toggleTab" data-index="1">转让</view>
+            </view>
+            <!--|订单审核-->
+            <view class="box-con" wx:if="{{tab_index==0}}">
+                <block wx:for="{{customer_audit}}" wx:key="">
+                    <view class="customer-info" @tap="goToAuditDetail" data-contractid="{{item.contract_id}}" data-id="{{item.user_id}}">
+                        <view class="customer-info-header">
+                            <view class="customer-num">编号：{{item.order_id_str}}</view>
+                        </view>
+                        <view class="customer-info-msgs" data-id="{{item.order_id}}">
+                            <view class="customer-item">客户姓名：<text>{{item.client_name}}</text></view>
+                            <!-- <view class="customer-item">合同金额：<text>{{item.contract_amount}}</text></view> -->
+                            <view class="customer-item">销售姓名：<text>{{item.sales_name}}</text></view>
+                        </view>
+                    </view>
+                </block>
+            </view>
+            <!--订单审核|-->
+            <!--|转让-->
+            <view class="box-con" wx:if="{{tab_index==1}}">
+                <block wx:for="{{customer_trans}}" wx:key="">
+                    <view class="customer-info" @tap="goToChargeback" data-id="{{item.id}}">
+                        <view class="customer-info-header">
+                            <view class="customer-num">转让申请</view>
+                        </view>
+                        <view class="customer-info-msgs" data-id="{{item.order_id}}">
+                            <view class="customer-item">客户姓名：<text>{{item.user_name}}</text></view>
+                            <view class="customer-item">转让意向：<text>{{item.intention_name}}</text></view>
+                            <view class="customer-item">销售姓名：<text>{{item.sales_name}}</text></view>
+                        </view>
+                    </view>
+                </block>
+            </view>
+            <!--转让|-->
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import G from '../../../../../common/global';
+    import rq from '../../../../../common/utils/request';
+    import tool from '../../../../../common/utils/tool';
+    import validate from '../../../../../common/utils/validate';
+    import storage from '../../../../../common/utils/storage';
+    import dat from '../../../../../common/utils/date';
+    import file from '../../../../../common/utils/file';
+    import css from '../../../../../components/css';
+    import header from '../../../../../components/header';
+    export default class Index extends wepy.page {
+        components = {
+            css: css, //样式表
+            header: header
+        };
+        data = {
+            isopacity: true,
+            title: '业务审核',
+            isback: true,
+            customer_audit: null,
+            customer_trans:null,
+
+            tab_index: 0,
+            id: -1
+        };
+        methods = {
+            goToChargeback(e){
+                let transform_id = e.currentTarget.dataset.id;
+                wepy.navigateTo({ url: 'transdetail?id='+transform_id });
+            },
+            goToAuditDetail(e){
+                let user_id = e.currentTarget.dataset.id;
+                let contract_id = e.currentTarget.dataset.contractid;
+                wepy.navigateTo({ url: 'auditdetail?id='+user_id+'&contract_id='+contract_id});
+            },
+            toggleTab(e) {
+                this.tab_index = e.currentTarget.dataset.index;
+            }
+        };
+        onLoad(options) {
+            options = tool.decodeQrCodeParam(options);
+            let that = this;
+            that.id = options.id
+        }
+        onShow() {
+            let that = this;
+            rq.get('orderReviewList', {
+                200: result => {
+                    that.customer_audit = result.data.data;
+                    that.$apply();
+                }
+            }, {})
+
+            rq.get('getTransferReview', {
+                200: result => {
+                    that.customer_trans=result.data.data;
+                    that.$apply();
+                }
+            }, {})
+        }
+    }
+</script>

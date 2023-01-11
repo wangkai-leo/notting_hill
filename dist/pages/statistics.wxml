@@ -1,0 +1,333 @@
+
+  <view class="container">
+    
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+    <view class="common-top">
+      <view class="common-content">
+      </view>
+    </view>
+    <view class="common-wrapper"  wx:if="{{user_act.is_server||user_act.is_server_offline}}">
+      
+  <view>
+    <view class="common-pannel">
+      <view class="dep-lead-sa">
+        <view class="dep-line">
+          时间：
+          
+  <view class="inline-tis"  wx:if="{{$statistics$ntinlinepickerc$ntpickertype!='date'}}">
+    {{ $statistics$ntinlinepickerc$ntrange[$statistics$ntinlinepickerc$checked_index][$statistics$ntinlinepickerc$ntkey] }}
+    <image class="common-log-arrows-c" src="../images/arrows-down.png" mode="widthFix" lazy-load="false">
+    </image>
+    <picker wx:if="{{!$statistics$ntinlinepickerc$readonly}}" class="picker-common" range="{{$statistics$ntinlinepickerc$ntrange}}" range-key="{{$statistics$ntinlinepickerc$ntkey}}" bindchange="$statistics$ntinlinepickerc$bindChange">
+      <view class="picker-common-v">
+        当前选择：{{ $statistics$ntinlinepickerc$ntrange[$statistics$ntinlinepickerc$checked_index][$statistics$ntinlinepickerc$ntkey] }}
+      </view>
+    </picker>
+  </view>
+  <view class="inline-tis"  wx:if="{{$statistics$ntinlinepickerc$ntpickertype=='date'}}">
+    {{ $statistics$ntinlinepickerc$checked_name }}
+    <image class="common-log-arrows-c" src="../images/arrows-down.png" mode="widthFix" lazy-load="false">
+    </image>
+    <picker wx:if="{{!$statistics$ntinlinepickerc$readonly}}" class="picker-common" mode="date" bindchange="$statistics$ntinlinepickerc$bindDateChange">
+      <view class="picker-common-v">
+        当前选择：{{ $statistics$ntinlinepickerc$checked_name }}
+      </view>
+    </picker>
+  </view>
+
+          至
+          
+  <view class="inline-tis"  wx:if="{{$statistics$ntinlinepickerb$ntpickertype!='date'}}">
+    {{ $statistics$ntinlinepickerb$ntrange[$statistics$ntinlinepickerb$checked_index][$statistics$ntinlinepickerb$ntkey] }}
+    <image class="common-log-arrows-c" src="../images/arrows-down.png" mode="widthFix" lazy-load="false">
+    </image>
+    <picker wx:if="{{!$statistics$ntinlinepickerb$readonly}}" class="picker-common" range="{{$statistics$ntinlinepickerb$ntrange}}" range-key="{{$statistics$ntinlinepickerb$ntkey}}" bindchange="$statistics$ntinlinepickerb$bindChange">
+      <view class="picker-common-v">
+        当前选择：{{ $statistics$ntinlinepickerb$ntrange[$statistics$ntinlinepickerb$checked_index][$statistics$ntinlinepickerb$ntkey] }}
+      </view>
+    </picker>
+  </view>
+  <view class="inline-tis"  wx:if="{{$statistics$ntinlinepickerb$ntpickertype=='date'}}">
+    {{ $statistics$ntinlinepickerb$checked_name }}
+    <image class="common-log-arrows-c" src="../images/arrows-down.png" mode="widthFix" lazy-load="false">
+    </image>
+    <picker wx:if="{{!$statistics$ntinlinepickerb$readonly}}" class="picker-common" mode="date" bindchange="$statistics$ntinlinepickerb$bindDateChange">
+      <view class="picker-common-v">
+        当前选择：{{ $statistics$ntinlinepickerb$checked_name }}
+      </view>
+    </picker>
+  </view>
+
+        </view>
+        <view class="dep-line">
+          人员：
+  <view class="inline-tis"  wx:if="{{$statistics$ntinlinepickera$ntpickertype!='date'}}">
+    {{ $statistics$ntinlinepickera$ntrange[$statistics$ntinlinepickera$checked_index][$statistics$ntinlinepickera$ntkey] }}
+    <image class="common-log-arrows-c" src="../images/arrows-down.png" mode="widthFix" lazy-load="false">
+    </image>
+    <picker wx:if="{{!$statistics$ntinlinepickera$readonly}}" class="picker-common" range="{{$statistics$ntinlinepickera$ntrange}}" range-key="{{$statistics$ntinlinepickera$ntkey}}" bindchange="$statistics$ntinlinepickera$bindChange">
+      <view class="picker-common-v">
+        当前选择：{{ $statistics$ntinlinepickera$ntrange[$statistics$ntinlinepickera$checked_index][$statistics$ntinlinepickera$ntkey] }}
+      </view>
+    </picker>
+  </view>
+  <view class="inline-tis"  wx:if="{{$statistics$ntinlinepickera$ntpickertype=='date'}}">
+    {{ $statistics$ntinlinepickera$checked_name }}
+    <image class="common-log-arrows-c" src="../images/arrows-down.png" mode="widthFix" lazy-load="false">
+    </image>
+    <picker wx:if="{{!$statistics$ntinlinepickera$readonly}}" class="picker-common" mode="date" bindchange="$statistics$ntinlinepickera$bindDateChange">
+      <view class="picker-common-v">
+        当前选择：{{ $statistics$ntinlinepickera$checked_name }}
+      </view>
+    </picker>
+  </view>
+
+        </view>
+      </view>
+    </view>
+    <view class="common-pannel">
+      <view class="dep-base-box">
+        <view class="dep-3-c dep-3-c-bd" bindtap="$statistics$naviToList" data-view="drop">
+          <view class="dep-num-c">{{ $statistics$page_old_data.drop_user_count }}</view>
+          <view class="dep-tip-c">退客资</view>
+        </view>
+        <view class="dep-3-c dep-3-c-bd" bindtap="$statistics$naviToList" data-view="all">
+          <view class="dep-num-c">{{ $statistics$page_old_data.all_user_count }}</view>
+          <view class="dep-tip-c">总客资</view>
+        </view>
+        <view class="dep-3-c" bindtap="$statistics$naviToList" data-view="review">
+          <view class="dep-num-c">{{ $statistics$page_old_data.noreview_user_count }}</view>
+          <view class="dep-tip-c">待审核</view>
+        </view>
+      </view>
+    </view>
+    <view class="prec-tab-box">
+      <view class="prec-tab-item {{$statistics$tab_index==0?'sale-tab-item-check':''}}" bindtap="$statistics$toggleTab" data-index="0">客资数
+      </view>
+      <view class="prec-tab-item {{$statistics$tab_index==1?'sale-tab-item-check':''}}" bindtap="$statistics$toggleTab" data-index="1">成交率
+      </view>
+    </view>
+    <view class="common-pannel"  wx:if="{{ $statistics$tab_index==0 }}">
+      <block wx:for="{{$statistics$page_old_data.channel_count_list}}">
+        <view bindtap="$statistics$naviToList" data-channel="{{item.where_map}}" data-count="{{item.count}}" class="dep-3-c dep-3-c-bd {{(index+1)%3==0?'dep-3-c-bd-n':''}}">
+          <view class="dep-num-c">{{ item.count }}</view>
+          <view class="dep-tip-c">{{ item.channel_name }}</view>
+        </view>
+      </block>
+    </view>
+    <view class="common-pannel"  wx:if="{{ $statistics$tab_index==1 }}">
+      <block wx:for="{{$statistics$page_data.channel_success_list}}">
+        <view bindtap="$statistics$naviToList" data-channel="{{item.where_map}}" data-count="{{item.count}}" class="dep-3-cd dep-3-c-bd {{(index+1)%3==0?'dep-3-c-bd-n':''}}">
+          <view class="dep-num-cd">{{ item.count }}</view>
+          <view class="dep-num-cd">{{ item.prent }}</view>
+          <view class="dep-tip-c"><text>{{ item.channel_name }}</text></view>
+        </view>
+      </block>
+      <block wx:for="{{$statistics$page_data.channel_success_prent_list}}">
+        <view bindtap="$statistics$naviToList" data-channel="{{item.where_map}}" data-count="{{item.count}}" class="dep-3-cd dep-3-c-bd {{(index+1)%3==0?'dep-3-c-bd-n':''}}">
+          <view class="dep-num-cd">{{ item.count }}</view>
+          <view class="dep-num-cd">{{ item.prent }}</view>
+          <view class="dep-tip-c"><text>{{ item.channel_name }}</text></view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+    </view>
+    <view class="common-wrapper" wx:if="{{user_act.is_sale}}">
+      <view class="common-pannel">
+        <view class="dep-lead">
+          <open-data class="common-user-avr" type="userAvatarUrl"/>
+          <view class="e-name">{{ user.employee_name }}</view>
+          <view class="e-stat {{user.online_status==1?'':'e-stat-off'}}">{{ user.online_status == 1 ? '在线中' : '离线中' }}
+            <image bindtap="turn" src="../images/change-line-i.png" class="c-line-ai" mode="scaleToFill" lazy-load="false">
+            </image>
+          </view>
+        </view>
+        <view class="dep-lead-time">统计时间：{{ order_date_start }}至{{ order_date_end }}<text class="dep-em-edit" bindtap="naviChangeDuration" data-start="{{order_date_start}}" data-end="{{order_date_end}}">修改</text></view>
+      </view>
+      <view class="common-title">客资统计</view>
+      <view class="common-pannel">
+        <view class="dep-base-box">
+          <view bindtap="naviToList" data-map="{{page_data.all_users.map}}" class="dep-3 dep-3-bd">
+            <view class="dep-num">{{ page_data.all_users.count }}</view>
+            <view class="dep-tip">总客资</view>
+          </view>
+          <view bindtap="naviToList" data-map="{{page_data.online_users.map}}" class="dep-3 dep-3-bd">
+            <view class="dep-num">{{ page_data.online_users.count }}</view>
+            <view class="dep-tip">线上客资</view>
+          </view>
+          <view bindtap="naviToList" data-map="{{page_data.offline_users.map}}" class="dep-3">
+            <view class="dep-num">{{ page_data.offline_users.count }}</view>
+            <view class="dep-tip">线下客资</view>
+          </view>
+          <view bindtap="naviToList" data-map="{{page_data.nottinghill_users.map}}" class="dep-3 dep-3-bd">
+            <view class="dep-num">{{ page_data.nottinghill_users.count }}</view>
+            <view class="dep-tip">诺丁山</view>
+          </view>
+          <view bindtap="naviToList" data-map="{{page_data.dreampark_users.map}}" class="dep-3 dep-3-bd">
+            <view class="dep-num">{{ page_data.dreampark_users.count }}</view>
+            <view class="dep-tip">DreamPark</view>
+          </view>
+          <view bindtap="naviToList" data-map="{{page_data.one_stop_wedding_users.map}}" class="dep-3">
+            <view class="dep-num">{{ page_data.one_stop_wedding_users.count }}</view>
+            <view class="dep-tip">一站式婚宴</view>
+          </view>
+          <view bindtap="naviToList" data-map="{{page_data.drop_customer_users.map}}" class="dep-3 dep-3-bd dep-3-bd-n">
+            <view class="dep-num">{{ page_data.drop_customer_users.count }}</view>
+            <view class="dep-tip">退客/无效客资</view>
+          </view>
+          <view bindtap="naviToList" data-map="{{page_data.dead_users.map}}" class="dep-3 dep-3-bd dep-3-bd-n">
+            <view class="dep-num">{{ page_data.dead_users.count }}</view>
+            <view class="dep-tip">已死客资</view>
+          </view>
+          <view data-map="{{page_data.missing_users.map}}" class="dep-3 dep-3-bd-n" bindtap="naviMissCount">
+            <view class="dep-num">{{ page_data.missing_users.count }}</view>
+            <view class="dep-tip dep-tip-dis">漏客数</view>
+          </view>
+        </view>
+      </view>
+      <view class="common-title">成交统计</view>
+      <view class="common-pannel">
+        <view class="dep-base-box">
+          <view bindtap="naviToList" data-map="{{page_data.complate_users.map}}" class="dep-3 dep-3-bd">
+            <view class="dep-num">{{ page_data.complate_users.count }}</view>
+            <view class="dep-tip">成交数</view>
+          </view>
+          <view class="dep-3 dep-3-bd">
+            <view class="dep-num">{{ page_data.complate_percent.count }}</view>
+            <view class="dep-tip dep-tip-dis">总成交率</view>
+          </view>
+          <view class="dep-3">
+            <view class="dep-num">{{ page_data.online_percent.count }}/{{ page_data.offline_percent.count }}</view>
+            <view class="dep-tip dep-tip-dis">线上/线下成交率</view>
+          </view>
+          <view bindtap="naviToList" data-map="{{page_data.nottinghill_complate_users.map}}" class="dep-3 dep-3-bd dep-3-bd-n">
+            <view class="dep-num">{{ page_data.nottinghill_complate_users.count }}</view>
+            <view class="dep-tip">诺丁山</view>
+          </view>
+          <view bindtap="naviToList" data-map="{{page_data.dreampark_complate_users.map}}" class="dep-3 dep-3-bd dep-3-bd-n">
+            <view class="dep-num">{{ page_data.dreampark_complate_users.count }}</view>
+            <view class="dep-tip">DreamPark</view>
+          </view>
+          <view bindtap="naviToList" data-map="{{page_data.one_stop_wedding_complate_users.map}}" class="dep-3 dep-3-bd-n">
+            <view class="dep-num">{{ page_data.one_stop_wedding_complate_users.count }}</view>
+            <view class="dep-tip">一站式婚宴</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="common-wrapper" wx:if="{{user_act.is_scheme}}">
+      <view class="common-title">订单统计</view>
+      <view class="common-pannel">
+        <view class="dep-base-box dep-base-box-np">
+          <view class="dep-3 dep-3-bd" bindtap="naviToSchemeList" data-type="now_year_executed">
+            <view class="dep-num">{{ page_data.order_statistics.now_year_executed }}</view>
+            <view class="dep-tip">今年已执行单</view>
+          </view>
+          <view class="dep-3 dep-3-bd" bindtap="naviToSchemeList" data-type="now_year_no_execute">
+            <view class="dep-num">{{ page_data.order_statistics.now_year_no_execute }}</view>
+            <view class="dep-tip">今年未执行单</view>
+          </view>
+          <view class="dep-3" bindtap="naviToSchemeList" data-type="next_year_execute">
+            <view class="dep-num">{{ page_data.order_statistics.next_year_execute }}</view>
+            <view class="dep-tip">明年执行单</view>
+          </view>
+          <view class="dep-3 dep-3-bd dep-3-bd-n" bindtap="naviToSchemeList" data-type="no_true">
+            <view class="dep-num">{{ page_data.order_statistics.no_true }}</view>
+            <view class="dep-tip">未确认订单</view>
+          </view>
+
+        </view>
+      </view>
+      <view class="common-title">确认订单</view>
+      <view class="common-pannel">
+        <view class="dep-lead-time dep-lead-time-nb">统计时间：{{ order_date_start }}至{{ order_date_end }}<text class="dep-em-edit" bindtap="naviChangeDuration" data-start="{{order_date_start}}" data-end="{{order_date_end}}">修改</text></view>
+        <view class="dep-base-box dep-base-box-np">
+          <view class="dep-3 dep-3-bd" bindtap="naviToSchemeList" data-type="executed">
+            <view class="dep-num">{{ page_data.order_true.executed }}</view>
+            <view class="dep-tip">已执行单</view>
+          </view>
+          <view class="dep-3 dep-3-bd" bindtap="naviToSchemeList" data-type="no_executed">
+            <view class="dep-num">{{ page_data.order_true.no_settle }}</view>
+            <view class="dep-tip">待结算单</view>
+          </view>
+          <view class="dep-3" bindtap="naviToSchemeList" data-type="no_settle">
+            <view class="dep-num">{{ page_data.order_true.no_executed }}</view>
+            <view class="dep-tip">未执行单</view>
+          </view>
+          <view class="dep-3 dep-3-bd dep-3-bd-n" bindtap="naviToSchemeList" data-type="drop_order">
+            <view class="dep-num">{{ page_data.order_true.drop_order }}</view>
+            <view class="dep-tip">退单</view>
+          </view>
+        </view>
+      </view>
+      <view class="common-title">未确认订单</view>
+      <view class="common-pannel">
+        <view class="dep-base-box dep-base-box-np">
+          <view class="dep-3 dep-3-bd" bindtap="naviToSchemeList" data-type="delay">
+            <view class="dep-num">{{ page_data.no_true.delay }}</view>
+            <view class="dep-tip">延期单</view>
+          </view>
+          <view class="dep-3 dep-3-bd" bindtap="naviToSchemeList" data-type="corpse">
+            <view class="dep-num">{{ page_data.no_true.corpse }}</view>
+            <view class="dep-tip">僵尸单</view>
+          </view>
+          <view class="dep-3 dep-3-bd" bindtap="naviToSchemeList" data-type="wedding_no_true">
+            <view class="dep-num">{{ page_data.no_true.wedding_no_true }}</view>
+            <view class="dep-tip">婚期未定单</view>
+          </view>
+          <view class="dep-3 dep-3-bd-n" bindtap="naviToSchemeList" data-type="error_order">
+            <view class="dep-num">{{ page_data.no_true.error_order }}</view>
+            <view class="dep-tip">异常订单</view>
+          </view>
+        </view>
+      </view>
+      <view class="common-title">收款统计</view>
+      <view class="common-pannel">
+        <view class="dep-lead-time dep-lead-time-nb">统计时间：{{ pay_date_start }}至{{ pay_date_end }}<text class="dep-em-edit" bindtap="naviChangeDuration" data-pay="yes" data-start="{{pay_date_start}}" data-end="{{pay_date_end}}">修改</text></view>
+        <view class="dep-get-line">收款总额 <text>{{ page_data.pay_statistics.all_deposit }}</text></view>
+      </view>
+      <view class="common-pannel">
+        <block wx:for="{{page_data.pay_statistics.team_deposit}}" wx:key="">
+          <view class="dep-get-line">
+            {{ item.team_name }} <text>{{ item.deposit_amount }}</text>
+          </view>
+        </block>
+      </view>
+      <view class="common-title">成本/毛利统计</view>
+      <block wx:for="{{page_data.cost_sale_percent}}" wx:key="">
+        <view class="common-pannel">
+          <view class="dep-lead-time dep-lead-time-nb">{{ item.title }}</view>
+          <view class="dep-base-box dep-base-box-np">
+            <view class="dep-3 dep-3-bd dep-3-bd-n">
+              <view class="dep-num">{{ item.sale_price_avg }}</view>
+              <view class="dep-tip">售出均价</view>
+            </view>
+            <view class="dep-3 dep-3-bd dep-3-bd-n">
+              <view class="dep-num">{{ item.cost_price_avg }}</view>
+              <view class="dep-tip">平均成本</view>
+            </view>
+            <view class="dep-3 dep-3-bd-n">
+              <view class="dep-num">{{ item.percent }}</view>
+              <view class="dep-tip">毛利率</view>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>

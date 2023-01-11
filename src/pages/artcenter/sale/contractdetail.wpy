@@ -1,0 +1,241 @@
+<style lang="less">
+    .common-lab {
+        width: 230rpx;
+    }
+    .common-tip {
+        width: 300rpx;
+        float: right;
+        text-align: right;
+        color: #999;
+    }
+    .common-tip {
+        color: #222;
+        width: 400rpx;
+    }
+    .server-msg-box {
+        background: #f9f9f9;
+        padding: 35rpx 20rpx;
+        border-radius: 10rpx;
+        font-size: 26rpx;
+        margin: 20rpx 0rpx 0rpx;
+        overflow: hidden;
+    }
+    .server-msg-line {
+        overflow: hidden;
+        margin-bottom: 20rpx;
+        color: #555;
+    }
+    .server-msg-value {
+        position: relative;
+        float: right;
+        text-align: right;
+    }
+    .server-msg-blo {
+        font-weight: bold;
+        margin-bottom: 40rpx;
+        font-size: 24rpx;
+        color: #333;
+    }
+    .server-group {
+        border-top: #eaeaea solid 1rpx;
+        padding-top: 20rpx;
+    }
+    .server-name {
+        font-size: 26rpx;
+        color: #333;
+        padding: 40rpx 0rpx 40rpx; // float: left;
+        // width: 500rpx;
+    }
+    .edit-btn {
+        position: relative;
+        float: right;
+        font-size: 28rpx;
+        color: #87a6e7;
+        height: 25rpx;
+        width: 80rpx;
+    }
+    .edit-btn-del {
+        position: relative;
+        float: right;
+        font-size: 28rpx;
+        color: #999;
+        height: 40rpx;
+        width: 80rpx;
+        padding: 20rpx 0rpx 20rpx 20rpx;
+        text-align: right;
+    }
+    .contract-oth-title {
+        font-size: 24rpx;
+        font-weight: bold;
+        margin-bottom: 20rpx;
+    }
+    .contract-cou-title {
+        font-size: 24rpx;
+        float: left;
+    }
+    .contract-pri-title {
+        font-size: 24rpx;
+        float: right;
+    }
+    .common-tip-line {
+        color: #000;
+    }
+    .common-list-bl {
+        color: #87a6e7;
+    }
+</style>
+
+<template>
+    <view>
+        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <!--|基本信息-->
+            <view>
+                <view class="common-title">合同编号</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <!-- <view class="common-tip-line">{{contract_info.contract_id}}</view> -->
+                        <input disabled class="common-tip-line" value="{{contract_info.contract_id}}" @input="bindInputContractId" />
+                    </view>
+                </view>
+                <view class="common-title">合同状态</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <input disabled class="common-tip-line" value="{{contract_info.contract_status_text}}" @input="bindInputContractType" />
+                    </view>
+                </view>
+                <view class="common-title">合同名称</view>
+                <view class="common-pannel">
+                    <!-- <view class="common-list" @tap="goToContractEdit"> -->
+                    <view class="common-list">
+                        <input disabled class="common-tip-line" value="{{contract_info.contract_name}}" @input="bindInputContractName" type="text" placeholder="请输入" />
+                    </view>
+                </view>
+                <view class="common-title">合同凭证 {{show_img_arr.length}}/9</view>
+                <view class="common-pannel">
+                    <view class="common-pic-box">
+                        <view class="server-name" wx:if="{{show_img_arr.length<=0}}">暂无</view>
+                        <block wx:for="{{show_img_arr}}" wx:key="">
+                            <image @tap="viewCheck" data-index="{{index}}" class="common-add-pic" src="{{item}}" mode="aspectFill" lazy-load="false">
+                            </image>
+                        </block>
+                    </view>
+                </view>
+                <view class="common-title">审批信息</view>
+                <view class="common-pannel">
+                    <view class="server-name" wx:if="{{review.length<=0}}">暂无</view>
+                    <block wx:for="{{review}}" wx:key="">
+                        <view class="common-list">
+                            <view class="common-lab">{{item.employee_name}}</view>
+                            <view class="common-tip">{{item.review_status_text}}</view>
+                        </view>
+                    </block>
+                </view>
+                <view class="common-title" wx:if="{{review_reason}}">驳回原因</view>
+                <view class="common-pannel" wx:if="{{review_reason}}">
+                    <textarea disabled class="common-area" value="{{review_reason}}" />
+                </view>
+                <view class="common-title">日志信息</view>
+                <view class="common-pannel common-pannel-c">
+                    <block wx:for="{{log}}" wx:key="">
+                        <view class="server-msg-box">
+                            <view class="server-msg-line">
+                                <view class="server-msg-title">{{item.status_date}} <text class="common-time-name">{{item.status_time_name}}</text></view>
+                            </view>
+                            <view class="server-msg-line">
+                                <view class="server-msg-title">操作人：{{item.employee_name}}</view>
+                            </view>
+                            <view class="server-msg-line">
+                                <view class="server-msg-title">原因：{{item.status_remark}}</view>
+                            </view>
+                        </view>
+                    </block>
+                </view>
+            </view>
+            <!--基本信息|-->
+            <view class="customer-order-btn" @tap="goToContractEdit" wx:if="{{contract_info.contract_status==3}}">编辑</view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import G from '../../../common/global';
+    import rq from '../../../common/utils/request';
+    import tool from '../../../common/utils/tool';
+    import validate from '../../../common/utils/validate';
+    import storage from '../../../common/utils/storage';
+    import dat from '../../../common/utils/date';
+    import file from '../../../common/utils/file';
+    import css from '../../../components/css';
+    import header from '../../../components/header';
+    export default class Index extends wepy.page {
+        components = {
+            css: css, //样式表
+            header: header
+        };
+        data = {
+            isopacity: true,
+            title: '合同详情',
+            isback: true,
+            order_info: null,
+            id: -1,
+            edit_base: false,
+            show_img_arr: [],
+            contract_info: {},
+            review: null,
+            log: null,
+            review_reason: '',
+            contract_id:''
+        };
+        methods = {
+            viewCheck(e){
+                wepy.previewImage({
+                    current: this.show_img_arr[e.currentTarget.dataset.index],
+                    urls: this.show_img_arr //需要预览的图片链接列表,
+                });
+            },
+            // edit() {
+            //     wepy.navigateTo({
+            //         url: 'contractedit?id=' + this.id+'&contract_id'+that.contract_id
+            //     });
+            // },
+            goToContractEdit() {
+                wepy.navigateTo({
+                    url: 'contractedit?id=' + this.id+'&contract_id='+this.contract_id
+                });
+            },
+            // bindInputGroomIdCard(e) {
+            //     this.contract_info.groom_id_card = e.detail.value;
+            // },
+        };
+        onLoad(options) {
+            options = tool.decodeQrCodeParam(options);
+            let that = this;
+            that.id = options.id;
+            that.contract_id=options.contract_id;
+
+            console.log(that.contract_id);
+        }
+        onShow() {
+            let that=this;
+            rq.get('getContractInfo', {
+                200: result => {
+                    that.contract_info = result.data.data.contract;
+                    that.review_reason = result.data.data.review_reason;
+                    that.review = result.data.data.review;
+                    that.log = result.data.data.log;
+                    that.show_img_arr = that.contract_info.contract_proof;
+                    that.$apply();
+                }
+            }, {
+                user_id: that.id,
+                contract_id:that.contract_id
+            })
+        }
+    }
+</script>

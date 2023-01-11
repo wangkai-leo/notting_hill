@@ -1,0 +1,103 @@
+
+  <view class="container">
+    
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+    <view class="select-top" id="top_header">
+      <view class="select-box">
+        <image class="select-icon" src="../images/select-icon.png" mode="widthFix" lazy-load="false"/>
+        <input bindconfirm="bindInputSearch" class="select-input" value="" type="text" placeholder="请输入订单编号\客户手机\客户姓名" placeholder-class="placeholder"/>
+      </view>
+    </view>
+    <view class="common-top">
+      <view class="common-content">
+      </view>
+    </view>
+    <scroll-view scroll-y class="common-wrapper" bindscrolltolower="loadMore" style="height:{{vi_height}}px">
+      <view class="customer_count"  wx:if="{{department=='artcenter' && userList.length>0}}">订单数：{{ userList.length }}</view>
+      <!--列表-->
+      <block  wx:for="{{userList}}" wx:key="">
+        <!--|客服和销售-->
+        <view class="customer-info" wx:if="{{user.is_server||user.is_server_offline||(user.is_sale&&item.user_status!=20)}}">
+          <view class="customer-info-header">
+            <view class="customer-num">编号：{{ item.order_id }}</view>
+            <view class="customer-date">{{ item.status_time }}</view>
+          </view>
+          <view class="customer-info-msgs" bindtap="goToDetail" data-id="{{item.id}}">
+            <view class="customer-item">接单销售：<text>{{ item.sales_name }}</text></view>
+            <view class="customer-item">客资意向：<text>{{ item.intention_name }}</text></view>
+            <view class="customer-item">渠道来源：<text>{{ item.channel_name }}</text></view>
+            <view class="customer-item">客资状态：<text>{{ item.status_name }}</text></view>
+            <view class="customer-item">订单状态：<text>{{ item.order_status_text }}</text></view>
+          </view>
+          <view class="customer-log-btn">
+            <view bindtap="toggleDisplay" data-index="{{index}}">
+              跟进日志
+              <image class="option-log-arrows" src="{{item.is_hide?'../images/arrows-right.png':'../images/arrows-down.png'}}" mode="widthFix" lazy-load="false">
+              </image>
+            </view>
+            <view wx:if="{{!item.is_hide}}">
+              <view class="customer-log-detail">
+                <view class="customer-ld-box">
+                  <block wx:for="{{item.status_log}}" wx:key="">
+                    <view class="customer-ld-list">
+                      <view class="customer-ld-header">
+                        <view class="customer-ld-date">{{ item.log_time }}</view>
+                        <view class="customer-ld-status">{{ item.status_time_name }}</view>
+                      </view>
+                      <view class="customer-ld-content">{{ item.status_remark }}</view>
+                    </view>
+                  </block>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <!--客服和销售|-->
+
+        <!--｜策划-->
+        <view class="customer-info" wx:if="{{user.is_scheme}}">
+          <view class="customer-info-header">
+            <view class="customer-num">客资编号：{{ item.order_id }}</view>
+          </view>
+          <view class="customer-info-msgs" bindtap="goToSchemeDetail" data-id="{{item.user_id}}">
+            <view class="customer-item">客户姓名：<text>{{ item.client_name }}</text></view>
+            <view class="customer-item">婚礼日期：<text>{{ item.schedule_date }}</text></view>
+            <view class="customer-item">销 售：<text>{{ item.sales_name }}</text></view>
+            <view class="customer-item">策 划：<text>{{ item.planner_name }}</text></view>
+            <view class="customer-item">任务状态：<text>{{ item.order_status_text }}</text></view>
+          </view>
+        </view>
+        <!--策划｜-->
+
+        <!--｜运营-->
+        <view class="customer-info" wx:if="{{user.is_excute}}">
+          <view class="customer-info-header">
+            <view class="customer-num">客资编号：{{ item.order_id_str }}</view>
+          </view>
+          <view class="customer-info-msgs" bindtap="goToExcuteDetail" data-id="{{item.order_id}}" data-tid="{{item.order_id_str}}">
+            <view class="customer-item">客户姓名：<text>{{ item.client_name }}</text></view>
+            <view class="customer-item">策 划：<text>{{ item.planner_name }}</text></view>
+            <view class="customer-item">婚礼日期：<text>{{ item.schedule_date }}</text></view>
+          </view>
+        </view>
+        <!--运营|-->
+
+      </block>
+    </scroll-view>
+    <!--列表-->
+    <view class="customer-create-btn" bindtap="navigatorToServicePublish" wx:if="{{user.is_server||user.is_server_offline}}">发布客资</view>
+  </view>

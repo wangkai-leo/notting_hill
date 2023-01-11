@@ -1,0 +1,80 @@
+<style lang="less">
+.common-tip {
+  color: #222;
+}
+
+.sale-tab-item {
+  width: 345rpx;
+}
+
+.common-lab-rcode {
+  width: 460rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  float: left;
+}
+
+.common-tip-rcode {
+  width: 150rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  float: right;
+  text-align: right;
+}
+
+.common-tip-0 {
+  color: red;
+}
+
+.common-tip-1 {
+  color: green;
+}
+</style>
+
+<template>
+  <view>
+    <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+    <view class="common-top">
+      <view class="common-content">
+      </view>
+    </view>
+    <view class="common-wrapper">
+      <customer :reflesh.sync="reflesh" :id.sync="id"></customer>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import css from '../../../components/css';
+import header from '../../../components/header';
+import customer from '../../../components/common/server/customer';
+import tool from '../../../common/utils/tool';
+export default class Index extends wepy.page {
+  components = {
+    css: css, //样式表
+    header: header,
+    customer:customer
+  };
+  data = {
+    isopacity: true,
+    title: '客资信息',
+    isback: true,
+    id: -1,
+    reflesh:''
+  };
+  methods = {
+  };
+  onLoad(options) {
+    options = tool.decodeQrCodeParam(options);
+    let that = this;
+    that.id = options.id;
+  }
+  onShow() {
+    this.reflesh=new Date().getTime();
+  }
+  
+}
+</script>

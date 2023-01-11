@@ -1,0 +1,274 @@
+<style lang="less">
+    .dep-lead {
+        overflow: hidden;
+        font-size: 26rpx;
+        padding: 40rpx 0rpx;
+        border-bottom: #f0f0f0 solid 1rpx;
+    }
+    .dep-num {
+        font-size: 42rpx;
+        color: #86a5e6;
+        font-weight: bold;
+        text-align: center;
+    }
+    .dep-tip {
+        font-size: 26rpx;
+        color: #555555;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 40rpx;
+    }
+    .dep-2 {
+        width: 50%;
+        float: left;
+    }
+    .dep-3 {
+        width: 33.33%;
+        float: left;
+    }
+    .dep-base-box {
+        position: relative;
+        overflow: hidden;
+        padding: 50rpx 0rpx;
+    }
+    .dep-em-sta {
+        margin-left: 20rpx;
+        color: #75b864;
+    }
+    .common-pannel {
+        padding: 10rpx 35rpx;
+    }
+    .dep-em-edit {
+        color: #87a6e7;
+        float: right;
+    }
+    .dep-inpu-lab {
+        font-size: 26rpx;
+        color: #333333;
+        float: left;
+        line-height: 60rpx;
+    }
+    .dep-form-box {
+        position: relative;
+        overflow: hidden;
+        margin: 0rpx auto 30rpx auto;
+        width: 560rpx;
+    }
+    .dep-input-box {
+        border: #f0f0f0 solid 1rpx;
+        border-radius: 5rpx;
+        float: right;
+        width: 420rpx;
+        font-size: 26rpx;
+        line-height: 60rpx;
+        height: 60rpx;
+        padding: 0rpx 10rpx;
+    }
+    .dep-input-box input {
+        font-size: 26rpx;
+        line-height: 60rpx;
+        display: block;
+        height: 60rpx;
+    }
+    .common-log-arrows {
+        margin-top: 15rpx;
+    }
+    .dep-form-btn {
+        width: 260rpx;
+        height: 70rpx;
+        line-height: 70rpx;
+        text-align: center;
+        background-color: #87a6e7;
+        color: #fff;
+        font-size: 26rpx;
+        border-radius: 10rpx;
+        margin-left: 50rpx;
+        float: left;
+        box-shadow: #eaeaea 5rpx 5rpx 10rpx;
+        margin-top: 30rpx;
+    }
+    .dep-form-btn:last-child {
+        float: right;
+        margin-right: 50rpx;
+        margin-left: 0rpx;
+    }
+    .leo-over-pannle {
+        padding-top: 60rpx;
+        height: 350rpx;
+    }
+    .gray-color{
+        color:#777;
+        margin-left:15rpx;
+    }
+    .red-color{
+        color:#ff0000;
+        margin-left:20rpx;
+    }
+</style>
+
+<template>
+    <view>
+        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <view class="common-title">{{page_info.team_info.team_name}}</view>
+            <view class="common-pannel">
+                <view class="dep-lead">队长：{{page_info.team_info.employee_name}}</view>
+                <view class="dep-base-box">
+                    <view class="dep-2">
+                        <view class="dep-num">{{page_info.team_info.employee_num}}</view>
+                        <view class="dep-tip">成员人数</view>
+                    </view>
+                    <view class="dep-2" @tap="goToTeamOrder">
+                        <view class="dep-num">{{page_info.team_info.month_user_num}}</view>
+                        <view class="dep-tip">接单数</view>
+                    </view>
+                </view>
+            </view>
+            <view class="common-title">成员详情</view>
+            <block wx:for="{{page_info.employee_list}}" wx:key="">
+                <view class="common-pannel">
+                    <view class="dep-lead">{{item.employee_name}} <text class="dep-em-sta">{{item.employee_status_text}}</text><text class="{{item.online_status==1?'gray-color':'red-color'}}">({{item.online_status_text}})</text><text class="dep-em-edit" @tap="check" data-index="{{index}}">编辑</text></view>
+                    <view class="dep-base-box">
+                        <view class="dep-3">
+                            <view class="dep-num">{{item.employee_now_clients}}/{{item.employee_max_clients}}</view>
+                            <view class="dep-tip">本月客资</view>
+                        </view>
+                        <view class="dep-3">
+                            <view class="dep-num">{{item.following_num}}</view>
+                            <view class="dep-tip">总维护客资</view>
+                        </view>
+                        <view class="dep-3">
+                            <view class="dep-num">{{item.un_follow_num}}</view>
+                            <view class="dep-tip">未跟进客资数</view>
+                        </view>
+                    </view>
+                </view>
+            </block>
+        </view>
+        <view class="leo-over-bg" wx:if="{{check_item}}">
+            <view class="leo-over-center">
+                <view class="leo-over-pannle">
+                    <view class="dep-form-box">
+                        <view class="dep-inpu-lab">客资上限</view>
+                        <view class="dep-input-box">
+                            <input class="" @input="bindInput" value="{{check_item.employee_max_clients}}" type="text" placeholder="请输入" maxlength="140"></input>
+                        </view>
+                    </view>
+                    <view class="dep-form-box">
+                        <view class="dep-inpu-lab">客资状态</view>
+                        <view class="dep-input-box">{{check_item.employee_status_text}} {{check_item.online_status_text}} 
+                            <image class="common-log-arrows" src="../../../../../images/arrows-down.png" mode="widthFix" lazy-load="false">
+                            </image>
+                            <picker class="picker-common" @change="bindChange" value="{{status_index}}" range="{{employee_status}}">
+                                <view class="picker-common-v">
+                                    当前选择：{{employee_status[status_index]}}
+                                </view>
+                            </picker>
+                        </view>
+                    </view>
+                    <view class="dep-form-btn" @tap="cancel">取消</view>
+                    <view class="dep-form-btn" @tap="submit">确认</view>
+                </view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import G from '../../../../../common/global';
+    import rq from '../../../../../common/utils/request';
+    import tool from '../../../../../common/utils/tool';
+    import validate from '../../../../../common/utils/validate';
+    import storage from '../../../../../common/utils/storage';
+    import dat from '../../../../../common/utils/date';
+    import file from '../../../../../common/utils/file';
+    import css from '../../../../../components/css';
+    import header from '../../../../../components/header';
+    export default class Index extends wepy.page {
+        components = {
+            css: css, //样式表
+            header: header
+        };
+        data = {
+            isopacity: true,
+            title: '团队管理',
+            isback: true,
+            page_info: null,
+            check_item: null,
+            check_index: -1,
+            employee_status: ['正常', '禁用', '离职'],
+            status_index: 0,
+            pre_data: {}
+        };
+        methods = {
+            goToTeamOrder(){
+                wepy.navigateTo({ url: 'teamorders' });
+            },
+            bindInput(e){
+                this.check_item.employee_max_clients=e.detail.value;
+            },
+            bindChange(e) {
+                this.status_index = e.detail.value;
+                this.check_item.employee_status_text = this.employee_status[this.status_index];
+                this.check_item.employee_status = this.status_index;
+            },
+            submit() {
+                let that = this;
+                rq.get('updateEmployee', {
+                    200: result => {
+                        that.check_item = null;
+                        that.$apply();
+                    }
+                }, {
+                    employee_id: that.check_item.id,
+                    employee_max_clients: that.check_item.employee_max_clients,
+                    employee_status: that.check_item.employee_status
+                })
+            },
+            cancel(e) {
+                this.check_item = null;
+                let index = e.currentTarget.dataset.index;
+                this.page_info.employee_list[this.check_index].employee_status_text = this.pre_data.employee_status_text;
+                this.page_info.employee_list[this.check_index].employee_status = this.pre_data.employee_status;
+                this.page_info.employee_list[this.check_index].employee_max_clients = this.pre_data.employee_max_clients;
+                this.pre_data = {};
+                this.check_index = -1;
+            },
+            check(e) {
+                let index = this.check_index = e.currentTarget.dataset.index;
+                this.check_item = this.page_info.employee_list[index];
+                this.pre_data.employee_status_text = this.page_info.employee_list[index].employee_status_text;
+                this.pre_data.employee_status = this.page_info.employee_list[index].employee_status;
+                this.pre_data.employee_max_clients = this.page_info.employee_list[index].employee_max_clients;
+                let i = 0;
+                this.employee_status.forEach(element => {
+                    if (element == this.check_item.employee_status_text) {
+                        this.status_index = i;
+                    }
+                    i++;
+                });
+            }
+        };
+        onLoad(options) {
+            options = tool.decodeQrCodeParam(options);
+            let that = this;
+            that.user = wepy.getStorageSync('user');
+            let team_id = options.team_id;
+            rq.get('teamDetail', {
+                200: result => {
+                    that.page_info = result.data.data;
+                    that.employee_status = result.data.data.employee_status;
+                    that.$apply();
+                }
+            }, {
+                team_id: team_id
+            })
+        }
+        onShow() {}
+    }
+</script>

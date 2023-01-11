@@ -1,0 +1,196 @@
+
+    <view class="container">
+        
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view  wx:if="{{!is_search}}">
+            <view class="common-wrapper" wx:if="{{!is_filter}}">
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <view class="common-lab">总客资</view>
+                        <text class="common-lab-btn" bindtap="editStatus">筛选</text>
+                    </view>
+                </view>
+                <!--列表-->
+                <view class="common-pannel" wx:if="{{!user.is_scheme}}">
+                    <view class="common-list-sa">
+                        <view class="cus-5-rows">日期</view>
+                        <view class="cus-5-rows">编号</view>
+                        <view class="cus-5-rows">渠道</view>
+                        <view class="cus-5-rows" wx:if="{{!user.is_server && !user.is_server_offline}}">城市</view>
+                        <view class="cus-5-rows" wx:if="{{user.is_server || user.is_server_offline}}">意向</view>
+                        <view class="cus-5-rows">销售</view>
+                    </view>
+                    <block wx:for="{{userList}}" wx:key="">
+                        <!--|客服和销售-->
+                        <view class="common-list" bindtap="goToDetail" data-id="{{item.user_id}}">
+                            <view class="cus-5-rows">{{item.create_date}}</view>
+                            <view class="cus-5-rows">{{item.order_id}}</view>
+                            <view class="cus-5-rows">{{item.channel_name}}</view>
+                            <view class="cus-5-rows" wx:if="{{!user.is_server && !user.is_server_offline}}">{{item.intention_city_name}}</view>
+                            <view class="cus-5-rows" wx:if="{{user.is_server || user.is_server_offline}}">{{item.intention_name}}</view>
+                            <view class="cus-5-rows">{{item.sales_name}}</view>
+                        </view>
+                        <!--客服和销售|-->
+                    </block>
+                </view>
+                <view class="common-pannel" wx:if="{{user.is_scheme}}">
+                    <view class="common-list">
+                        <view class="cus-3-rows">日期（执行日期）</view>
+                        <view class="cus-3-rows">客资编号</view>
+                        <view class="cus-3-rows">策划姓名</view>
+                    </view>
+                    <block wx:for="{{userList}}" wx:key="">
+                        <!--|客服和销售-->
+                        <view class="common-list" bindtap="goToDetail" data-id="{{item.user_id}}">
+                            <view class="cus-3-rows">{{item.wedding_date}}</view>
+                            <view class="cus-3-rows">{{item.order_id}}</view>
+                            <view class="cus-3-rows">{{item.planner_name}}</view>
+                        </view>
+                        <!--客服和销售|-->
+                    </block>
+                </view>
+            </view>
+            <view class="common-wrapper" wx:if="{{is_filter}}">
+                <view class="common-title">日期</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <view class="common-lab">开始时间</view>
+                        <input disabled class="common-tip" value="{{op.start_date}}" start="{{op.start_date}}" end="{{op.end_date}}" placeholder="请选择"/>
+                        <picker class="picker-common" mode="date" bindchange="bindStartChange">
+                            <view class="picker-common-v">
+                                当前选择：{{start_date}}
+                            </view>
+                        </picker>
+                    </view>
+                    <view class="common-list">
+                        <view class="common-lab">结束时间</view>
+                        <input disabled class="common-tip" value="{{op.end_date}}" start="{{op.start_date}}" end="{{op.end_date}}" placeholder="请选择"/>
+                        <picker class="picker-common" mode="date" bindchange="bindEndChange">
+                            <view class="picker-common-v">
+                                当前选择：{{end_date}}
+                            </view>
+                        </picker>
+                    </view>
+                </view>
+                <view class="common-title" wx:if="{{user.is_sale}}">城市</view>
+                <view class="common-pannel" wx:if="{{user.is_sale}}">
+                    <view class="common-list">
+                        <input class="common-tip" disabled value="{{op.intention_city_name}}" type="text" placeholder="请选择"/>
+                        <picker class="picker-common" range="{{intention_city_arr}}" bindchange="bindCityChange">
+                            <view class="picker-common-v">
+                                当前选择：
+                            </view>
+                        </picker>
+                    </view>
+                </view>
+                <view class="common-title">客资编号</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <input class="common-tip" value="{{op.order_id}}" type="text" bindinput="bindInputOrderId" placeholder="请输入编号"/>
+                    </view>
+                </view>
+                <view class="common-title">客资渠道</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <input class="common-tip" disabled value="{{op.channel_name}}" type="text" placeholder="请选择"/>
+                        <picker class="picker-common" range="{{channel_arr}}" bindchange="bindChannelChange">
+                            <view class="picker-common-v">
+                                当前选择：
+                            </view>
+                        </picker>
+                    </view>
+                </view>
+                <view class="common-title">客资意向</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <input class="common-tip" disabled value="{{op.intention_name}}" type="text" placeholder="请选择"/>
+                        <picker class="picker-common" range="{{intention_arr}}" bindchange="bindIntentionChange">
+                            <view class="picker-common-v">
+                                当前选择：
+                            </view>
+                        </picker>
+                    </view>
+                </view>
+                <view class="common-title">销售</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <input class="common-tip" disabled value="{{op.sales_name}}" type="text" placeholder="请选择"/>
+                        <picker class="picker-common" range="{{sales_arr}}" bindchange="bindSalesChange">
+                            <view class="picker-common-v">
+                                当前选择：
+                            </view>
+                        </picker>
+                    </view>
+                </view>
+                <view class="customer-order-btn" bindtap="search">确认</view>
+            </view>
+        </view>
+        <view  wx:if="{{is_search}}">
+            <view class="common-wrapper" wx:if="{{show_search}}">
+                <view class="common-title">客资编号</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <input class="common-tip" value="{{op.order_id_str}}" type="text" bindinput="bindInputOrderIdStr" placeholder="请输入编号"/>
+                    </view>
+                </view>
+                <view class="common-title">手机</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <input class="common-tip" value="{{op.user_mobile}}" type="text" bindinput="bindInputMobile" placeholder="请输入手机号"/>
+                    </view>
+                </view>
+                <view class="common-title">微信号</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <input class="common-tip" value="{{op.wechat_id}}" type="text" bindinput="bindInputwechat" placeholder="请输入微信号"/>
+                    </view>
+                </view>
+                <view class="customer-order-btn" bindtap="searchNow">确定</view>
+            </view>
+            <!--列表-->
+            <view class="common-wrapper" wx:if="{{!show_search}}">
+                <view class="common-pannel">
+                    <view class="common-list-sa">
+                        <view class="cus-5-rows">日期</view>
+                        <view class="cus-5-rows">编号</view>
+                        <view class="cus-5-rows">渠道</view>
+                        <view class="cus-5-rows" wx:if="{{!user.is_server && !user.is_server_offline}}">城市</view>
+                        <view class="cus-5-rows" wx:if="{{user.is_server || user.is_server_offline}}">意向</view>
+                        <view class="cus-5-rows">销售</view>
+                    </view>
+                    <block wx:for="{{userList}}" wx:key="">
+                        <!--|客服和销售-->
+                        <view class="common-list" bindtap="goToDetail" data-id="{{item.user_id}}">
+                            <view class="cus-5-rows">{{item.create_date}}</view>
+                            <view class="cus-5-rows">{{item.order_id}}</view>
+                            <view class="cus-5-rows">{{item.channel_name}}</view>
+                            <view class="cus-5-rows" wx:if="{{!user.is_server && !user.is_server_offline}}">{{item.intention_city_name}}</view>
+                            <view class="cus-5-rows" wx:if="{{user.is_server || user.is_server_offline}}">{{item.intention_name}}</view>
+                            <view class="cus-5-rows">{{item.sales_name}}</view>
+                        </view>
+                        <!--客服和销售|-->
+                    </block>
+                </view>
+                <view class="customer-order-btn" bindtap="showSearchBox">搜索</view>
+            </view>
+        </view>
+        <!--列表-->
+    </view>

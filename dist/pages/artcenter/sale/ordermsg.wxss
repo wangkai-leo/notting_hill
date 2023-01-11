@@ -1,0 +1,155 @@
+@import "./../../../components/header.wxss";
+@import "./../../../components/css.wxss";
+.common-lab {
+  width: 230rpx;
+}
+.common-tip {
+  width: 300rpx;
+  float: right;
+  text-align: right;
+  color: #999;
+}
+.common-tip {
+  color: #222;
+}
+.server-msg-box {
+  background: #f9f9f9;
+  padding: 35rpx 20rpx;
+  border-radius: 10rpx;
+  font-size: 26rpx;
+  margin: 20rpx 0rpx 0rpx;
+  overflow: hidden;
+}
+.server-msg-line {
+  overflow: hidden;
+  margin-bottom: 20rpx;
+  color: #555;
+}
+.server-msg-value {
+  position: relative;
+  float: right;
+  text-align: right;
+}
+.server-msg-title {
+  float: left;
+}
+.server-msg-blo {
+  font-weight: bold;
+  margin-bottom: 40rpx;
+  font-size: 24rpx;
+  color: #333;
+}
+.server-group {
+  border-top: #eaeaea solid 1rpx;
+  padding-top: 20rpx;
+}
+.server-name {
+  font-size: 26rpx;
+  color: #333;
+  padding: 40rpx 0rpx 15rpx;
+}
+.edit-btn {
+  position: relative;
+  float: right;
+  font-size: 28rpx;
+  color: #87a6e7;
+}
+.edit-btn-del {
+  position: relative;
+  float: right;
+  font-size: 28rpx;
+  color: #999;
+  height: 40rpx;
+  width: 80rpx;
+  padding: 20rpx 0rpx 20rpx 20rpx;
+  text-align: right;
+}
+.common-stauts-tip {
+  color: #fb7c7c;
+  float: right;
+}
+.common-tip {
+  color: #999;
+}
+.free_service_order {
+  position: relative;
+  overflow: hidden;
+  height: 65rpx;
+  border-bottom: #eaeaea solid 1rpx;
+  margin-bottom: 10rpx;
+  margin-left: 30rpx;
+  margin-right: 30rpx;
+}
+.free_service_name {
+  float: left;
+  margin-left: 70rpx;
+  font-size: 28rpx;
+  line-height: 50rpx;
+}
+.leo-free-service-alter {
+  height: 850rpx;
+  margin-top: -370rpx;
+  border-radius: 0rpx;
+}
+.free-scroll-y-box {
+  height: 740rpx;
+  margin-top: 25rpx;
+}
+.free-service-sure {
+  position: absolute;
+  bottom: 0rpx;
+  width: 100%;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  background: #87a6e7;
+  color: #fff;
+}
+.free-count-edit {
+  color: #87a6e7;
+}
+.free-service-title {
+  font-size: 28rpx;
+  border-bottom: #eaeaea solid 1rpx;
+  padding: 20rpx 0rpx 25rpx 0rpx;
+}
+.free-service-edit-box {
+  margin: 0rpx 40rpx;
+}
+.free-service-count {
+  font-size: 28rpx;
+  padding: 30rpx 0rpx 50rpx;
+}
+.delete-item {
+  font-size: 32rpx;
+  width: 50%;
+  float: left;
+  text-align: center;
+  color: #fb7c7c;
+}
+.change-item {
+  font-size: 32rpx;
+  width: 50%;
+  float: left;
+  text-align: center;
+  color: #87a6e7;
+}
+.free-service-input {
+  float: right;
+  display: block;
+  text-align: right;
+}
+.leo-lop-count {
+  height: 300rpx;
+  margin-top: -150rpx;
+}
+.server-name {
+  overflow: hidden;
+}
+.common-pannel-mn {
+  margin-bottom: 10rpx;
+}
+.edit-btn-fn {
+  float: none;
+  margin-bottom: 30rpx;
+}

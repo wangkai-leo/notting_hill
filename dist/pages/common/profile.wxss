@@ -1,0 +1,76 @@
+@import "./../../components/header.wxss";
+@import "./../../components/css.wxss";
+.container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.proflie-fn {
+  background: #fff;
+  width: 700rpx;
+  padding: 50rpx;
+  height: 1000rpx;
+}
+.customer-create-btn {
+  position: fixed;
+  bottom: 50rpx;
+}
+.profile-reset-pass {
+  font-size: 26rpx;
+  line-height: 29rpx;
+  margin-top: 50rpx;
+}
+.common-pass-box {
+  margin-top: 40rpx;
+  overflow: hidden;
+  width: 650rpx;
+  margin: 40rpx auto 0rpx;
+}
+.common-pass-input {
+  font-size: 26rpx;
+  margin-top: 20rpx;
+}
+.common-pass-subm {
+  font-size: 26rpx;
+  background: #87a6e7;
+  color: #fff;
+  padding: 10rpx;
+  text-align: center;
+  border-radius: 20rpx;
+  width: 300rpx;
+  margin-top: 40rpx;
+}
+.common-online-status {
+  font-size: 24rpx;
+  float: left;
+  padding: 10rpx 30rpx;
+  margin-left: 20rpx;
+  border-radius: 10rpx;
+  color: #87a6e7;
+  background-color: #87a6e7;
+}
+.common-online-status-act {
+  color: #fff;
+  background-color: #87a6e7;
+}
+.common-online-status-lea {
+  color: #fff;
+  background-color: #ffb2a5;
+}
+button {
+  display: block;
+  padding: 0rpx;
+  margin: 0rpx;
+  border: none;
+  background: none;
+  text-align: left;
+  color: #000;
+}
+button::after {
+  border: none;
+}
+.button-hover {
+  background: none;
+  color: #000;
+}

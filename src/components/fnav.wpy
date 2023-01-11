@@ -1,0 +1,78 @@
+
+<style lang="less">
+.rb-nav-footer {
+    position: fixed;
+    bottom: 0rpx;
+    height: 98rpx;
+    width: 750rpx;
+    background: #fff;
+    z-index: 1000;
+}
+
+.rb-nav-item {
+    width: 120rpx;
+    height: 98rpx;
+    display: block;
+    margin: 0rpx auto;
+}
+
+.rb-footer-nav {
+    width: 25%;
+    float: left;
+}
+
+.rb-index-nav {
+    width: 359rpx;
+    height: 90rpx;
+}
+
+.foot-btn {
+    background: none;
+}
+
+.button-hover {
+    color: rgba(0, 0, 0, 0);
+}
+
+.foot-btn:after {
+    border: none;
+}
+</style>
+
+<template>
+<view class="rb-nav-footer">
+    <view wx:for="{{navImgs}}">
+        <navigator class="rb-footer-nav" url="{{navList[index]}}" open-type="navigate" hover-class="none">
+            <button formType="submit" class="foot-btn"><image class="rb-nav-item" src="{{index==currIndex?navImgsCurr[index]:item}}"></image></button>
+        </navigator>
+    </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import G from '../common/global.js';
+import api from '../common/api.js';
+export default class Fnav extends wepy.component {
+    props = {
+        currIndex: Number
+    }
+    components = {};
+    data = {
+        navImgs: ['../images/nav-c.png', '../images/nav-b.png', '../images/nav-a.png', '../images/nav-d.png'],
+        navImgsCurr: ['../images/nav-ch.png', '../images/nav-bh.png', '../images/nav-ah.png', '../images/nav-dh.png'],
+        navList: ['index', '', '', '']
+    };
+    methods = {
+        formsubmit(e) {
+            let formId = e.detail.formId;
+            console.log(formId);
+            api.saveFormId(formId);
+        }
+    };
+    onLoad(options) {
+        console.log(this.currIndex);
+    }
+    events = {};
+}
+</script>

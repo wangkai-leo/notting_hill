@@ -1,0 +1,75 @@
+
+    <view>
+        
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">定金金额</view>
+                    <input type="number" class="common-tip" disabled  wx:if="{{is_deposite}}" value="{{form_data.deposit_amount}}"/>
+                    <input type="number" class="common-tip" bindinput="bindInputDeposit"  wx:if="{{!is_deposite}}" value="{{form_data.deposit_amount}}"/>
+                    <view class="common-warning-tip">{{form_data.deposit_status_text}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">付款方式</view>
+                    <!-- <input type="text" class="common-tip" disabled wx:if="{{is_deposite}}" value="{{form_data.payment_type}}" /> -->
+                    <!-- <input type="text" class="common-tip" bindinput="bindInputPayMethod" wx:if="{{!is_deposite}}" value="{{form_data.payment_type}}" /> -->
+                    <image class="option-log-arrows-b" src="../../../images/arrows-down.png" mode="widthFix" lazy-load="false">
+                    </image>
+                    <view class="common-tip">{{form_data.payment_type_name}}</view>
+                    <picker class="picker-common" wx:if="{{!is_deposite}}" bindchange="bindPayChange" data-index="{{index}}" value="{{pay_index}}" range="{{pay_method_rand}}">
+                        <view class="picker-common-v">
+                            当前选择：{{pay_method_rand[pay_index]}}
+                        </view>
+                    </picker>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">付款时间</view>
+                    <view class="common-tip">{{form_data.payment_date}}</view>
+                    <picker class="picker-common" wx:if="{{!is_deposite}}" mode="date" value="{{form_data.payment_time}}" bindchange="bindDateChange">
+                        <view class="picker-common-v">
+                            当前选择：{{form_data.payment_time}}
+                        </view>
+                    </picker>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">接单团队</view>
+                    <input type="text" class="common-tip" bindinput="inputTeamName" value="{{form_data.team_name}}"/>
+                </view>
+            </view>
+            <view class="common-title">备注信息</view>
+            <view class="common-pannel">
+                <textarea class="common-area" bindinput="inputLog" value="{{form_data.deposit_remark}}" placeholder="请输入备注信息"/>
+            </view>
+            <view class="common-title">备注信息 {{show_img_arr.length}}/9</view>
+            <view class="common-pannel">
+                <view class="common-pic-box">
+                    <block wx:for="{{show_img_arr}}" wx:key="">
+                        <image class="common-add-pic" src="{{item}}" mode="aspectFill" lazy-load="false">
+                        </image>
+                    </block>
+                    <image wx:if="{{!is_deposite&&show_img_arr.length<9}}" bindtap="uploadFile" class="common-add-pic" src="../../../images/add-pic.png" mode="aspectFill" lazy-load="false">
+                    </image>
+                </view>
+            </view>
+            <view class="customer-create-btn" wx:if="{{!is_deposite}}" bindtap="submit">提交</view>
+        </view>
+    </view>

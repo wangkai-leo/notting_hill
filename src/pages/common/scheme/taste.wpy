@@ -1,0 +1,176 @@
+<style lang="less">
+    .common-lab {
+        width: 230rpx;
+    }
+    .common-tip {
+        width: 300rpx;
+        float: right;
+        text-align: right;
+        color: #999;
+    }
+    .common-tip {
+        color: #222;
+    }
+    .server-msg-box {
+        background: #f9f9f9;
+        padding: 35rpx 20rpx;
+        border-radius: 10rpx;
+        font-size: 26rpx;
+        margin: 20rpx 0rpx 0rpx;
+        overflow: hidden;
+    }
+    .server-msg-line {
+        overflow: hidden;
+        margin-bottom: 20rpx;
+        color: #555;
+    }
+    .server-msg-value {
+        position: relative;
+        float: right;
+        text-align: right;
+    }
+    .server-msg-title {
+        float: left;
+    }
+    .server-msg-blo {
+        font-weight: bold;
+        margin-bottom: 40rpx;
+        font-size: 24rpx;
+        color: #333;
+    }
+    .server-group {
+        border-top: #eaeaea solid 1rpx;
+        padding-top: 20rpx;
+    }
+    .server-name {
+        position: relative;
+        font-size: 26rpx;
+        color: #333;
+        padding: 40rpx 0rpx 15rpx;
+    }
+    .edit-btn {
+        position: relative;
+        float: right;
+        font-size: 28rpx;
+        color: #87a6e7;
+    }
+    .edit-btn-del {
+        position: relative;
+        float: right;
+        font-size: 28rpx;
+        color: #999;
+        height: 40rpx;
+        width: 80rpx;
+        padding: 20rpx 0rpx 20rpx 20rpx;
+        text-align: right;
+    }
+    .common-stauts-tip {
+        color: #fb7c7c;
+        float: right;
+    }
+    .common-checked {
+        right: 0rpx;
+        left: auto;
+        top: 25rpx;
+    }
+    .common-lab-btn{
+        top:15rpx;
+    }
+</style>
+
+<template>
+    <view>
+        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <block wx:for="{{taste_list}}" wx:key="">
+                <view class="common-pannel common-pannel-b">
+                    <view>
+                        <view class="server-name">试菜申请
+                            <text class="common-lab-btn" @tap="goToFeedback" data-id="{{item.id}}" wx:if="{{item.task_status==1}}">查看反馈</text>
+                            <text class="common-lab-btn" @tap="goToFeedback" data-id="{{item.id}}" wx:if="{{item.task_status!=1}}">{{item.task_status_text}}</text>
+                        </view>
+                        <view class="server-msg-box" @tap="goToTasteDetail" data-id="{{item.id}}">
+                            <view class="server-msg-line">
+                                <view class="server-msg-title">试菜日期</view>
+                                <view class="common-tip">{{item.session.schedule_date}}</view>
+                            </view>
+                            <view class="server-msg-line">
+                                <view class="server-msg-title">试菜时间</view>
+                                <view class="common-tip">{{item.try_time}}</view>
+                            </view>
+                            <view class="server-msg-line">
+                                <view class="server-msg-title">婚宴餐标</view>
+                                <view class="common-tip">{{item.wedding_package_name}}</view>
+                            </view>
+                            <view class="server-msg-line">
+                                <view class="server-msg-title">试菜人数</view>
+                                <view class="common-tip">{{item.try_person_number}}</view>
+                            </view>
+                            <view class="server-msg-line">
+                                <view class="server-msg-title">试菜状态</view>
+                                <view class="common-tip">{{item.task_status_text}}</view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </block>
+            <view class="customer-order-btn" @tap="goToTasteAdd">发起申请</view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import rq from '../../../common/utils/request';
+    import tool from '../../../common/utils/tool';
+    import css from '../../../components/css';
+    import header from '../../../components/header';
+    export default class Index extends wepy.page {
+        components = {
+            css: css, //样式表
+            header: header
+        };
+        data = {
+            isopacity: true,
+            title: '试菜申请',
+            isback: true,
+            taste_list: null,
+            id: -1,
+            user_id:-1,
+        };
+        methods = {
+            goToFeedback(e){
+                let id = e.currentTarget.dataset.id;
+                wepy.navigateTo({ url: '/pages/common/scheme/feedback?id='+id});
+            },
+            goToTasteDetail(e){
+                let id = e.currentTarget.dataset.id;
+                wepy.navigateTo({ url: '/pages/common/scheme/tastedetail?try_dishes_id='+ id +'&user_id='+this.user_id});
+            },
+            goToTasteAdd(){
+                wepy.navigateTo({ url: '/pages/common/scheme/tastedetail?id='+this.id +'&user_id='+this.user_id});
+            }
+        };
+        onLoad(options) {
+            options = tool.decodeQrCodeParam(options);
+            let that = this;
+            that.id = options.id;
+            that.user_id=options.user_id;
+        }
+        onShow() {
+            let that = this;
+            rq.get('getTryDishesList', {
+                200: result => {
+                    that.taste_list = result.data.data;
+                    that.$apply();
+                }
+            }, {
+                order_id: that.id
+            })
+        }
+    }
+</script>

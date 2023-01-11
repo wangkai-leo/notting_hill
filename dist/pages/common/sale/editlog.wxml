@@ -1,0 +1,79 @@
+
+  <view>
+    
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+    <view class="common-top">
+      <view class="common-content"/>
+    </view>
+    <view class="common-wrapper">
+      
+  <view class="common-title">{{ $ntpicker$label }}</view>
+  <view class="common-pannel">
+    <view class="common-list">
+      <view class="common-nt-full">{{ $ntpicker$checked_name?$ntpicker$checked_name:$ntpicker$ntrange[$ntpicker$checked_index][$ntpicker$ntkey] }}</view>
+      <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+      </image>
+      <picker  wx:if="{{!$ntpicker$readonly}}" class="picker-common" range="{{$ntpicker$ntrange}}" range-key="{{$ntpicker$ntkey}}" bindchange="$ntpicker$bindChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntpicker$ntrange[$ntpicker$checked_index] }}
+        </view>
+      </picker>
+    </view>
+  </view>
+
+      
+<view>
+  <view class="common-title">
+    {{$ntitem$label}}
+    
+      
+  </view>
+    <view class="common-pannel">
+      <!--textarea-->
+      <textarea  wx:if="{{$ntitem$nttype=='area' && $ntitem$readonly}}" disabled class="common-area" value="{{$ntitem$ntvalue[$ntitem$ntkey]}}"/>
+      <textarea  wx:if="{{$ntitem$nttype=='area' && !$ntitem$readonly}}" class="common-area" bindinput="$ntitem$bindInput" placeholder="{{$ntitem$placeholder}}" value="{{$ntitem$ntvalue[$ntitem$ntkey]}}"/>
+      <!--textarea-->
+
+      <!--input-->
+      <view class="common-list" wx:if="{{$ntitem$nttype=='text'}}">
+        <view class="common-nt-full">{{$ntitem$ntvalue[$ntitem$ntkey]}}</view>
+      </view>
+      <!--input-->
+    </view>
+</view>
+
+      
+  <view class="common-title">{{ $upload$label }} <text  wx:if="{{!$upload$readonly}}">{{ $upload$save_obj[$upload$ntkey].length }}/{{ $upload$size }}</text></view>
+  <view class="common-pannel">
+    <view class="common-pic-box">
+      <view class="upload-none"  wx:if="{{$upload$readonly&&(!$upload$save_obj||$upload$save_obj[$upload$ntkey].length==0)}}">暂无</view>
+      <block  wx:for="{{$upload$save_obj[$upload$ntkey]}}" wx:key="index">
+        <view class="common-add-pic">
+          <image bindtap="$upload$viewCheck" data-index="{{index}}" class="common-add-pic-img" src="{{item}}" mode="aspectFill" lazy-load="false">
+          </image>
+          <image wx:if="{{!$upload$readonly}}" bindtap="$upload$deleteImg" data-index="{{index}}" class="capi-del" src="../../../images/delete-icon.png" mode="scaleToFill" lazy-load="false">
+          </image>
+        </view>
+      </block>
+      <image wx:if="{{!$upload$readonly&&$upload$save_obj[$upload$ntkey].length<$upload$size}}" bindtap="$upload$uploadFile" class="common-add-pic" src="../../../images/add-pic.png" mode="aspectFill" lazy-load="false">
+      </image>
+    </view>
+  </view>
+
+      <view class="customer-create-btn" bindtap="submit">提交</view>
+    </view>
+  </view>

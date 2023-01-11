@@ -1,0 +1,60 @@
+
+<view>
+    
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+    <view class="common-top">
+        <view class="common-content"/>
+    </view>
+
+    <view class="common-wrapper">
+        <block  wx:for="{{customer.transfer_log}}" wx:key="">
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">发起时间</view>
+                    <view class="common-tip">{{item.create_date}}</view>
+                    <view class="common-warning-tip">{{item.transfer_status_text}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">发起人</view>
+                    <view class="common-tip">{{item.transferor}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">转让意向</view>
+                    <view class="common-tip">{{item.intention_name}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">接单团队</view>
+                    <view class="common-tip">{{item.designated_team?item.designated_team:'-'}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">接单人</view>
+                    <view class="common-tip">{{item.accept_name}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">接单状态</view>
+                    <view class="common-tip">{{item.accept_status_text}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">成交金额</view>
+                    <view class="common-tip">{{item.total_amount}}</view>
+                </view>
+            </view>
+        </block>
+        <view class="customer-tip">*客资只可跨业务部转让，不会对现有客资造成影响</view>
+        <view class="customer-create-btn" bindtap="goToEditTurn">申请转让</view>
+    </view>
+</view>

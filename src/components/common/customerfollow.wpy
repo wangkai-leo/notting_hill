@@ -1,0 +1,116 @@
+<style lang="less">
+.common-linear-btn {
+  position: relative;
+  float: right;
+  font-size: 26rpx;
+  color: #87a6e7;
+  margin-left: 20rpx;
+}
+</style>
+
+<template>
+  <view>
+    <ntmodeaa label="接单信息">
+      <ntlistba label="接单团队" :ntvalue.sync="ntvalue" ntkey="team_name"></ntlistba>
+      <ntlistbb label="客户意向" :ntvalue.sync="ntvalue" ntkey="intention_name"></ntlistbb>
+      <ntlistbc label="销售" :ntvalue.sync="ntvalue" ntkey="sales_name"></ntlistbc>
+      <ntlistbd label="分配时间" :ntvalue.sync="ntvalue" ntkey="distribution_date"></ntlistbd>
+      <ntlistbe label="转让人" wx:if="{{user.is_server||user.is_server_offline}}" :ntvalue.sync="ntvalue" ntkey="transferor"></ntlistbe>
+    </ntmodeaa>
+    <ntmodeab label="接单状态">
+      <ntlistbf label="已接单" :ntvalue.sync="ntvalue" ntkey="accept_date"></ntlistbf>
+    </ntmodeab>
+
+    <ntmodeac label="客资状态">
+      <text slot="btn" class="common-lab-btn" wx:if="{{!customer.have_drop}}" @tap="dropCustomer">状态变更</text>
+      <text slot="btn" class="common-lab-btn" wx:if="{{customer.have_drop}}">变更审核中...</text>
+      <ntlistbg :ntvalue.sync="ntvalue" ntkey="status_name"></ntlistbg>
+    </ntmodeac>
+
+    <maintain label="跟进备注" :ntvalue.sync="ntvalue" ntkey="change_log">
+      <text class="common-lab-btn" @tap="goToLogEdit">编辑</text>
+    </maintain>
+
+    <ntmodead label="客资最新信息">
+      <text slot="btn" class="common-lab-btn" @tap="goToEditUserMsg" wx:if="{{user.is_server_offline||user.is_sale}}">编辑</text>
+      <ntlistbh label="新人称呼" :ntvalue.sync="ntvalue" ntkey="user_name"></ntlistbh>
+      <ntlistbi label="电话" :ntvalue.sync="ntvalue" ntkey="user_mobile"></ntlistbi>
+      <ntlistbj label="婚期" :ntvalue.sync="ntvalue" ntkey="wedding_date"></ntlistbj>
+      <ntlistbk label="结婚城市" :ntvalue.sync="ntvalue" ntkey="wedding_city_name"></ntlistbk>
+      <ntlistbl label="酒店桌数" :ntvalue.sync="ntvalue" ntkey="hotel_tables_number"></ntlistbl>
+      <ntlistbm label="预算" :ntvalue.sync="ntvalue" ntkey="wedding_budget"></ntlistbm>
+    </ntmodead>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import ntmode from './ntmode';
+import ntlist from './ntlist';
+import maintain from './maintain';
+export default class Index extends wepy.component {
+  props = {
+    id:{
+      type: Number,
+    },
+    customer:{
+      type: Object,
+      twoWay: true
+    },
+    ntvalue: {
+      type: Object,
+      twoWay: true
+    }
+  }
+  components = {
+    ntmodeaa: ntmode,
+    ntmodeab: ntmode,
+    ntmodeac: ntmode,
+    ntmodead: ntmode,
+
+    ntlistba: ntlist,
+    ntlistbb: ntlist,
+    ntlistbc: ntlist,
+    ntlistbd: ntlist,
+    ntlistbe: ntlist,
+    ntlistbf: ntlist,
+    ntlistbg: ntlist,
+    ntlistbh: ntlist,
+    ntlistbi: ntlist,
+    ntlistbj: ntlist,
+    ntlistbk: ntlist,
+    ntlistbl: ntlist,
+    ntlistbm: ntlist,
+    ntlistbn: ntlist,
+
+    maintain:maintain
+  };
+  data = {
+    user:null,
+    department:''
+  };
+  methods = {
+    goToEditUserMsg() {
+      wepy.navigateTo({
+        url: '/pages/common/sale/editcurstomerinfo?id=' + this.id
+      });
+    },
+    goToLogEdit() {
+      wepy.navigateTo({
+        url: '/pages/common/sale/editlog?id=' + this.id
+      });
+    },
+    dropCustomer() {
+      wepy.navigateTo({
+        url: '/pages/common/sale/chargeback?id=' + this.id
+      });
+    },
+  };
+  onLoad(options) {
+    this.user = wepy.getStorageSync('user');
+    this.department=wepy.getStorageSync('office_line');
+  }
+  onShow() {
+  }
+}
+</script>

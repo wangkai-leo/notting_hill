@@ -1,0 +1,82 @@
+
+<view>
+    
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+    <view class="common-top">
+        <view class="common-content">
+        </view>
+    </view>
+    <view class="common-wrapper">
+        <view class="common-title">套餐名称</view>
+        <view class="common-pannel">
+            <view class="common-list">
+                <view class="common-lab">{{page_info.package_name}}</view>
+            </view>
+        </view>
+        <view class="common-title">套餐清单</view>
+        <view class="common-pannel common-pannel-b">
+            <view class="server-name">冷菜</view>
+            <view class="server-msg-box">
+                <block  wx:for="{{page_info.cool}}" wx:key="">
+                    <view class="server-msg-line">
+                        <view class="server-msg-title {{item.is_delete==1?'server-msg-title-del':''}}">{{item.product_name}} {{item.change_remark?'('+item.change_remark+')':''}}
+                            <view class="menu-ch-btns">
+                                <view class="meun-change-btn" wx:if="{{item.is_delete==0&&!readonly}}">更换
+                                    <picker class="picker-common" bindchange="bindCoolChange" data-id="{{item.id}}" value="{{cool_index}}" range="{{cool_arr_rand}}">
+                                        <view class="picker">
+                                            当前选择：{{cool_arr_rand[cool_index]}}
+                                        </view>
+                                    </picker>
+                                </view>
+                                <view bindtap="deleteMenu" wx:if="{{item.is_delete==0&&!readonly}}" data-id="{{item.id}}" data-session="cool" data-index="{{index}}" class="meun-change-btn">删除</view>
+                                <view bindtap="backMenu" wx:if="{{item.is_delete==1&&!readonly}}" data-id="{{item.id}}" data-session="cool" data-index="{{index}}" class="meun-back-btn">恢复</view>
+                            </view>
+                        </view>
+                    </view>
+                </block>
+            </view>
+            <view class="server-name">热菜</view>
+            <view class="server-msg-box">
+                <block  wx:for="{{page_info.hot}}" wx:key="">
+                    <view class="server-msg-line">
+                        <view class="server-msg-title {{item.is_delete==1?'server-msg-title-del':''}}">{{item.product_name}} {{item.change_remark?'('+item.change_remark+')':''}}
+                            <view class="menu-ch-btns">
+                                <view class="meun-change-btn" wx:if="{{item.is_delete==0&&!readonly}}">更换
+                                    <picker class="picker-common" bindchange="bindHotChange" data-id="{{item.id}}" value="{{hot_index}}" range="{{hot_arr_rand}}">
+                                        <view class="picker">
+                                            当前选择：{{hot_arr_rand[hot_index]}}
+                                        </view>
+                                    </picker>
+                                </view>
+                                <view bindtap="deleteMenu" wx:if="{{item.is_delete==0&&!readonly}}" data-id="{{item.id}}" data-session="hot" data-index="{{index}}" class="meun-change-btn">删除</view>
+                                <view bindtap="backMenu" wx:if="{{item.is_delete==1&&!readonly}}" data-id="{{item.id}}" data-session="hot" data-index="{{index}}" class="meun-back-btn">恢复</view>
+                            </view>
+                        </view>
+                    </view>
+                </block>
+            </view>
+        </view>
+        <view class="customer-order-btn" bindtap="addNew" wx:if="{{!readonly}}">添加内容
+            <picker class="picker-common" mode="multiSelector" bindchange="bindAddProduct" value="{{multiIndex}}" range="{{multiArrayProduct}}">
+                <view class="picker">
+                    当前选择：{{multiArrayProduct[0][multiIndex[0]]}}，{{multiArrayProduct[1][multiIndex[1]]}}
+                </view>
+            </picker>
+        </view>
+
+    </view>
+</view>

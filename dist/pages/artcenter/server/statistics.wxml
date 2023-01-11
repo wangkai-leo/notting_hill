@@ -1,0 +1,151 @@
+
+  <view>
+    
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+    <view class="common-top">
+      <view class="common-content">
+      </view>
+    </view>
+    <view class="common-wrapper">
+      
+  <view>
+    <view class="common-pannel">
+      <view class="dep-lead-sa">
+        <view class="dep-line">
+          时间：
+          
+  <view class="inline-tis"  wx:if="{{$statistics$ntinlinepickerc$ntpickertype!='date'}}">
+    {{ $statistics$ntinlinepickerc$ntrange[$statistics$ntinlinepickerc$checked_index][$statistics$ntinlinepickerc$ntkey] }}
+    <image class="common-log-arrows-c" src="../../../images/arrows-down.png" mode="widthFix" lazy-load="false">
+    </image>
+    <picker wx:if="{{!$statistics$ntinlinepickerc$readonly}}" class="picker-common" range="{{$statistics$ntinlinepickerc$ntrange}}" range-key="{{$statistics$ntinlinepickerc$ntkey}}" bindchange="$statistics$ntinlinepickerc$bindChange">
+      <view class="picker-common-v">
+        当前选择：{{ $statistics$ntinlinepickerc$ntrange[$statistics$ntinlinepickerc$checked_index][$statistics$ntinlinepickerc$ntkey] }}
+      </view>
+    </picker>
+  </view>
+  <view class="inline-tis"  wx:if="{{$statistics$ntinlinepickerc$ntpickertype=='date'}}">
+    {{ $statistics$ntinlinepickerc$checked_name }}
+    <image class="common-log-arrows-c" src="../../../images/arrows-down.png" mode="widthFix" lazy-load="false">
+    </image>
+    <picker wx:if="{{!$statistics$ntinlinepickerc$readonly}}" class="picker-common" mode="date" bindchange="$statistics$ntinlinepickerc$bindDateChange">
+      <view class="picker-common-v">
+        当前选择：{{ $statistics$ntinlinepickerc$checked_name }}
+      </view>
+    </picker>
+  </view>
+
+          至
+          
+  <view class="inline-tis"  wx:if="{{$statistics$ntinlinepickerb$ntpickertype!='date'}}">
+    {{ $statistics$ntinlinepickerb$ntrange[$statistics$ntinlinepickerb$checked_index][$statistics$ntinlinepickerb$ntkey] }}
+    <image class="common-log-arrows-c" src="../../../images/arrows-down.png" mode="widthFix" lazy-load="false">
+    </image>
+    <picker wx:if="{{!$statistics$ntinlinepickerb$readonly}}" class="picker-common" range="{{$statistics$ntinlinepickerb$ntrange}}" range-key="{{$statistics$ntinlinepickerb$ntkey}}" bindchange="$statistics$ntinlinepickerb$bindChange">
+      <view class="picker-common-v">
+        当前选择：{{ $statistics$ntinlinepickerb$ntrange[$statistics$ntinlinepickerb$checked_index][$statistics$ntinlinepickerb$ntkey] }}
+      </view>
+    </picker>
+  </view>
+  <view class="inline-tis"  wx:if="{{$statistics$ntinlinepickerb$ntpickertype=='date'}}">
+    {{ $statistics$ntinlinepickerb$checked_name }}
+    <image class="common-log-arrows-c" src="../../../images/arrows-down.png" mode="widthFix" lazy-load="false">
+    </image>
+    <picker wx:if="{{!$statistics$ntinlinepickerb$readonly}}" class="picker-common" mode="date" bindchange="$statistics$ntinlinepickerb$bindDateChange">
+      <view class="picker-common-v">
+        当前选择：{{ $statistics$ntinlinepickerb$checked_name }}
+      </view>
+    </picker>
+  </view>
+
+        </view>
+        <view class="dep-line">
+          人员：
+  <view class="inline-tis"  wx:if="{{$statistics$ntinlinepickera$ntpickertype!='date'}}">
+    {{ $statistics$ntinlinepickera$ntrange[$statistics$ntinlinepickera$checked_index][$statistics$ntinlinepickera$ntkey] }}
+    <image class="common-log-arrows-c" src="../../../images/arrows-down.png" mode="widthFix" lazy-load="false">
+    </image>
+    <picker wx:if="{{!$statistics$ntinlinepickera$readonly}}" class="picker-common" range="{{$statistics$ntinlinepickera$ntrange}}" range-key="{{$statistics$ntinlinepickera$ntkey}}" bindchange="$statistics$ntinlinepickera$bindChange">
+      <view class="picker-common-v">
+        当前选择：{{ $statistics$ntinlinepickera$ntrange[$statistics$ntinlinepickera$checked_index][$statistics$ntinlinepickera$ntkey] }}
+      </view>
+    </picker>
+  </view>
+  <view class="inline-tis"  wx:if="{{$statistics$ntinlinepickera$ntpickertype=='date'}}">
+    {{ $statistics$ntinlinepickera$checked_name }}
+    <image class="common-log-arrows-c" src="../../../images/arrows-down.png" mode="widthFix" lazy-load="false">
+    </image>
+    <picker wx:if="{{!$statistics$ntinlinepickera$readonly}}" class="picker-common" mode="date" bindchange="$statistics$ntinlinepickera$bindDateChange">
+      <view class="picker-common-v">
+        当前选择：{{ $statistics$ntinlinepickera$checked_name }}
+      </view>
+    </picker>
+  </view>
+
+        </view>
+      </view>
+    </view>
+    <view class="common-pannel">
+      <view class="dep-base-box">
+        <view class="dep-3-c dep-3-c-bd" bindtap="$statistics$naviToList" data-view="drop">
+          <view class="dep-num-c">{{ $statistics$page_old_data.drop_user_count }}</view>
+          <view class="dep-tip-c">退客资</view>
+        </view>
+        <view class="dep-3-c dep-3-c-bd" bindtap="$statistics$naviToList" data-view="all">
+          <view class="dep-num-c">{{ $statistics$page_old_data.all_user_count }}</view>
+          <view class="dep-tip-c">总客资</view>
+        </view>
+        <view class="dep-3-c" bindtap="$statistics$naviToList" data-view="review">
+          <view class="dep-num-c">{{ $statistics$page_old_data.noreview_user_count }}</view>
+          <view class="dep-tip-c">待审核</view>
+        </view>
+      </view>
+    </view>
+    <view class="prec-tab-box">
+      <view class="prec-tab-item {{$statistics$tab_index==0?'sale-tab-item-check':''}}" bindtap="$statistics$toggleTab" data-index="0">客资数
+      </view>
+      <view class="prec-tab-item {{$statistics$tab_index==1?'sale-tab-item-check':''}}" bindtap="$statistics$toggleTab" data-index="1">成交率
+      </view>
+    </view>
+    <view class="common-pannel"  wx:if="{{ $statistics$tab_index==0 }}">
+      <block wx:for="{{$statistics$page_old_data.channel_count_list}}">
+        <view bindtap="$statistics$naviToList" data-channel="{{item.where_map}}" data-count="{{item.count}}" class="dep-3-c dep-3-c-bd {{(index+1)%3==0?'dep-3-c-bd-n':''}}">
+          <view class="dep-num-c">{{ item.count }}</view>
+          <view class="dep-tip-c">{{ item.channel_name }}</view>
+        </view>
+      </block>
+    </view>
+    <view class="common-pannel"  wx:if="{{ $statistics$tab_index==1 }}">
+      <block wx:for="{{$statistics$page_data.channel_success_list}}">
+        <view bindtap="$statistics$naviToList" data-channel="{{item.where_map}}" data-count="{{item.count}}" class="dep-3-cd dep-3-c-bd {{(index+1)%3==0?'dep-3-c-bd-n':''}}">
+          <view class="dep-num-cd">{{ item.count }}</view>
+          <view class="dep-num-cd">{{ item.prent }}</view>
+          <view class="dep-tip-c"><text>{{ item.channel_name }}</text></view>
+        </view>
+      </block>
+      <block wx:for="{{$statistics$page_data.channel_success_prent_list}}">
+        <view bindtap="$statistics$naviToList" data-channel="{{item.where_map}}" data-count="{{item.count}}" class="dep-3-cd dep-3-c-bd {{(index+1)%3==0?'dep-3-c-bd-n':''}}">
+          <view class="dep-num-cd">{{ item.count }}</view>
+          <view class="dep-num-cd">{{ item.prent }}</view>
+          <view class="dep-tip-c"><text>{{ item.channel_name }}</text></view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+    </view>
+  </view>

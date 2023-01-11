@@ -1,0 +1,405 @@
+<style lang="less">
+.common-lab {
+  width: 230rpx;
+}
+
+.common-tip {
+  width: 300rpx;
+  float: right;
+  text-align: right;
+  color: #999;
+}
+
+.common-tip {
+  color: #222;
+}
+
+.server-msg-box {
+  background: #f9f9f9;
+  padding: 35rpx 20rpx;
+  border-radius: 10rpx;
+  font-size: 26rpx;
+  margin: 20rpx 0rpx 0rpx;
+  overflow: hidden;
+}
+
+.server-msg-line {
+  overflow: hidden;
+  margin-bottom: 20rpx;
+  color: #555;
+}
+
+.server-msg-value {
+  position: relative;
+  float: right;
+  text-align: right;
+}
+
+.server-msg-title {
+  float: left;
+}
+
+.server-msg-blo {
+  font-weight: bold;
+  margin-bottom: 40rpx;
+  font-size: 24rpx;
+  color: #333;
+}
+
+.server-group {
+  border-top: #eaeaea solid 1rpx;
+  padding-top: 20rpx;
+}
+
+.server-name {
+  font-size: 26rpx;
+  color: #333;
+  padding: 40rpx 0rpx 15rpx;
+}
+
+.edit-btn {
+  position: relative;
+  float: right;
+  font-size: 28rpx;
+  color: #87a6e7;
+  height: 25rpx;
+  width: 80rpx;
+}
+
+.edit-btn-del {
+  position: relative;
+  float: right;
+  font-size: 28rpx;
+  color: #999;
+  height: 40rpx;
+  width: 80rpx;
+  padding: 20rpx 0rpx 20rpx 20rpx;
+  text-align: right;
+}
+
+.common-stauts-tip {
+  color: #fb7c7c;
+  float: right;
+}
+
+.common-checked {
+  right: 0rpx;
+  left: auto;
+  top: 25rpx;
+}
+</style>
+
+<template>
+  <view>
+    <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+    <view class="common-top">
+      <view class="common-content"></view>
+    </view>
+    <view class="common-wrapper">
+      <view class="common-title">客户信息</view>
+      <view class="common-pannel">
+        <view class="common-list">
+          <view class="common-lab">客户姓名</view>
+          <input class="common-tip" disabled value="{{taste_info.client_name}}" @input="bindInputUserName"
+            type="text" />
+        </view>
+        <view class="common-list">
+          <view class="common-lab">电话</view>
+          <input class="common-tip" disabled value="{{taste_info.client_mobile}}" @input="bindInputUserMobile"
+            type="text" />
+        </view>
+      </view>
+      <view class="common-title">新人信息</view>
+      <view class="common-pannel">
+        <view class="common-list">
+          <view class="common-lab">新郎姓名</view>
+          <input class="common-tip" disabled="{{!edit_base}}" value="{{taste_info.groom_name}}"
+            @input="bindInputGroomName" type="text" placeholder="请输入" />
+        </view>
+        <view class="common-list">
+          <view class="common-lab">新郎电话</view>
+          <input class="common-tip" disabled="{{!edit_base}}" value="{{taste_info.groom_mobile}}"
+            @input="bindInputGroomMobile" type="text" placeholder="请输入" />
+        </view>
+        <view class="common-list">
+          <view class="common-lab">新娘姓名</view>
+          <input class="common-tip" disabled="{{!edit_base}}" value="{{taste_info.bride_name}}"
+            @input="bindInputBrideName" type="text" placeholder="请输入" />
+        </view>
+        <view class="common-list">
+          <view class="common-lab">新娘电话</view>
+          <input class="common-tip" disabled="{{!edit_base}}" value="{{taste_info.bride_mobile}}"
+            @input="bindInputBrideMobile" type="text" placeholder="请输入" />
+        </view>
+        <view class="common-list">
+          <view class="common-lab">销售</view>
+          <input class="common-tip" disabled="{{!edit_base}}" value="{{taste_info.sales_name}}"
+            @input="bindInputBrideMobile" type="text" placeholder="请输入" />
+        </view>
+        <view class="common-list">
+          <view class="common-lab">策划</view>
+          <input class="common-tip" disabled="{{!edit_base}}" value="{{taste_info.planner_name}}"
+            @input="bindInputBrideMobile" type="text" placeholder="请输入" />
+        </view>
+      </view>
+      <view class="common-title">试菜信息</view>
+      <view class="common-pannel">
+        <view class="common-list">
+          <view class="common-lab">试菜类型</view>
+          <input class="common-tip" disabled="{{!edit_base}}" value="{{taste_info.try_type_text}}" type="text"
+            placeholder="请选择" />
+          <picker class="picker-common" @change="bindTryChange" value="{{try_index}}" range="{{try_type}}"
+            range-key="lable">
+            <view class="picker-common-v">
+              当前选择：{{ try_type[try_index].lable }}
+            </view>
+          </picker>
+        </view>
+        <view class="common-list">
+          <view class="common-lab">婚期</view>
+          <input class="common-tip" disabled="{{!edit_base}}" value="{{taste_info.schedule_session.schedule_date}}"
+            @input="bindInputBrideMobile" type="text" placeholder="请输入" />
+        </view>
+        <view class="common-list" @tap="goSchedule">
+          <view class="common-lab">试菜日期</view>
+          <view class="common-tip">{{ taste_info.session.schedule_date }}</view>
+        </view>
+        <view class="common-list" @tap="goSchedule">
+          <view class="common-lab">宴会厅</view>
+          <input class="common-tip" disabled value="{{taste_info.session.area_name}}" @input="bindInputAddress"
+            type="text" />
+        </view>
+        <view class="common-list" @tap="goSchedule">
+          <view class="common-lab">宴会场次</view>
+          <input class="common-tip" disabled value="{{taste_info.session.session_name}}" @input="bindInputSession"
+            type="text" />
+        </view>
+        <view class="common-list">
+          <view class="common-lab">餐段</view>
+          <input class="common-tip" value="{{taste_info.wedding_meal_section}}" @input="bindInputMeal" type="text"
+            placeholder="请输入" />
+        </view>
+        <view class="common-list">
+          <view class="common-lab">试菜时间</view>
+          <view class="common-tip">{{ taste_info.try_time ? taste_info.try_time : '' }}</view>
+          <picker class="picker-common" mode="time" @change="bindTimeChange">
+            <view class="picker-common-v">
+              当前选择：{{ taste_info.try_time }}
+            </view>
+          </picker>
+        </view>
+        <view class="common-list">
+          <view class="common-lab">婚宴餐标</view>
+          <input class="common-tip" value="{{taste_info.wedding_package_name}}" disabled @input="bindInput" type="text"
+            placeholder="请输入" />
+        </view>
+        <view class="common-list">
+          <view class="common-lab">试菜人数</view>
+          <input class="common-tip" value="{{taste_info.try_person_number}}" @input="bindInputPersonNum" type="number"
+            placeholder="请输入" />
+        </view>
+      </view>
+      <view class="common-title">备注</view>
+      <view class="common-pannel">
+        <textarea class="common-area" value="{{taste_info.remark}}" @input="bindInputMark"
+          placeholder="请输入客资的备注信息：如预算、风格、喜好等" />
+      </view>
+      <view class="customer-order-btn" @tap="submit" wx:if="{{!taste_info.task_status||taste_info.task_status==4}}">编辑菜单
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from "wepy";
+import rq from "../../../common/utils/request";
+import tool from "../../../common/utils/tool";
+
+
+import css from "../../../components/css";
+import header from "../../../components/header";
+export default class Index extends wepy.page {
+  components = {
+    css: css, //样式表
+    header: header
+  };
+  data = {
+    isopacity: true,
+    title: "试菜申请",
+    isback: true,
+    taste_info: null,
+    id: 0,
+    user_id: 0,
+    try_dishes_id: 0,
+    remark: '',
+    try_type: null,
+    try_index: 0
+  };
+  methods = {
+    bindTryChange(e) {
+      this.taste_info.try_type = this.try_type[e.detail.value].try_type;
+      this.taste_info.try_type_text = this.try_type[e.detail.value].lable;
+    },
+    bindInputMark(e) {
+      this.taste_info.remark = e.detail.value;
+    },
+    goSchedule() {
+      let that = this;
+      let data = that.taste_info; //Form's data for sumbit.
+      let info = that.taste_info.session; //Schedule's info handler.
+      //Create a new tasting list first.
+      that.id ? rq.get(
+        "confirmTryDishesApply", {
+        200: result => {
+          //Created a tasting list and get try_dishes_id.Other info is empty.
+          that.try_dishes_id = result.data.try_dishes_id;
+          that.id = false;
+          that.$apply();
+          if (!info) {
+            rq.get(
+              "getTryDishesDetail", {
+              200: result => {
+                that.taste_info = result.data.data;
+                that.taste_info.package_info = JSON.stringify(result.data.data.package_info);
+                that.$apply();
+                let info = that.taste_info.session; //Schedule's info handler.
+                wepy.navigateTo({
+                  url: 'schedule?id=' + info.id + '&order_id=' + that.try_dishes_id + '&schedule_type=' + info.schedule_type + '&area_name=' + info.area_name + '&schedule_date=' + info.schedule_date + '&session=' + info.session + '&schedule_end_date=' + info.schedule_end_date
+                });
+              }
+            }, {
+              try_dishes_id: that.try_dishes_id,
+              user_id: that.user_id
+            }
+            )
+          } else {
+            wepy.navigateTo({
+              url: 'schedule?id=' + info.id + '&order_id=' + result.data.try_dishes_id + '&schedule_type=' + info.schedule_type + '&area_name=' + info.area_name + '&schedule_date=' + info.schedule_date + '&session=' + info.session + '&schedule_end_date=' + info.schedule_end_date
+            });
+          }
+        }
+      }, data
+      ) : false;
+      //Edit tasting list directly.
+      that.try_dishes_id ? wepy.navigateTo({
+        url: 'schedule?id=' + info.id + '&order_id=' + that.taste_info.id + '&schedule_type=' + info.schedule_type + '&area_name=' + info.area_name + '&schedule_date=' + info.schedule_date + '&session=' + info.session + '&schedule_end_date=' + info.schedule_end_date
+      }) : false;
+    },
+    bindTimeChange(e) {
+      this.taste_info.try_time = e.detail.value;
+    },
+    bindDateChange(e) {
+      this.taste_info.try_date = e.detail.value;
+    },
+    submit() {
+      let that = this;
+      let data = that.taste_info;
+      that.id ? rq.get(
+        "confirmTryDishesApply", {
+        200: result => {
+          that.try_dishes_id = result.data.try_dishes_id;
+          that.id = false;
+          that.$apply();
+          wepy.navigateTo({
+            url: '/pages/common/scheme/ordermenu?try_dishes_id=' + result.data.try_dishes_id
+          });
+        }
+      }, data
+      ) : false;
+      //Save msg and navigate to
+      that.try_dishes_id ? rq.get(
+        "editTryDishesApply", {
+        200: result => {
+          that.try_dishes_id = result.data.try_dishes_id;
+          that.id = false;
+          that.$apply();
+          wepy.navigateTo({
+            url: '/pages/common/scheme/ordermenu?try_dishes_id=' + this.taste_info.id
+          })
+        }
+      }, {
+        remark: that.taste_info.remark,
+        try_type: that.taste_info.try_type,
+        try_dishes_id: that.try_dishes_id,
+        wedding_meal_section: that.taste_info.wedding_meal_section,
+        try_time: that.taste_info.try_time,
+        try_person_number: that.taste_info.try_person_number
+      }
+      ) : false;
+    },
+    bindInputUserMobile(e) {
+      this.taste_info.client_mobile = e.detail.value;
+    },
+    bindInputUserName(e) {
+      this.taste_info.client_name = e.detail.value;
+    },
+    bindInputMeal(e) {
+      this.taste_info.wedding_meal_section = e.detail.value;
+    },
+    bindInputMealDate(e) {
+      this.taste_info.try_date = e.detail.value;
+    },
+    bindInputAddress(e) {
+      this.taste_info.try_address = e.detail.value;
+    },
+    bindInputSession(e) {
+      this.taste_info.try_session = e.detail.value;
+    },
+    bindInputMealTime(e) {
+      this.taste_info.try_time = e.detail.value;
+    },
+    bindInput(e) {
+      // this.taste_info.wedding_meal_section = e.detail.value;
+    },
+    bindInputPersonNum(e) {
+      this.taste_info.try_person_number = e.detail.value;
+    }
+  };
+  onLoad(options) {
+    options = tool.decodeQrCodeParam(options);
+    let that = this;
+    that.id = options.id;
+    that.user_id = options.user_id;
+    that.try_dishes_id = options.try_dishes_id;
+  }
+  onShow() {
+    let that = this;
+    that.id ? rq.get(
+      "applyTryDishes", {
+      200: result => {
+        that.taste_info = result.data.data;
+        that.taste_info.package_info = JSON.stringify(result.data.data.package_info);
+        that.try_type = result.data.try_type;
+        that.taste_info.try_type = that.try_type[that.try_index].try_type;
+        that.taste_info.try_type_text = that.try_type[that.try_index].lable;
+        that.$apply();
+      }
+    }, {
+      order_id: that.id,
+      user_id: that.user_id
+    }
+    ) : false;
+    that.try_dishes_id ? rq.get(
+      "getTryDishesDetail", {
+      200: result => {
+        that.taste_info = result.data.data;
+        that.taste_info.package_info = JSON.stringify(result.data.data.package_info);
+        that.try_type = result.data.try_type;
+
+        let i = 0;
+        that.try_type.forEach(element => {
+          if (element.try_type == that.taste_info.try_type) {
+            that.try_index = i;
+          }
+          i++;
+        });
+        that.$apply();
+      }
+    }, {
+      try_dishes_id: that.try_dishes_id,
+      user_id: that.user_id
+    }
+    ) : false;
+  }
+}
+</script>

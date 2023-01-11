@@ -1,0 +1,45 @@
+
+    <view class="container">
+        <view  wx:if="{{!loading}}">
+            
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+            <view class="common-top">
+                <view class="common-content">
+                </view>
+            </view>
+            <view class="common-wrapper">
+                <!--列表-->
+                <block wx:for="{{userList}}" wx:key="">
+                    <!--|客服和销售-->
+                    <view class="customer-info">
+                        <view class="customer-info-header">
+                            <view class="customer-num">编号：{{item.order_id}}</view>
+                            <view class="customer-date">{{item.status_time}}</view>
+                        </view>
+                        <view class="customer-info-msgs" bindtap="goToDetail" data-id="{{item.id}}">
+                            <view class="customer-item">新人姓名：<text>{{item.user_name}}</text></view>
+                            <view class="customer-item">客资意向：<text>{{item.intention_name}}</text></view>
+                            <view class="customer-item">渠道来源：<text>{{item.channel_name}}</text></view>
+                            <view class="customer-item">客资状态：<text>{{item.status_name}}</text></view>
+                        </view>
+                    </view>
+                    <!--客服和销售|-->
+                </block>
+            </view>
+            <!--列表-->
+        </view>
+    </view>

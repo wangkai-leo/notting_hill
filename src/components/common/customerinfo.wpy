@@ -1,0 +1,101 @@
+<style lang="less">
+.common-linear-btn {
+  position: relative;
+  float: right;
+  font-size: 26rpx;
+  color: #87a6e7;
+  margin-left: 20rpx;
+}
+</style>
+
+<template>
+  <view>
+    <ntitema label="客户来源" :ntvalue.sync="ntcusinfo" ntkey="channel_name"></ntitema>
+    <ntitemb label="客户意向" :ntvalue.sync="ntcusinfo" ntkey="intention_name"></ntitemb>
+    <ntitemc label="派送客服" :ntvalue.sync="ntcusinfo" ntkey="submit_name"></ntitemc>
+
+    <ntmodea label="婚礼信息">
+      <ntlista label="意向城市" :ntvalue.sync="ntcusinfo" ntkey="intention_city_name"></ntlista>
+      <ntlistb label="结婚城市" :ntvalue.sync="ntcusinfo" ntkey="wedding_city_name"></ntlistb>
+      <ntlistc label="婚礼酒店" :ntvalue.sync="ntcusinfo" ntkey="wedding_hotel"></ntlistc>
+      <ntlistd label="婚礼时间" :ntvalue.sync="ntcusinfo" ntkey="wedding_date"></ntlistd>
+    </ntmodea>
+
+    <ntmodeb label="客户信息">
+      <ntlisth label="编号" :ntvalue.sync="ntcusinfo" ntkey="order_id">
+        <text slot="linear" class="common-linear-btn" wx:if="{{ntcusinfo.order_id}}" @tap="copyText({{ ntcusinfo.order_id }})">复制</text>
+      </ntlisth>
+      <ntliste label="客户姓名" :ntvalue.sync="ntcusinfo" ntkey="user_name">
+        <text slot="linear" class="common-linear-btn" wx:if="{{ntcusinfo.user_name}}" @tap="copyText({{ ntcusinfo.user_name }})">复制</text>
+      </ntliste>
+      <ntlistf label="手机号" :ntvalue.sync="ntcusinfo" ntkey="user_mobile">
+        <text slot="linear" class="common-linear-btn" wx:if="{{ntcusinfo.user_mobile}}" @tap="copyText({{ ntcusinfo.user_mobile }})">复制</text>
+      </ntlistf>
+      <ntlistg label="微信号" :ntvalue.sync="ntcusinfo" ntkey="wechat_id">
+        <text slot="linear" class="common-linear-btn" wx:if="{{ntcusinfo.wechat_id}}" @tap="copyText({{ ntcusinfo.wechat_id }})">复制</text>
+      </ntlistg>
+    </ntmodeb>
+    <uploada label="沟通证明" :readonly="uploada_read" :save_obj.sync="ntcusinfo" ntkey="comm_proof"></uploada>
+    <ntitemd label="备注信息" :ntvalue.sync="ntcusinfo" ntkey="user_remark" nttype="area"></ntitemd>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import ntitem from './ntitem';
+import ntmode from './ntmode';
+import ntlist from './ntlist';
+import upload from './upload';
+export default class Index extends wepy.component {
+  props = {
+    ntcusinfo: {
+      type: Object,
+      twoWay: true
+    },
+  }
+  components = {
+    ntmodea: ntmode,
+    ntmodeb: ntmode,
+    ntitema: ntitem,
+    ntitemb: ntitem,
+    ntitemc: ntitem,
+    ntitemd: ntitem,
+    ntlista: ntlist,
+    ntlistb: ntlist,
+    ntlistc: ntlist,
+    ntlistd: ntlist,
+    ntliste: ntlist,
+    ntlistf: ntlist,
+    ntlistg: ntlist,
+    ntlisth: ntlist,
+    uploada: upload,
+  };
+  data = {
+    user: null,
+    uploada_read: true,
+    department: ''
+  };
+  methods = {
+    copyText(text) {
+      wx.setClipboardData({
+        data: text,
+        success: function (res) {
+          wx.getClipboardData({
+            title: '复制成功', //提示的内容,
+            icon: 'none',
+            success: function (res) { }
+          })
+        }
+      })
+    },
+  };
+  watch = {
+  }
+  onLoad(options) {
+    this.user = wepy.getStorageSync('user');
+    this.department = wepy.getStorageSync('office_line');
+  }
+  onShow() {
+  }
+}
+</script>

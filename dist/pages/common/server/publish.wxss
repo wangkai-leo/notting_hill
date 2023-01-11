@@ -1,0 +1,4 @@
+@import "./../../../components/common/upload.wxss";
+@import "./../../../components/mpicker.wxss";
+@import "./../../../components/header.wxss";
+@import "./../../../components/css.wxss";

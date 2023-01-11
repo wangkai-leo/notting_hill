@@ -1,0 +1,53 @@
+
+  <view class="container">
+    <view class="common-top">
+      <view class="common-content">
+      </view>
+    </view>
+    
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+    <view class="common-wrapper">
+      <view class="common-user-info">
+        <view class="common-user-msg">
+          <view class="common-user-name">{{ user.employee_name }}</view>
+          <view class="common-user-position">{{ user.type_name }}</view>
+          <view class="common-user-department">{{ user.team_name }}</view>
+        </view>
+        <open-data class="common-user-avr" type="userAvatarUrl"/>
+      </view>
+      <view class="common-online-status {{user.online_status==1?'common-online-status-act':'common-online-status-lea'}}" bindtap="turn">{{ user.online_status == 1 ? '在线' : '离线' }}</view>
+      <view class="common-online-status common-online-status-act" bindtap="changeAccount"  wx:if="{{user.bind_sale_id!=0}}">切换账号</view>
+    </view>
+    <view class="proflie-fn">
+      <view class="common-title">辅助功能</view>
+      <view class="profile-reset-pass" bindtap="goTochangePassword">
+        <image class="common-pass-icon" src="../images/pass-icon.png" mode="scaleToFill" lazy-load="false">
+        </image>
+        修改密码
+        <image class="option-log-arrows" src="../images/arrows-right.png" mode="widthFix" lazy-load="false">
+        </image>
+      </view>
+      <button class="profile-reset-pass" open-type="share"  wx:if="{{department=='artcenter'}}">
+        <image class="common-pass-icon" src="../images/share-icon.png" mode="scaleToFill" lazy-load="false">
+        </image>
+        分享小程序
+        <image class="option-log-arrows" src="../images/arrows-right.png" mode="widthFix" lazy-load="false">
+        </image>
+      </button>
+    </view>
+    <view class="customer-create-btn" bindtap="logOut">退出登录</view>
+  </view>

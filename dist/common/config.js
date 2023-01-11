@@ -1,0 +1,31 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = {
+  AUTO_LOGIN: true, //是否开启微信登陆
+  AUTO_UPDATE: true, //是否提示跟新版本
+
+  MULTILINGUAL: true, //是否启用多语言
+  DEFAULT_LANG: 'en', //默认语言版本
+  LANGU_STORAGE_KEY: 'lang',
+  DEBUGING: false,
+  SHOW_LOADING: false,
+
+  HAS_BGM: false, //是否具有背景音乐
+  // BG_MUSIC:'http://res.incker.com/RefuseClassification/7.mp3',//背景音乐地址
+  // BG_STORAGE_KEY:'bg_music', //storage key值
+
+  ENV_METHOD: 'POST', //提交方式
+
+  //地址
+  // ENV_URL: 'https://nottinghill.incker.com/ndsWxapp/',
+  // ENV_URL: 'https://nottinghill-group.incker.com/ndsWxapp/',
+
+  // ENV_URL: 'https://dev-crm.nottinghillwedding.com/ndsWxapp/',
+  ENV_URL: 'https://crm.nottinghillwedding.com/ndsWxapp/',
+  OFFLICE_LINE: 'wxad7c32c969fca3be' ? 'artcenter' : 'marry'
+
+};
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNvbmZpZy5qcyJdLCJuYW1lcyI6WyJBVVRPX0xPR0lOIiwiQVVUT19VUERBVEUiLCJNVUxUSUxJTkdVQUwiLCJERUZBVUxUX0xBTkciLCJMQU5HVV9TVE9SQUdFX0tFWSIsIkRFQlVHSU5HIiwiU0hPV19MT0FESU5HIiwiSEFTX0JHTSIsIkVOVl9NRVRIT0QiLCJFTlZfVVJMIiwiT0ZGTElDRV9MSU5FIl0sIm1hcHBpbmdzIjoiOzs7OztrQkFBZTtBQUNiQSxjQUFZLElBREMsRUFDSztBQUNsQkMsZUFBYSxJQUZBLEVBRU07O0FBRW5CQyxnQkFBYyxJQUpELEVBSU87QUFDcEJDLGdCQUFhLElBTEEsRUFLSztBQUNsQkMscUJBQWtCLE1BTkw7QUFPYkMsWUFBUyxLQVBJO0FBUWJDLGdCQUFhLEtBUkE7O0FBVWJDLFdBQVEsS0FWSyxFQVVDO0FBQ2Q7QUFDQTs7QUFFQUMsY0FBWSxNQWRDLEVBY087O0FBRXBCO0FBQ0E7QUFDQTs7QUFFQTtBQUNBQyxXQUFTLDhDQXJCSTtBQXNCYkMsZ0JBQWMsdUJBQXVCLFdBQXZCLEdBQXFDOztBQXRCdEMsQyIsImZpbGUiOiJjb25maWcuanMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgZGVmYXVsdCB7XG4gIEFVVE9fTE9HSU46IHRydWUsIC8v5piv5ZCm5byA5ZCv5b6u5L+h55m76ZmGXG4gIEFVVE9fVVBEQVRFOiB0cnVlLCAvL+aYr+WQpuaPkOekuui3n+aWsOeJiOacrFxuICBcbiAgTVVMVElMSU5HVUFMOiB0cnVlLCAvL+aYr+WQpuWQr+eUqOWkmuivreiogFxuICBERUZBVUxUX0xBTkc6J2VuJywvL+m7mOiupOivreiogOeJiOacrFxuICBMQU5HVV9TVE9SQUdFX0tFWTonbGFuZycsXG4gIERFQlVHSU5HOmZhbHNlLFxuICBTSE9XX0xPQURJTkc6ZmFsc2UsXG4gIFxuICBIQVNfQkdNOmZhbHNlLC8v5piv5ZCm5YW35pyJ6IOM5pmv6Z+z5LmQXG4gIC8vIEJHX01VU0lDOidodHRwOi8vcmVzLmluY2tlci5jb20vUmVmdXNlQ2xhc3NpZmljYXRpb24vNy5tcDMnLC8v6IOM5pmv6Z+z5LmQ5Zyw5Z2AXG4gIC8vIEJHX1NUT1JBR0VfS0VZOidiZ19tdXNpYycsIC8vc3RvcmFnZSBrZXnlgLxcbiAgXG4gIEVOVl9NRVRIT0Q6ICdQT1NUJywgLy/mj5DkuqTmlrnlvI9cblxuICAvL+WcsOWdgFxuICAvLyBFTlZfVVJMOiAnaHR0cHM6Ly9ub3R0aW5naGlsbC5pbmNrZXIuY29tL25kc1d4YXBwLycsXG4gIC8vIEVOVl9VUkw6ICdodHRwczovL25vdHRpbmdoaWxsLWdyb3VwLmluY2tlci5jb20vbmRzV3hhcHAvJyxcblxuICAvLyBFTlZfVVJMOiAnaHR0cHM6Ly9kZXYtY3JtLm5vdHRpbmdoaWxsd2VkZGluZy5jb20vbmRzV3hhcHAvJyxcbiAgRU5WX1VSTDogJ2h0dHBzOi8vY3JtLm5vdHRpbmdoaWxsd2VkZGluZy5jb20vbmRzV3hhcHAvJyxcbiAgT0ZGTElDRV9MSU5FOiAnd3hhZDdjMzJjOTY5ZmNhM2JlJyA/ICdhcnRjZW50ZXInIDogJ21hcnJ5J1xuICBcbn1cbiJdfQ==

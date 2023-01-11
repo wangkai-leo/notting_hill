@@ -1,0 +1,9 @@
+@import "./../../../components/header.wxss";
+@import "./../../../components/css.wxss";
+.common-wrapper {
+  width: 700rpx;
+}
+.server-name {
+  font-size: 26rpx;
+  color: #333;
+}

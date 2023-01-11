@@ -1,0 +1,563 @@
+
+    <view>
+        
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <!--|基本信息-->
+            <view class="common-pannel">
+                <view class="common-list" bindtap="toggleDisplayBaseInfo">
+                    <view class="common-lab">基本信息</view>
+                    <image class="common-log-arrows" src="{{show_base_info?'../../../images/arrows-down.png':'../../../images/arrows-right.png'}}" mode="widthFix" lazy-load="false"/>
+                </view>
+            </view>
+            <view  wx:if="{{show_base_info}}">
+                <view class="common-ov-h">
+                    <view class="edit-btn" wx:if="{{!edit_base&&(order_info.base_info.order_status==0||order_info.base_info.order_status==4)}}" bindtap="editBaseToggle">编辑</view>
+                    <view class="edit-btn" wx:if="{{edit_base}}"><text> </text></view>
+                </view>
+                <view>
+                    <view class="common-title">签约公司</view>
+                    <view class="common-pannel">
+                        <view class="common-list">
+                            <view class="common-lab">公司名称</view>
+                            <input class="common-tip" disabled value="{{order_info.base_info.sub_company_name}}" type="text" placeholder="请选择"/>
+                            <picker class="picker-common" wx:if="{{edit_base}}" range="{{sub_company}}" range-key="sub_company_name" bindchange="bindSubCompanyChange">
+                                <view class="picker-common-v">
+                                    当前选择：{{order_info.base_info.sub_company_num_name}}
+                                </view>
+                            </picker>
+                        </view>
+                    </view>
+                    <view class="common-title">签约日期</view>
+                    <view class="common-pannel">
+                        <view class="common-list">
+                            <view class="common-lab">签约日期</view>
+                            <input class="common-tip" disabled value="{{order_info.base_info.sign_date}}" type="text" placeholder="请选择"/>
+                            <picker class="picker-common" wx:if="{{edit_base}}" mode="date" bindchange="bindDateChange">
+                                <view class="picker-common-v">
+                                    当前选择：{{payment_time}}
+                                </view>
+                            </picker>
+                        </view>
+                    </view>
+                    <view class="common-title">客户信息</view>
+                    <view class="common-pannel">
+                        <view class="common-list">
+                            <view class="common-lab">客户姓名</view>
+                            <input class="common-tip" disabled value="{{order_info.base_info.user_name}}" bindinput="bindInputUserName" type="text"/>
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">电话</view>
+                            <input class="common-tip" disabled value="{{order_info.base_info.user_mobile}}" bindinput="bindInputUserMobile" type="text"/>
+                        </view>
+                        <!-- <view class="common-list">
+                                                <view class="common-lab">客户意向</view>
+                                                <input class="common-tip" disabled value="{{order_info.base_info.intention_name}}" bindinput="bindInputUserMobile" type="text" />
+                                                <picker class="picker-common" wx:if="{{edit_base}}" bindchange="bindAttentChange" value="{{intent_index}}" range="{{intentionInfo}}" range-key="intention_name">
+                                                    <view class="picker-common-v">
+                                                    </view>
+                                                </picker>
+                                            </view> -->
+                    </view>
+                    <view class="common-title">新人信息</view>
+                    <view class="common-pannel">
+                        <view class="common-list">
+                            <view class="common-lab">新郎姓名</view>
+                            <input class="common-tip" disabled="{{!edit_base}}" value="{{order_info.base_info.groom_name}}" bindinput="bindInputGroomName" type="text" placeholder="请输入"/>
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">新郎电话</view>
+                            <input class="common-tip" disabled="{{!edit_base}}" value="{{order_info.base_info.groom_mobile}}" bindinput="bindInputGroomMobile" type="text" placeholder="请输入"/>
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">新郎微信</view>
+                            <input class="common-tip" disabled="{{!edit_base}}" value="{{order_info.base_info.groom_wechat}}" bindinput="bindInputGroomWechat" type="text" placeholder="请输入"/>
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">新娘姓名</view>
+                            <input class="common-tip" disabled="{{!edit_base}}" value="{{order_info.base_info.bride_name}}" bindinput="bindInputBrideName" type="text" placeholder="请输入"/>
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">新娘电话</view>
+                            <input class="common-tip" disabled="{{!edit_base}}" value="{{order_info.base_info.bride_mobile}}" bindinput="bindInputBrideMobile" type="text" placeholder="请输入"/>
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">新娘微信</view>
+                            <input class="common-tip" disabled="{{!edit_base}}" value="{{order_info.base_info.bride_wechat}}" bindinput="bindInputBrideWechat" type="text" placeholder="请输入"/>
+                        </view>
+                    </view>
+                    <view class="common-title">备注信息</view>
+                    <view class="common-pannel">
+                        <textarea disabled="{{!edit_base}}" class="common-area" value="{{order_info.base_info.order_remark}}" bindinput="bindInputUserName" placeholder="这里是备注信息的描述"/>
+                    </view>
+                </view>
+            </view>
+            <view class="customer-order-btn"  wx:if="{{edit_base}}" bindtap="editBaseToggle">保存</view>
+            <!--基本信息|-->
+            <!--weeding schedule-->
+            <view class="common-pannel">
+                <view class="common-list" bindtap="toggleWeedingScheduleInfo">
+                    <view class="common-lab">婚礼档期</view>
+                    <image class="common-log-arrows" src="{{display_weeding_schedule?'../../../images/arrows-down.png':'../../../images/arrows-right.png'}}" mode="widthFix" lazy-load="false"/>
+                </view>
+            </view>
+            <view wx:if="{{display_weeding_schedule}}">
+                <view class="common-ov-h">
+                    <view class="edit-btn" bindtap="editWeedingSchedule" data-del="0">编辑</view>
+                </view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <view class="common-lab">档期类型</view>
+                        <input class="common-tip" disabled value="{{order_info.schedule_session.schedule_type}}" bindinput="bindInputScheduleType" type="text"/>
+                    </view>
+                    <view class="common-list">
+                        <view class="common-lab">档期时间</view>
+                        <view class="common-tip">
+                            {{order_info.schedule_session.schedule_date}}
+                        </view>
+                        <!-- <picker class="picker-common" wx:if="{{edit_base}}" mode="date" value="{{order_info.schedule_session.wedding_date}}" bindchange="bindInputWeddingDate">
+                                                                                                                                                        <view class="picker-common-v">
+                                                                                                                                                            当前选择：{{order_info.schedule_session.wedding_date}}
+                                                                                                                                                        </view>
+                                                                                                                                                    </picker> -->
+                    </view>
+                    <view class="common-list">
+                        <view class="common-lab">宴会厅</view>
+                        <input class="common-tip" disabled value="{{order_info.schedule_session.area_name}}" bindinput="bindInputWeedingAddress" type="text"/>
+                    </view>
+                    <view class="common-list">
+                        <view class="common-lab">宴会场次</view>
+                        <input class="common-tip" disabled value="{{order_info.schedule_session.session_name}}" bindinput="bindInputWeedingSession" type="text"/>
+                    </view>
+                    <view class="common-list">
+                        <view class="common-lab">档期预留至</view>
+                        <view class="common-tip">
+                            {{order_info.schedule_session.schedule_end_date}}
+                        </view>
+                        <!-- <picker class="picker-common" wx:if="{{edit_base}}" mode="date" value="{{order_info.base_info.schedule_end_time}}" bindchange="bindInputScheduleEndTime">
+                                                                                                                                                        <view class="picker-common-v">
+                                                                                                                                                            当前选择：{{order_info.base_info.schedule_end_time}}
+                                                                                                                                                        </view>
+                                                                                                                                                    </picker> -->
+                    </view>
+                </view>
+                <block wx:for="{{order_info.sec_schedule_session}}" wx:key="">
+                    <view class="common-ov-h">
+                        <view class="edit-btn" bindtap="deleteWeedingSchedule" data-index="{{index}}">删除</view>
+                    </view>
+                    <view class="common-pannel common-pannel-mn">
+                        <view class="common-list">
+                            <view class="common-lab">档期时间</view>
+                            <view class="common-tip">
+                                {{item.schedule_date}}
+                            </view>
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">宴会厅</view>
+                            <input class="common-tip" disabled value="{{item.area_name}}" bindinput="bindInputWeedingAddress" type="text"/>
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">宴会场次</view>
+                            <input class="common-tip" disabled value="{{item.session_name}}" bindinput="bindInputWeedingSession" type="text"/>
+                        </view>
+                    </view>
+                </block>
+                <view class="common-ov-h">
+                    <view class="edit-btn edit-btn-fn" bindtap="editWeedingSchedule" data-del="2">添加副档期</view>
+                </view>
+            </view>
+            <!--weeding schedule-->
+            <!--|服务及报价-->
+            <view>
+                <view class="common-pannel">
+                    <view class="common-list" bindtap="toggleDiplayServerInfo">
+                        <view class="common-lab">服务及报价</view>
+                        <image class="common-log-arrows" src="{{show_server_info?'../../../images/arrows-down.png':'../../../images/arrows-right.png'}}" mode="widthFix" lazy-load="false"/>
+                    </view>
+                </view>
+                <view wx:if="{{show_server_info}}">
+                    <!-- <view> -->
+                    <view class="common-title">服务套餐
+                        <view class="edit-btn" wx:if="{{show_server_info&&!edit_server&&(order_info.base_info.order_status==0||order_info.base_info.order_status==4)}}" bindtap="editServerToggle">编辑</view>
+                        <view class="edit-btn" wx:if="{{show_server_info&&edit_server}}"><text> </text></view>
+                    </view>
+                    <view class="common-pannel common-pannel-b">
+                        <block wx:for="{{order_info.server_package}}" wx:key="">
+                            <view class="server-name">{{item.package_type=="婚宴"?'婚宴餐标':'婚庆套餐'}}
+                                <view wx:if="{{edit_server}}" class="edit-btn">更换
+                                    <picker wx:if="{{index==0}}" class="picker-common" bindchange="bindWeddingPackageChange" data-index="{{index}}" value="{{wedding_index}}" range="{{wedding_page}}" range-key="package_name">
+                                        <view class="picker-common-v">
+                                            当前选择：{{wedding_page[wedding_index].package_name}}
+                                        </view>
+                                    </picker>
+                                    <picker wx:if="{{index==1}}" class="picker-common" bindchange="bindPlanPackageChange" data-index="{{index}}" value="{{plan_index}}" range="{{plan_package}}" range-key="package_name">
+                                        <view class="picker-common-v">
+                                            当前选择：{{plan_package[plan_index].package_name}}
+                                        </view>
+                                    </picker>
+                                </view>
+                            </view>
+                            <view class="server-msg-box">
+                                <view class="server-msg-line server-msg-blo">
+                                    <view class="server-msg-title">{{item.package_name}}</view>
+                                    <view class="server-msg-value">所含内容</view>
+                                </view>
+                                <view class="server-msg-line">
+                                    <view class="server-msg-title">{{index==0?'菜类套餐':'单套价格'}}</view>
+                                    <view class="server-msg-value">{{item.package_price}}</view>
+                                </view>
+                                <view class="server-msg-line">
+                                    <view class="server-msg-title">单套折扣</view>
+                                    <view class="server-msg-value">{{item.package_discount_name}}
+                                        <image class="option-log-arrows-b" src="../../../images/arrows-down.png" mode="widthFix" lazy-load="false">
+                                        </image>
+                                    </view>
+                                    <picker wx:if="{{edit_server&&index==0&&wedding_page[wedding_index].package_discount_list.length>0}}" class="picker-common" bindchange="bindWeddingDiscountChange" data-index="{{index}}" value="{{discout_index}}" range="{{wedding_page[wedding_index].package_discount_list}}" range-key="discount_name">
+                                        <view class="picker-common-v">
+                                            当前选择：{{discout.wedding[discout_index].name}}
+                                        </view>
+                                    </picker>
+                                    <picker wx:if="{{edit_server&&index==1&&plan_package[plan_index].package_discount_list.length>0}}" class="picker-common" bindchange="bindWeddingDiscountChange" data-index="{{index}}" value="{{discout_index}}" range="{{plan_package[plan_index].package_discount_list}}" range-key="discount_name">
+                                        <view class="picker-common-v">
+                                            当前选择：{{discout.wedding[discout_index].name}}
+                                        </view>
+                                    </picker>
+                                </view>
+                                <view class="server-group">
+                                    <view class="server-msg-line">
+                                        <view class="server-msg-title">{{index==0?'菜类优惠':'套餐优惠'}}</view>
+                                        <input class="common-tip" disabled="{{!edit_server}}" value="{{item.package_end_price}}" bindinput="bindInputPackageEndPrice" data-index="{{index}}" type="text"/>
+                                        <!-- <input class="common-tip" disabled="{{!edit_server}}" value="{{item.package_end_price}}" bindinput="bindInputPackageEndPrice" data-index="{{index}}" type="number" placeholder="请输入" /> -->
+                                    </view>
+                                </view>
+                                <view class="server-group" wx:if="{{index==0}}">
+                                    <view class="server-msg-line">
+                                        <view class="server-msg-title">所订桌数</view>
+                                        <input class="common-tip" disabled="{{!edit_server}}" value="{{item.package_count_all}}" bindinput="bindInputPackageCountAll" data-index="{{index}}" type="number" placeholder="请输入"/>
+                                    </view>
+                                    <view class="server-msg-line">
+                                        <view class="server-msg-title">总价格</view>
+                                        <input class="common-tip" disabled value="{{item.total_price}}" bindinput="bindInputPTotalPrice" data-index="{{index}}" type="number"/>
+                                    </view>
+                                </view>
+                            </view>
+                        </block>
+                    </view>
+                    <view class="common-title">赠送服务
+                        <view wx:if="{{edit_server}}" class="edit-btn" bindtap="addPresentService">添加</view>
+                    </view>
+                    <view class="common-pannel {{!order_info.free_server||order_info.free_server.length<=0?'common-pannel-b':''}}">
+                        <view class="server-name" wx:if="{{!order_info.free_server||order_info.free_server.length<=0}}">未设置</view>
+                        <block wx:for="{{order_info.free_server}}" wx:key="">
+                            <view class="common-list">
+                                <view class="common-lab">{{item.title}}</view>
+                                <view class="common-tip">价格：{{item.subject_price}} X {{item.need_count}} <text wx:if="{{edit_server}}" class="free-count-edit" bindtap="editFreeServiceCount" data-index="{{index}}">编辑</text></view>
+                            </view>
+                        </block>
+                    </view>
+                    <!-- <view class="common-pannel common-pannel-b">
+                                                                                                                                    <view class="server-name" wx:if="{{!order_info.free_server||order_info.free_server.length<=0}}">未设置</view>
+                                                                                                                                    <block wx:for="{{order_info.free_server}}" wx:for-index="free_index">
+                                                                                                                                        <view class="server-msg-line">
+                                                                                                                                        <input class="server-name" disabled value="{{item.title}}" data-index="{{free_index}}" type="text" placeholder="请选择" />
+                                                                                                                                        <picker mode="selector" wx:if="{{free_servers_arr}}" class="picker-common" bindchange="bindPresentServiceTypeChange" data-index="{{free_index}}" value="{{index}}" range="{{free_servers_arr}}" range-key="product_name">
+                                                                                                                                            <view class="picker-common">
+                                                                                                                                                当前选择：{{free_servers_arr[index].subjet_name}}
+                                                                                                                                            </view>
+                                                                                                                                        </picker>
+                                                                                                                                        </view>
+                                                                                                                                        <view class="server-msg-box">
+                                                                                                                                            <view class="server-msg-line">
+                                                                                                                                                <view class="server-msg-title">项目单价</view>
+                                                                                                                                                <input class="server-msg-value" disabled="{{!edit_server}}" value="{{item.subject_price}}" bindinput="bindInputSubjectPrice" data-index="{{index}}" type="text" />
+                                                                                                                                            </view>
+                                                                                                                                            <view class="server-msg-line">
+                                                                                                                                                <view class="server-msg-title">所需数量</view>
+                                                                                                                                                <input class="server-msg-value" disabled="{{!edit_server}}" value="{{item.need_count}}" bindinput="bindInputNeedCount" data-index="{{index}}" type="number" />
+                                                                                                                                            </view>
+                                                                                                                                            <view wx:if="{{edit_server}}" class="edit-btn-del" bindtap="deletePresentService" data-index="{{free_index}}">删除</view>
+                                                                                                                                        </view>
+                                                                                                                                    </block>
+                                                                                                                                </view> -->
+                    <view>
+                        <view class="common-title">其他服务
+                            <view wx:if="{{edit_server}}" class="edit-btn" bindtap="addOtherServer">添加</view>
+                        </view>
+                        <view class="common-pannel common-pannel-b">
+                            <view class="server-name" wx:if="{{!order_info.other_server||order_info.other_server.length<=0}}">未设置</view>
+                            <block wx:for="{{order_info.other_server}}" wx:key="">
+                                <input class="server-name" disabled="{{!edit_server}}" value="{{item.title}}" bindinput="bindInputOtherTitle" data-index="{{index}}" type="text" placeholder="请填写"/>
+                                <view class="server-msg-box">
+                                    <!-- <view class="server-msg-line">
+                                                        <view class="server-msg-title">项目类型</view>
+                                                        <input class="server-msg-value" disabled value="{{item.subject_type}}" data-index="{{index}}" type="text" placeholder="请选择" />
+                                                        <picker mode="multiSelector" wx:if="{{edit_server}}" class="picker-common" bindchange="bindOtherServiceTypeChange" data-index="{{index}}" bindcolumnchange="bindOtherServiceColumnChange" value="{{index}}" range="{{other_service_range}}">
+                                                            <view class="picker">
+                                                                当前选择：{{other_service_range[0][other_service_muiti_index[0]]}},{{other_service_range[1][other_service_muiti_index[1]]}}
+                                                            </view>
+                                                        </picker>
+                                                    </view> -->
+                                    <view class="server-msg-line">
+                                        <view class="server-msg-title">项目单价</view>
+                                        <input class="server-msg-value" disabled="{{!edit_server}}" value="{{item.subject_price}}" bindinput="bindInputSubjectPrice" data-index="{{index}}" type="text" placeholder="请输入"/>
+                                    </view>
+                                    <view class="server-msg-line">
+                                        <view class="server-msg-title">所需数量</view>
+                                        <input class="server-msg-value" disabled="{{!edit_server}}" value="{{item.need_count}}" bindinput="bindInputNeedCount" data-index="{{index}}" type="number" placeholder="请输入"/>
+                                    </view>
+                                    <view wx:if="{{edit_server}}" class="edit-btn-del" bindtap="deleteOtherServer" data-index="{{index}}">删除</view>
+                                </view>
+                            </block>
+                            <view class="server-msg-box" wx:if="{{!edit_server&&other_service_total_price!=0}}">
+                                <view class="server-msg-line">
+                                    <view class="server-msg-title">总价格</view>
+                                    <input class="server-msg-value" disabled value="{{other_service_total_price}}" bindinput="bindInputSubjectPrice" data-index="{{index}}" type="text" placeholder="请输入"/>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                    <view class="common-title">服务报价</view>
+                    <view class="common-pannel">
+                        <view class="common-list">
+                            <view class="common-lab">服务总价格</view>
+                            <input class="common-tip" disabled="{{!edit_server}}" value="{{order_info.server_offer.server_total_price}}" bindinput="bindInputServerTotalPrice" type="number"/>
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">支付方式</view>
+                            <image class="option-log-arrows-b" src="../../../images/arrows-down.png" mode="widthFix" lazy-load="false">
+                            </image>
+                            <view class="common-tip">{{order_info.server_offer.by_stages_name}}</view>
+                            <picker wx:if="{{edit_server}}" class="picker-common" bindchange="bindIntallmentChange" data-index="{{index}}" value="{{pay_index}}" range="{{order_info.by_stages_items}}">
+                                <view class="picker-common-v">
+                                    当前选择：{{order_info.by_stages_items[by_stages_items_index]}}
+                                </view>
+                            </picker>
+                            <!-- <picker wx:if="{{edit_server}}" class="picker-common" bindchange="bindPayChange" data-index="{{index}}" value="{{pay_index}}" range="{{pay_method}}" range-key="name">
+                                                                                                                                                            <view class="picker-common-v">
+                                                                                                                                                                当前选择：{{pay_method[pay_index].name}}
+                                                                                                                                                            </view>
+                                                                                                                                                        </picker> -->
+                        </view>
+                        <view class="common-list" wx:if="{{order_info.server_offer.by_stages==0}}">
+                            <view class="common-lab">分蛋免息</view>
+                            <image class="option-log-arrows-b" src="../../../images/arrows-down.png" mode="widthFix" lazy-load="false">
+                            </image>
+                            <view class="common-tip">{{order_info.server_offer.splite_egg_interest_free==1?'免息':'不免息'}}
+                                <picker wx:if="{{edit_server}}" class="picker-common" bindchange="bindFreeChange" data-index="{{index}}" value="{{free_index}}" range="{{free_arr}}">
+                                    <view class="picker-common-v">
+                                        当前选择：{{free_arr[free_index]}}
+                                    </view>
+                                </picker>
+                            </view>
+                        </view>
+                        <view class="common-list" wx:if="{{order_info.server_offer.by_stages==0}}">
+                            <view class="common-lab">分期金额</view>
+                            <input class="common-tip" disabled="{{!edit_server}}" value="{{order_info.server_offer.by_stages_before_price}}" bindinput="bindInputByStagesBeforePrice" type="text" placeholder="请输入"/>
+                        </view>
+                        <view class="common-list" wx:if="{{order_info.server_offer.by_stages==0}}">
+                            <view class="common-lab">分期期数</view>
+                            <input class="common-tip" disabled="{{!edit_server}}" value="{{order_info.server_offer.by_stages_num}}" bindinput="bindInputByStagesNum" type="number" placeholder="请输入"/>
+                        </view>
+                        <view class="common-list" wx:if="{{order_info.server_offer.by_stages==0}}">
+                            <view class="common-lab">单期还款金</view>
+                            <input class="common-tip" disabled="{{!edit_server}}" value="{{order_info.server_offer.by_stages_unit_price}}" bindinput="bindInputByStagesUnitPrice" type="text" placeholder="请输入"/>
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">付款总价</view>
+                            <input class="common-tip" disabled="{{!edit_server}}" value="{{order_info.server_offer.by_stages_price}}" bindinput="bindInputByStagesPrice" type="number" placeholder="请输入"/>
+                        </view>
+                    </view>
+                    <view class="common-title">优惠信息</view>
+                    <view class="common-pannel">
+                        <view class="common-list">
+                            <view class="common-lab">抹零</view>
+                            <input class="common-tip" disabled="{{!edit_server}}" value="{{order_info.server_offer.splite_egg_price}}" bindblur="bindBlurSpliteEggPrice" bindinput="bindInputSpliteEggPrice" type="number" placeholder="请输入"/>
+                        </view>
+                    </view>
+                    <view class="common-title">服务最终报价</view>
+                    <view class="common-pannel">
+                        <view class="common-list">
+                            <view class="common-lab">合同最终金额</view>
+                            <input class="common-tip" disabled="{{!edit_server}}" value="{{order_info.server_offer.server_end_total_price}}" bindinput="bindInputServerEndTotalPrice" type="number" placeholder="请输入"/>
+                        </view>
+                        <!-- <view class="common-list">
+                                                                                                                                                <view class="common-lab">大写金额</view>
+                                                                                                                                                <input class="common-tip" disabled="{{!edit_server}}" value="{{order_info.server_offer.server_total_price_upper}}" bindinput="bindInputServerEndTotalUpper" type="text" placeholder="请输入" />
+                                                                                                                                            </view> -->
+                    </view>
+                    <view class="common-title">服务费用支付方式</view>
+                    <view class="common-pannel">
+                        <view class="common-list">
+                            <view class="common-lab">首款支付时间</view>
+                            <input class="common-tip" disabled value="{{order_info.server_offer.payment_first_date}}" type="number" placeholder="请选择"/>
+                            <picker class="picker-common" wx:if="{{edit_server}}" mode="date" bindchange="bindFirstDateChange">
+                                <view class="picker-common-v">
+                                    当前选择：{{payment_time}}
+                                </view>
+                            </picker>
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">首款金额</view>
+                            <input class="common-tip" disabled="{{!edit_server}}" value="{{order_info.server_offer.payment_first}}" bindinput="bindInputPaymentFirst" type="number" placeholder="请输入"/>
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">中款支付时间</view>
+                            <input class="common-tip" disabled value="{{order_info.server_offer.payment_second_date}}" type="number" placeholder="请选择"/>
+                            <picker class="picker-common" wx:if="{{edit_server}}" mode="date" bindchange="bindSecondDateChange">
+                                <view class="picker-common-v">
+                                    当前选择：{{payment_time}}
+                                </view>
+                            </picker>
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">中款金额</view>
+                            <input class="common-tip" disabled="{{!edit_server}}" value="{{order_info.server_offer.payment_second}}" bindinput="bindInputPaymentSecond" type="number" placeholder="请输入"/>
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">尾款支付时间</view>
+                            <input class="common-tip" disabled value="{{order_info.server_offer.payment_last_date}}" type="number" placeholder="请选择"/>
+                            <picker class="picker-common" wx:if="{{edit_server}}" mode="date" bindchange="bindLastDateChange">
+                                <view class="picker-common-v">
+                                    当前选择：{{payment_time}}
+                                </view>
+                            </picker>
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">尾款金额</view>
+                            <input class="common-tip" disabled="{{!edit_server}}" value="{{order_info.server_offer.payment_last}}" bindinput="bindInputPaymentLast" type="number" placeholder="请输入"/>
+                        </view>
+                    </view>
+                </view>
+                <view class="customer-order-btn" wx:if="{{edit_server}}" bindtap="editServerToggle">保存</view>
+                <view class="common-pannel">
+                    <view class="common-list" bindtap="goToMenu">
+                        <view class="common-lab">婚宴菜单</view>
+                        <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false"/>
+                    </view>
+                </view>
+                <!-- <view class="group-title">支付凭证
+                                                                                                                                                                                                        <view class="edit-btn" bindtap="goToPayLog">添加</view>
+                                                                                                                                                                                                    </view> -->
+                <view class="common-pannel">
+                    <view class="common-list" bindtap="togglePayPro">
+                        <view class="common-lab">支付凭证</view>
+                        <image class="common-log-arrows" src="{{show_pay_pro?'../../../images/arrows-down.png':'../../../images/arrows-right.png'}}" mode="widthFix" lazy-load="false"/>
+                    </view>
+                </view>
+                <view class="common-ov-h" wx:if="{{show_pay_pro}}">
+                    <view class="edit-btn" bindtap="goToPayLog">添加</view>
+                </view>
+                <view wx:if="{{show_pay_pro}}">
+                    <view class="common-pannel common-pannel-b">
+                        <view class="server-name" wx:if="{{!order_info.pay_log||order_info.pay_log.length<=0}}">暂无</view>
+                        <block wx:for="{{order_info.pay_log}}" wx:key="">
+                            <view bindtap="goToPayLogCheck" data-id="{{item.id}}" data-deposit="{{item.is_deposit}}" data-name="{{item.deposit_name}}">
+                                <view class="server-name">{{item.deposit_name}}
+                                    <view class="common-stauts-tip">{{item.status_text}}</view>
+                                </view>
+                                <view class="server-msg-box">
+                                    <view class="server-msg-line">
+                                        <view class="server-msg-title">实付金额</view>
+                                        <input class="server-msg-value" disabled value="{{item.deposit_amount}}元" bindinput="bindInputSubjectType" data-index="{{index}}" type="text" placeholder="请输入"/>
+                                    </view>
+                                    <view class="server-msg-line">
+                                        <view class="server-msg-title">支付方式</view>
+                                        <view class="common-tip">{{item.pay_type_name}}</view>
+                                    </view>
+                                    <view class="server-msg-line">
+                                        <view class="server-msg-title">支付时间</view>
+                                        <view class="common-tip">{{item.pay_date}}</view>
+                                    </view>
+                                </view>
+                                <!-- <view class="edit-btn-del" bindtap="deleteOtherServer" data-index="{{index}}">删除</view> -->
+                            </view>
+                        </block>
+                    </view>
+                </view>
+            </view>
+            <view class="common-pannel">
+                <view class="common-list" bindtap="goToContract">
+                    <view class="common-lab">合同管理</view>
+                    <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="common-pannel">
+                <view class="common-list" bindtap="navigateToRefundPage">
+                    <view class="common-lab">申请退单</view>
+                    <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="common-pannel">
+                <view class="common-list" bindtap="navigateToTaste">
+                    <view class="common-lab">试菜申请</view>
+                    <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="common-title">策划团队</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab-full">{{teams[teams_index].team_name}}</view>
+                    <image wx:if="{{(order_info.base_info.order_status==0||order_info.base_info.order_status==4)}}" class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false"/>
+                    <picker wx:if="{{(order_info.base_info.order_status==0||order_info.base_info.order_status==4)}}" class="picker-common" bindchange="bindTeamChange" data-index="{{index}}" value="{{teams_index}}" range="{{teams}}" range-key="team_name">
+                        <view class="picker-common-v">
+                            当前选择：{{teams[teams_index].team_name}}
+                        </view>
+                    </picker>
+                </view>
+            </view>
+            <view class="customer-order-btn" wx:if="{{order_info.base_info.order_status==0||order_info.base_info.order_status==4}}" bindtap="submit">确认并提交订单</view>
+            <view class="customer-create-btn" wx:if="{{order_info.base_info.order_status==2}}" bindtap="returnOrder">变更订单</view>
+        </view>
+        <view class="leo-over-bg" wx:if="{{display_free_service}}">
+            <view class="leo-over-center">
+                <view class="leo-over-pannle leo-free-service-alter">
+                    <scroll-view scroll-y class="free-scroll-y-box">
+                        <block wx:for="{{free_servers_arr}}" wx:key="">
+                            <view class="free_service_order" bindtap="toggleChecked" data-index="{{index}}">
+                                <checkbox-group bindchange="checkedChange" data-key="{{item.key}}">
+                                    <checkbox disabled class="common-checked" value="{{item.key}}" checked="{{item.checked}}" name="id"/>
+                                </checkbox-group>
+                                <view class="free_service_name">{{item.product_name}}</view>
+                            </view>
+                        </block>
+                    </scroll-view>
+                    <view class="free-service-sure" bindtap="freeServiceAdd">添加</view>
+                </view>
+            </view>
+        </view>
+        <view class="leo-over-bg" wx:if="{{display_edit_free_count}}">
+            <view class="leo-over-center">
+                <view class="leo-over-pannle leo-lop-count">
+                    <view class="free-service-edit-box">
+                        <view class="free-service-title">{{order_info.free_server[free_server_eidt_index].title}}</view>
+                        <view class="free-service-count">所需数量：
+                            <input class="free-service-input" bindinput="bindInputFreeCount" value="{{order_info.free_server[free_server_eidt_index].need_count}}" type="number" placeholder="请输入" maxlength="140"/>
+                        </view>
+                        <view class="delete-item" bindtap="deleteItem">取消</view>
+                        <view class="change-item" bindtap="changeItem">确认修改</view>
+                    </view>
+                </view>
+            </view>
+        </view>
+        <modal wx:if="{{display_return}}" confirm-text="确定" cancel-text="取消" bindcancel="cancelReturn" bindconfirm="confirmReturn">
+            变更订单后，订单将自动驳回，是否确认变更？
+        </modal>
+    </view>

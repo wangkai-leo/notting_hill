@@ -1,0 +1,11 @@
+.inline-tis {
+  position: relative;
+  display: inline-block;
+  color: #999;
+}
+.common-log-arrows-c {
+  margin-left: 10rpx;
+  margin-top: 5rpx;
+  float: right;
+  width: 26rpx;
+}

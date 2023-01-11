@@ -1,0 +1,145 @@
+
+    <view>
+        
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+        <view class="common-top">
+            <view class="common-content"/>
+        </view>
+        <view class="common-wrapper">
+            <!--|基本信息-->
+            <view>
+                <view>
+                    <view class="common-title">合同编号</view>
+                    <view class="common-pannel">
+                        <view class="common-list">
+                            <view class="common-tip-line">
+                                {{task_info.main_contract}}
+                            </view>
+                        </view>
+                    </view>
+                    <view class="common-title">活动信息</view>
+                    <view class="common-pannel">
+                        <view class="common-list">
+                            <view class="common-lab">新郎姓名</view>
+                            <input class="common-tip" disabled value="{{task_info.groom_name}}" type="text" placeholder="请输入"/>
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">新娘姓名</view>
+                            <input class="common-tip" disabled value="{{task_info.bride_name}}" type="text" placeholder="请输入"/>
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">销售</view>
+                            <input class="common-tip" disabled value="{{task_info.sales_name}}" type="text" placeholder="请输入"/>
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">策划</view>
+                            <input class="common-tip" disabled value="{{task_info.planner_name}}" type="text" placeholder="请输入"/>
+                        </view>
+                    </view>
+                    <view class="common-title">活动时间</view>
+                    <view class="common-pannel">
+                        <view class="common-list">
+                            <view class="common-lab">婚礼日期</view>
+                            <input class="common-tip" disabled value="{{task_info.schedule_session.schedule_date}}" type="text" placeholder="请输入"/>
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">宴会厅</view>
+                            <view class="common-tip">{{task_info.schedule_session.area_name}}</view>
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">宴会场次</view>
+                            <input class="common-tip" disabled value="{{task_info.schedule_session.session_name}}" type="text" placeholder="请输入"/>
+                        </view>
+                        <!-- <view class="common-list">
+                            <view class="common-lab">餐段</view>
+                            <input class="common-tip" disabled bindinput="bindInputMealSection" value="{{task_info.wedding_meal_section}}" type="text" />
+                        </view> -->
+                    </view>
+                    <view class="common-title">活动需求</view>
+                    <view class="common-pannel">
+                        <view class="common-list">
+                            <view class="common-lab">台型</view>
+                            <input class="common-tip" disabled bindinput="bindInputTableType" value="{{task_info.wedding_table_type}}" type="text"/>
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">桌数</view>
+                            <input class="common-tip" disabled value="{{task_info.wedding_table_number}}" bindinput="bindInputTableNumber" type="text"/>
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">宴会餐标</view>
+                            <view class="common-tip flesh-btn" bindtap="goToMenu">{{task_info.wedding_package_name}}</view>
+                        </view>
+                    </view>
+                </view>
+                <view class="common-title">最终菜单</view>
+                <view class="common-pannel common-pannel-b">
+                    <view class="server-name">冷菜</view>
+                    <view class="server-msg-box">
+                        <block  wx:for="{{task_info.package_info.cool}}" wx:key="">
+                            <view class="server-msg-line">
+                                <view class="server-msg-title {{item.is_delete==1?'server-msg-title-del':''}}">{{item.product_name}} {{item.change_remark?'('+item.change_remark+')':''}}
+                                </view>
+                            </view>
+                        </block>
+                    </view>
+                    <view class="server-name">热菜</view>
+                    <view class="server-msg-box">
+                        <block  wx:for="{{task_info.package_info.hot}}" wx:key="">
+                            <view class="server-msg-line">
+                                <view class="server-msg-title {{item.is_delete==1?'server-msg-title-del':''}}">{{item.product_name}} {{item.change_remark?'('+item.change_remark+')':''}}
+                                </view>
+                            </view>
+                        </block>
+                    </view>
+                </view>
+            </view>
+            <!--基本信息|-->
+            <view class="common-title">运营须知</view>
+            <view class="common-pannel">
+                <textarea disabled class="common-area" value="{{task_info.instruction_operation}}" bindinput="bindInputOperationMark" placeholder="请输入"/>
+            </view>
+            <view class="common-title">宴会厅须知</view>
+            <view class="common-pannel">
+                <textarea disabled class="common-area" value="{{task_info.instruction_room}}" bindinput="bindInputRoomMark" placeholder="请输入"/>
+            </view>
+            <view class="common-title">工程部须知</view>
+            <view class="common-pannel">
+                <textarea disabled class="common-area" value="{{task_info.instruction_engineering}}" bindinput="bindInputEnginnerMark" placeholder="请输入"/>
+            </view>
+            <view class="common-title">厨房须知</view>
+            <view class="common-pannel">
+                <textarea disabled class="common-area" value="{{task_info.instruction_kitchen}}" bindinput="bindInputKitchenMark" placeholder="请输入"/>
+            </view>
+            <view wx:if="{{task_info.is_distribution==0}}">
+                <view class="common-title">指定人员</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        {{employee_rand[employee_index]}}
+                        <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                        </image>
+                        <picker class="picker-common" bindchange="bindTeamChange" value="{{employee_index}}" range="{{employee_rand}}">
+                            <view class="picker-common-v">
+                                当前选择：{{employee_rand[employee_index]}}
+                            </view>
+                        </picker>
+                    </view>
+                </view>
+                <view class="customer-order-btn" bindtap="submit">分配任务</view>
+                <view class="customer-rollback-btn" bindtap="rollback">驳回申请</view>
+            </view>
+        </view>
+    </view>

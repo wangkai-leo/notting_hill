@@ -1,0 +1,177 @@
+
+    <view>
+        
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <view class="common-title">客户来源</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab common-lab-line">{{customer.channel_name}}</view>
+                    <!-- <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                                </image>
+                                <picker class="picker-common" bindchange="bindChannelChange" value="{{channel_index}}" range="{{page_data.channelInfo}}" range-key="channel_name">
+                                    <view class="picker-common-v">
+                                        当前选择：{{page_data.channelInfo[channel_index].channel_name}}
+                                    </view>
+                                </picker> -->
+                </view>
+            </view>
+            <view class="common-title">客户意向</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab-full">{{page_data.intentionInfo[intent_index].intention_name}}</view>
+                    <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                    </image>
+                    <picker class="picker-common" bindchange="bindAttentChange" value="{{intent_index}}" range="{{page_data.intentionInfo}}" range-key="intention_name">
+                        <view class="picker-common-v">
+                            {{page_data.intentionInfo[intent_index].intention_name}}
+                        </view>
+                    </picker>
+                </view>
+            </view>
+            <view class="common-title">婚礼信息</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">接单城市</view>
+                    <view class="common-tip">{{page_data.cityInfo[attend_city_index].city_name}}</view>
+                    <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                    </image>
+                    <picker class="picker-common" bindchange="bindAttendCityChange" value="{{attend_city_index}}" range="{{page_data.cityInfo}}" range-key="city_name">
+                        <view class="picker-common-v">
+                            当前选择：{{page_data.cityInfo[attend_city_index].city_name}}
+                        </view>
+                    </picker>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">结婚城市</view>
+                    <view class="common-tip">{{region[0]}} {{region[1]}} {{region[2]}}</view>
+                    <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                    </image>
+                    <picker mode="region" class="picker-common" bindchange="bindMerryCityChange" value="{{region}}">
+                        <view class="picker-common-v">
+                            当前选择：{{region[0]}}，{{region[1]}}，{{region[2]}}
+                        </view>
+                    </picker>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">婚礼酒店</view>
+                    <input class="common-tip" bindinput="bindInputHotel" value="{{wedding_hotel}}" type="text" placeholder="请输入婚礼酒店"/>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">婚礼时间</view>
+                    <!-- <view class="common-tip">{{merry_date}}</view> -->
+                    <input class="common-tip" bindinput="bindInputMerryDate" value="{{merry_date}}" type="text" placeholder="请输入婚礼时间"/>
+                    <!-- <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                                                                    </image> -->
+                    <!-- <picker class="picker-common" mode="date" value="{{merry_date}}" bindchange="bindMerryDateChange">
+                                                                        <view class="picker-common-v">
+                                                                            当前选择：{{merry_date}}
+                                                                        </view>
+                                                                    </picker> -->
+                </view>
+            </view>
+            <view class="common-title">客户信息</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">客户姓名</view>
+                    <input class="common-tip" bindinput="bindInputUserName" disabled value="{{user_name}}" type="text"/>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">手机号</view>
+                    <input class="common-tip" value="{{user_mobile}}" type="number" disabled bindinput="bindInputUserMobile" bindblur="checkPhoneNume"/>
+                    <view class="common-warning-tip"  wx:if="{{exit_user}}">客资已存在</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">微信号</view>
+                    <input class="common-tip" value="{{wechat_id}}" disabled type="text" bindinput="bindInputWxCount" bindblur="checkPhoneNume"/>
+                </view>
+                <view class="common-swiper-box"  wx:if="{{exit_user}}">
+                    <view class="common-swiper-title">
+                        <view class="common-left-right">
+                            <view class="common-swt-lab">来访记录</view>
+                            <view class="common-swt-tip">详情</view>
+                        </view>
+                        <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                        </image>
+                    </view>
+                    <view class="swiper-container-common">
+                        <view class="com-swt-box">
+                            <view class="com-swt-list">日期：<text>{{exit_user.status_time}}</text></view>
+                            <view class="com-swt-list">编号：<text>{{exit_user.channel_name}}</text></view>
+                            <view class="com-swt-list">渠道：<text>{{exit_user.channel_name}}</text></view>
+                            <view class="com-swt-list">意向：<text>{{exit_user.intention_name}}</text></view>
+                            <view class="com-swt-list">销售：<text>{{exit_user.sales_name}}</text></view>
+                            <view class="com-swt-list">状态：<text>{{exit_user.status_name}}</text></view>
+                        </view>
+                        <view class="com-swt-close" bindtap="closeUser" wx:if="{{exit_user.user_status==20}}" data-id="{{exit_user.id}}">关闭客资</view>
+                    </view>
+                </view>
+            </view>
+            <view class="common-title">沟通证明 {{show_img_arr.length}}/9</view>
+            <view class="common-pannel">
+                <view class="common-pic-box">
+                    <block wx:for="{{show_img_arr}}" wx:key="">
+                        <image class="common-add-pic" src="{{item}}" mode="aspectFill" lazy-load="false">
+                        </image>
+                    </block>
+                    <image wx:if="{{show_img_arr.length<9}}" bindtap="uploadFile" class="common-add-pic" src="../../../images/add-pic.png" mode="aspectFill" lazy-load="false">
+                    </image>
+                </view>
+            </view>
+            <view class="common-title">备注信息</view>
+            <view class="common-pannel">
+                <textarea class="common-area" value="{{user_remark}}" bindinput="bindInputMark" placeholder="请输入客资的备注信息：如预算、风格、喜好等"/>
+            </view>
+            <view>
+                <view class="common-title">接单信息</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <view class="common-lab-full">{{teams[teams_index].team_name}}</view>
+                        <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                        </image>
+                        <picker class="picker-common" value="{{teams_index}}" range="{{teams}}" range-key="team_name" bindchange="bindInputTeamChange">
+                            <view class="picker-common-v">
+                                当前选择：{{teams[teams_index].team_name}}
+                            </view>
+                        </picker>
+                    </view>
+                    <view class="common-list">
+                        <view class="common-lab-full">{{team_members[team_members_index].employee_name}}</view>
+                        <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                        </image>
+                        <picker class="picker-common" value="{{team_members_index}}" range="{{team_members}}" range-key="employee_name" bindchange="bindChangeEmployee">
+                            <view class="picker-common-v">
+                                当前选择：{{team_members[team_members_index].employee_name}}
+                            </view>
+                        </picker>
+                    </view>
+                </view>
+                <!-- <view class="common-check-wrap" bindtap="toggleAutoAllot">
+                                                                    <view class="common-check-box">
+                                                                        <image class="common-checked" wx:if="{{auto_allot}}" src="../../../images/checked-icon.png" mode="widthFix" lazy-load="false">
+                                                                        </image>
+                                                                    </view>
+                                                                    客资自动分配
+                                                                </view> -->
+            </view>
+            <view class="customer-create-btn" bindtap="submit">确认并分配</view>
+        </view>
+    </view>

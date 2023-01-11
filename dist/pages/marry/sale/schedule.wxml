@@ -1,0 +1,107 @@
+
+  <view>
+    
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+    <view class="common-top">
+      <view class="common-content"/>
+    </view>
+    <view class="common-wrapper">
+      <view class="common-title">档期类型</view>
+      <view class="common-pannel">
+        <view class="common-list">
+          <view class="common-lab-full">{{ schedule_type[schedule_type_index] }}</view>
+          <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+          </image>
+          <picker class="picker-common" bindchange="bindScheduleTypeChange" data-index="{{index}}" value="{{schedule_type_index}}" range="{{schedule_type}}">
+            <view class="picker-common-v">
+              当前选择：{{ schedule_type[schedule_type_index] }}
+            </view>
+          </picker>
+        </view>
+      </view>
+      <view  wx:if="{{schedule_type_index==0}}">
+        <view class="common-title">档期预留时间</view>
+        <view class="common-pannel">
+          <view class="common-list">
+            <view class="common-lab-full">{{ schedule_remain_date }}</view>
+            <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+            </image>
+            <picker mode="date" class="picker-common" bindchange="bindScheduleRemainChange">
+              <view class="picker-common-v">
+                当前选择：{{ schedule_remain_date }}
+              </view>
+            </picker>
+          </view>
+        </view>
+      </view>
+      <view class="common-title">档期时间</view>
+      <view class="cand-con">
+        <view class="week-dd-sr">
+          <view class="month-choice-t">
+            <view class="monthn-curr">{{ all_month[show_month_num - 1] }} {{ show_year }}</view>
+            <view class="pre-btn" bindtap="preMonth">
+              <image class="month-change" src="../../../images/pre-month.png" mode="scaleToFill" lazy-load="false">
+              </image>
+            </view>
+            <view class="next-btn" bindtap="nextMonth">
+              <image class="month-change" src="../../../images/next-month.png" mode="scaleToFill" lazy-load="false">
+              </image>
+            </view>
+          </view>
+          <view class="week-title">
+            <block  wx:for="{{one_wekk_tit_cn}}" wx:key="">
+              <view class="week-d-a month-dd-th">{{ one_wekk_tit_cn[index] }}</view>
+            </block>
+          </view>
+        </view>
+        <view class="week-dd-content">
+          <view class="week-dd-box">
+            <block wx:for="{{full_one_month}}" wx:key="">
+              <view class="schedule-line">
+                <block wx:for="{{item}}" wx:for-item="date">
+                  <view class="month-dd-ey {{date.current?'':'week-day-end'}} {{date_time.check_format==date.full?'week-day-check':''}}" bindtap="selectDay" data-date="{{date.full}}" data-current="{{date.current}}">{{ date.num }}</view>
+                </block>
+              </view>
+            </block>
+          </view>
+        </view>
+      </view>
+      <view class="">
+        <view class="session-date">{{ date_time.check_format }} {{ week_name_cn }}</view>
+        <block wx:for="{{session_list}}" wx:key="" wx:for-index="area_index">
+          <view class="session">
+            <view class="session-address">{{ item.area_name }}</view>
+            <view class="session-address-descript">{{ item.area_remark }}</view>
+            <view class="session-box">
+              <block wx:for="{{item.session}}" wx:key="" wx:for-index="session_index">
+                <view class="session-item">
+                  <text>{{ item.session_name }}</text>
+                  <text class="session-remark" wx:if="{{item.session_remark}}">({{ item.session_remark }})</text>
+                  <view class="session-check" wx:if="{{item.is_book==0}}" bindtap="checkedSession" data-aindex="{{area_index}}" data-sindex="{{session_index}}">选定</view>
+                  <view class="session-disable" wx:if="{{item.is_book==1}}">已选定</view>
+                  <view class="session-disable" wx:if="{{item.is_book==2}}">不可选</view>
+                </view>
+              </block>
+            </view>
+          </view>
+        </block>
+        <view class="session session-empty" wx:if="{{session_list.length<=0}}">今日无档期</view>
+      </view>
+      <view class="customer-order-btn" bindtap="submit">提交档期</view>
+      <view class="customer-order-btn" bindtap="cancel" wx:if="{{has_schedule}}">取消档期</view>
+    </view>
+  </view>

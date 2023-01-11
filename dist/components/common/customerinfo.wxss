@@ -1,0 +1,11 @@
+@import "./upload.wxss";
+@import "./ntlist.wxss";
+@import "./ntitem.wxss";
+@import "./ntmode.wxss";
+.common-linear-btn {
+  position: relative;
+  float: right;
+  font-size: 26rpx;
+  color: #87a6e7;
+  margin-left: 20rpx;
+}

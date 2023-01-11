@@ -1,0 +1,305 @@
+<style lang="less">
+.common-wrapper {
+  width: 700rpx;
+}
+</style>
+
+<template>
+  <view>
+    <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+    <view class="common-top">
+      <view class="common-content"></view>
+    </view>
+    <view class="common-wrapper">
+      <view wx:if="{{del_flg!=2}}">
+        <view class="common-title">档期类型</view>
+        <view class="common-pannel">
+          <view class="common-list">
+            <view class="common-lab-full">{{ schedule_type[schedule_type_index] }}</view>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{schedule_type_index==0&&del_flg!=2}}">
+        <view class="common-title">档期预留时间</view>
+        <view class="common-pannel">
+          <view class="common-list">
+            <view class="common-lab-full">{{ schedule_remain_date }}</view>
+            <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+            </image>
+            <picker mode="date" class="picker-common" @change="bindScheduleRemainChange">
+              <view class="picker-common-v">
+                当前选择：{{ schedule_remain_date }}
+              </view>
+            </picker>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{schedule_type_index==0}}">
+        <view class="common-title">档期时间</view>
+        <view class="common-pannel">
+          <view class="common-list">
+            <view class="common-lab-full">{{ date_time.check_format }}</view>
+            <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+            </image>
+            <picker mode="date" class="picker-common" @change="bindScheduleDateChange">
+              <view class="picker-common-v">
+                当前选择：{{ date_time.check_format }}
+              </view>
+            </picker>
+          </view>
+        </view>
+      </view>
+      <view class="">
+        <view class="session-date">{{ date_time.check_format }} {{ week_name_cn }}</view>
+        <block wx:for="{{session_list}}" wx:key="" wx:for-index="area_index">
+          <view class="session">
+            <view class="session-address">{{ item.area_name }}</view>
+            <view class="session-address-descript">{{ item.area_remark }}</view>
+            <view class="session-box">
+              <block wx:for="{{item.session}}" wx:key="" wx:for-index="session_index">
+                <view class="session-item">
+                  <text>{{ item.session_name }}</text>
+                  <text class="session-remark" wx:if="{{item.session_remark}}">({{ item.session_remark }})</text>
+                  <view class="session-check" wx:if="{{item.is_book==0}}" @tap="checkedSession"
+                    data-aindex="{{area_index}}" data-sindex="{{session_index}}">选定</view>
+                  <view class="session-disable" wx:if="{{item.is_book==1}}">已选定</view>
+                  <view class="session-disable" wx:if="{{item.is_book==2}}">不可选</view>
+                </view>
+              </block>
+            </view>
+          </view>
+        </block>
+        <view class="session session-empty" wx:if="{{session_list.length<=0}}">今日无档期</view>
+      </view>
+      <view class="customer-order-btn" @tap="submit">提交档期</view>
+      <view class="customer-order-btn" @tap="cancel" wx:if="{{has_schedule}}">取消档期</view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from "wepy";
+import G from "../../../common/global";
+import rq from "../../../common/utils/request";
+import tool from "../../../common/utils/tool";
+import validate from "../../../common/utils/validate";
+import storage from "../../../common/utils/storage";
+import dat from "../../../common/utils/date";
+import file from "../../../common/utils/file";
+
+
+import css from "../../../components/css";
+import header from "../../../components/header";
+export default class Index extends wepy.page {
+  components = {
+    css: css, //样式表
+    header: header
+  };
+  data = {
+    isopacity: true,
+    title: "婚礼档期",
+    isback: true,
+    customer: null,
+    id: "",
+    schedule_type: ['选定', '预定', '锁定'],
+    date_time: {
+      now: new Date(), //current time
+      check_format: '', // 选择的格式化时间  yyyy-MM-dd
+      show_week_date: '', //日期时间, 用来获取该时间点的一周时间
+      show_month_date: '' //用来显示月份的时间
+    },
+    one_week_tit_cn: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'], //星期简称
+    one_week: [], //Mdd //显示的日期
+    full_one_week: [], //yyyy-MM-dd //完整的日期
+    full_one_week_has: [], //判断一周时间的某一天是否具有活动
+    full_one_month: [], //该月的日期
+    all_month: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'], //月份简称
+    show_month_num: 0,
+    show_year: 2019,
+    week_name_cn: '',
+    session_list: null,
+    schedule_type_index: 0,
+    schedule_remain_date: '',
+    aindex: -1,
+    sindex: -1,
+    order_id: -1,
+    has_schedule: false,
+    del_flg: 0
+  };
+  methods = {
+    cancel() {
+      let that = this;
+      rq.get('cancelWeddingSchedule', {
+        200: result => {
+          wepy.navigateBack({
+            delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+          });
+          that.$apply();
+        }
+      }, {
+        order_id: that.order_id,
+        schedule_type: that.schedule_type[that.schedule_type_index]
+      })
+    },
+    submit() {
+      if (this.schedule_type_index == 0 && this.schedule_remain_date == '') {
+        // wepy.showToast({
+        //     title: '请选择档期预留时间', //提示的内容,
+        //     icon: 'none', //图标,
+        //     duration: 2000, //延迟时间,
+        //     mask: true, //显示透明蒙层，防止触摸穿透,
+        //     success: res => {}
+        // });
+        // return false;
+      } else if (this.aindex == -1 || this.sindex == -1) {
+        wepy.showToast({
+          title: '请选择需要预定的场次', //提示的内容,
+          icon: 'none', //图标,
+          duration: 2000, //延迟时间,
+          mask: true, //显示透明蒙层，防止触摸穿透,
+          success: res => { }
+        });
+        return false;
+      }
+      let that = this;
+      // let json_code='"[{"area_id":'+that.session_list[this.aindex].area_id+',"session":'+(this.sindex+1)+'}]"'
+      let json_code = [{
+        area_id: that.session_list[this.aindex].area_id,
+        session: (this.sindex + 1)
+      }]
+      let api = ''
+      if (that.has_schedule) {
+        api = 'editWeddingSchedule'
+      } else {
+        api = 'addWeddingSchedule'
+      }
+      let data = {};
+      if (this.del_flg == 2) {
+        data = {
+          schedule_date: that.date_time.check_format,
+          order_id: that.order_id,
+          schedule_type: that.schedule_type[that.schedule_type_index],
+          schedule_id: that.id,
+          json_data: JSON.stringify(json_code),
+          del_flg: 2
+        }
+      } else {
+        data = {
+          schedule_date: that.date_time.check_format,
+          order_id: that.order_id,
+          schedule_end_date: that.schedule_remain_date,
+          schedule_type: that.schedule_type[that.schedule_type_index],
+          schedule_id: that.id,
+          json_data: JSON.stringify(json_code)
+        }
+      }
+      rq.get(api, {
+        200: result => {
+          wepy.navigateBack({
+            delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+          });
+          that.$apply();
+        }
+      }, data)
+    },
+    checkedSession(e) {
+      if (this.aindex != -1) {
+        this.session_list[this.aindex].session[this.sindex].is_book = 0;
+      }
+      let aindex = this.aindex = e.currentTarget.dataset.aindex;
+      let sindex = this.sindex = e.currentTarget.dataset.sindex;
+      this.session_list[aindex].session[sindex].is_book = 1;
+    },
+    bindScheduleRemainChange(e) {
+      this.schedule_remain_date = e.detail.value;
+    },
+    bindScheduleDateChange(e) {
+      this.date_time.check_format = e.detail.value;
+      this.getAreaSession(this.date_time.check_format);
+    },
+    bindScheduleTypeChange(e) {
+      this.schedule_type_index = e.detail.value;
+    },
+    //上一个月
+    preMonth() {
+      this.show_category = false;
+      this.show_days_category = false;
+      let cur_d = dat.dateFormat('yyyy-MM-dd', this.date_time.show_month_date);
+      console.log('当前显示时间：');
+      console.log(cur_d);
+      this.date_time.show_month_date = new Date(dat.getPreMonth(cur_d).replace(/-/g, "/"));
+      this.setOneMonth(this.date_time.show_month_date);
+    },
+    //下一个月
+    nextMonth() {
+      this.show_category = false;
+      this.show_days_category = false;
+      let cur_d = dat.dateFormat('yyyy-MM-dd', this.date_time.show_month_date);
+      console.log('当前显示时间：');
+      this.date_time.show_month_date = new Date(dat.getNextMonth(cur_d).replace(/-/g, "/"));
+      this.setOneMonth(this.date_time.show_month_date);
+    },
+    //当前日期
+    selectDay(e) {
+      let is_current_month = e.currentTarget.dataset.current;
+      if (!is_current_month) {
+        return false;
+      }
+      this.show_category = false;
+      this.show_days_category = false;
+      this.date_time.check_format = e.currentTarget.dataset.date; //选择的日期
+      this.no_empty = e.currentTarget.dataset.has;
+      this.show_month_num = dat.getMonth(new Date(e.currentTarget.dataset.date));
+      this.show_month = false;
+      this.date_time.show_week_date = new Date(e.currentTarget.dataset.date);
+      // this.setOneMonth(new Date(e.currentTarget.dataset.date));
+      //Search session for current day.
+      this.getAreaSession(this.date_time.check_format);
+    }
+  };
+  onLoad(options) {
+    options = tool.decodeQrCodeParam(options);
+    let that = this;
+    that.id = options.id;
+    that.order_id = options.order_id;
+    this.del_flg = options.del_flg;
+    if (options.schedule_date && options.schedule_date != "undefined") {
+      this.date_time.check_format = options.schedule_date;
+      this.has_schedule = true;
+    } else {
+      this.date_time.check_format = dat.dateFormat('yyyy-MM-dd', this.date_time.now);
+    }
+    if (options.schedule_end_date && options.schedule_end_date != "undefined") {
+      this.schedule_remain_date = options.schedule_end_date;
+    }
+    this.date_time.show_week_date = new Date();
+    this.date_time.show_month_date = new Date();
+    this.setOneMonth(new Date()); //设置一个月
+    this.getAreaSession(this.date_time.check_format);
+  }
+  getAreaSession(c_date) {
+    let that = this;
+    rq.get('getAreaSession', {
+      200: result => {
+        that.session_list = result.data.data;
+        let week_index = dat.getWeek(new Date(Date.parse(c_date.replace(/-/g, "/"))));
+        that.week_name_cn = that.one_week_tit_cn[week_index];
+        that.aindex = -1;
+        that.sindex = -1;
+        that.$apply();
+      }
+    }, {
+      schedule_date: c_date
+    })
+  }
+  //设置一月内是否具有活动
+  setOneMonth(c_date) {
+    this.full_one_month = dat.getMonthEveryDay(c_date); //一月的所有日期
+    console.log('月份');
+    console.log(this.full_one_month);
+    this.show_month_num = dat.getMonth(c_date); // 设置该时间的月份
+    this.show_year = dat.getYear(c_date); //设置该时间的年份
+  }
+  onShow() { }
+}
+</script>

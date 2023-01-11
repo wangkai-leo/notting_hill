@@ -1,0 +1,14 @@
+.common-title {
+  position: relative;
+  font-size: 28rpx;
+  line-height: 50rpx;
+  padding-left: 20rpx;
+  margin-bottom: 15rpx;
+}
+.common-pannel {
+  background-color: #fff;
+  border-radius: 20rpx;
+  padding: 0rpx 25rpx;
+  box-shadow: #dce1fc 0rpx 0rpx 20rpx;
+  margin-bottom: 40rpx;
+}

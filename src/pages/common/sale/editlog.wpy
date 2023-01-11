@@ -1,0 +1,107 @@
+<style lang="less">
+</style>
+
+<template>
+  <view>
+    <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+    <view class="common-top">
+      <view class="common-content"></view>
+    </view>
+    <view class="common-wrapper">
+      <ntpicker label="客资状态" :ntrange.sync="status_arr" ntkey="user_status_name"
+        :checked_index.sync="status_arr_index" :readonly.sync="readonly"></ntpicker>
+      <ntitem label="跟进备注" placeholder="请输入客资的备注信息：如预算、风格、喜好等" :ntvalue.sync="form" ntkey="status_remark" nttype="area"
+        :readonly.sync="readonly">
+      </ntitem>
+      <upload label="上传附件" size="9" :save_obj.sync="uplaoded" ntkey="images" :readonly.sync="readonly"></upload>
+      <view class="customer-create-btn" @tap="submit">提交</view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from "wepy";
+import G from "../../../common/global";
+import rq from "../../../common/utils/request";
+import tool from "../../../common/utils/tool";
+import validate from "../../../common/utils/validate";
+import storage from "../../../common/utils/storage";
+import dat from "../../../common/utils/date";
+import file from "../../../common/utils/file";
+
+
+import css from "../../../components/css";
+import header from "../../../components/header";
+import upload from "../../../components/common/upload";
+import ntpicker from "../../../components/common/ntpicker";
+import ntitem from "../../../components/common/ntitem";
+
+export default class Index extends wepy.page {
+  components = {
+    css: css, //样式表
+    header: header,
+    upload: upload,
+    ntpicker: ntpicker,
+    ntitem: ntitem
+  };
+  data = {
+    isopacity: true,
+    title: "客资跟进",
+    isback: true,
+    status_arr: [],
+    status_arr_index: 0,
+    user_id: "",
+    uplaoded:{
+      images: [],
+    },
+    form:{
+      status_remark:''
+    },
+    readonly: false
+  };
+  methods = {
+    submit() {
+      let that = this;
+      if (!that.form.status_remark) {
+        wepy.showToast({
+          title: '请填写跟进备注', //提示的内容,
+          icon: 'none', //图标,
+          duration: 1000, //延迟时间,
+          mask: true, //显示透明蒙层，防止触摸穿透,
+          success: res => { }
+        });
+        return false;
+      }
+      rq.get(
+        "AddFollowUpLog", {
+        200: result => {
+          wepy.navigateBack({
+            delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+          });
+          that.$apply();
+        }
+      }, {
+        user_id: this.user_id,
+        user_status: this.status_arr[this.status_arr_index].user_status,
+        status_remark: this.form.status_remark,
+        status_file: this.uplaoded.images.join(',')
+      }
+      );
+    }
+  };
+  onLoad(options) {
+    options = tool.decodeQrCodeParam(options);
+    this.user_id = options.id;
+    let that = this;
+    rq.get("getOneUserInfo", {
+      200: result => {
+        that.status_arr = result.data.sales_status;
+        that.$apply();
+      }
+    }, {
+      user_id: that.user_id
+    });
+  }
+  onShow() { }
+}
+</script>

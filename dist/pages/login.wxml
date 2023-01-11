@@ -1,0 +1,14 @@
+
+  <view class="container">
+    <image class="logo" src="../images/logo.png" mode="widthFix" lazy-load="false">
+    </image>
+    <view class="form-box">
+      <view class="form-input">
+        <input value="{{employee_account}}" type="text" bindinput="bindInputCount" placeholder="请输入员工账号"/>
+      </view>
+      <view class="form-input">
+        <input value="{{employee_password}}" type="text" bindinput="bindInputPass" password="true" placeholder="请输入密码"/>
+      </view>
+      <view class="login-btn" bindtap="submit">登 陆</view>
+    </view>
+  </view>

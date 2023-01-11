@@ -1,0 +1,92 @@
+
+    <view>
+        
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <view class="common-title">客户意向</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">{{customer.intention_name}}</view>
+                </view>
+            </view>
+            <view class="common-title">客户信息</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">客户姓名</view>
+                    <input type="text" class="common-tip" disabled value="{{customer.user_name}}"/>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">手机号</view>
+                    <input type="text" class="common-tip" disabled value="{{customer.user_mobile}}"/>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">微信号</view>
+                    <input type="text" class="common-tip" disabled value="{{customer.wechat_id}}"/>
+                </view>
+            </view>
+            <view class="common-title">婚礼信息</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">接单城市</view>
+                    <input type="text" class="common-tip" disabled value="{{customer.intention_city_name}}"/>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">结婚城市</view>
+                    <input type="text" class="common-tip" disabled value="{{customer.wedding_city_name}}"/>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">婚礼酒店</view>
+                    <input type="text" class="common-tip" disabled value="{{customer.wedding_hotel}}"/>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">婚礼时间</view>
+                    <input type="text" class="common-tip" disabled value="{{customer.wedding_date}}"/>
+                </view>
+            </view>
+            <view class="common-title">备注信息 {{show_img_arr.length}}/9</view>
+            <view class="common-pannel">
+                <view class="common-pic-box">
+                    <block  wx:for="{{show_img_arr}}" wx:key="">
+                        <image bindtap="viewCheck" data-index="{{index}}" class="common-add-pic" src="{{item}}" mode="aspectFill" lazy-load="false">
+                        </image>
+                    </block>
+                </view>
+            </view>
+            <view class="common-title">备注信息</view>
+            <view class="common-pannel">
+                <textarea class="common-area" disabled bindinput="inputLog" value="{{customer.user_remark}}"/>
+            </view>
+            <view class="common-title">接单团队</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab-full">{{customer.designated_team_name}}</view>
+                </view>
+            </view>
+            <view class="common-title">接单人(若无指定可不选)</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">{{customer.designated_employee_name}}</view>
+                </view>
+            </view>
+            <view class="customer-order-btn" bindtap="submit" data-pass="1">审核通过</view>
+            <view class="customer-order-btn bod-order-btn" bindtap="submit" data-pass="0">驳回申请</view>
+        </view>
+    </view>

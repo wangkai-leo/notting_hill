@@ -1,0 +1,19 @@
+@import "./../../../components/header.wxss";
+@import "./../../../components/css.wxss";
+.common-tip {
+  width: 100%;
+}
+.common-list {
+  border: none;
+  padding: 13rpx 20rpx;
+}
+.common-pannel {
+  padding: 30rpx 20rpx;
+}
+.common-fl {
+  float: right;
+}
+.customer-create-btn {
+  position: absolute;
+  bottom: 50rpx;
+}

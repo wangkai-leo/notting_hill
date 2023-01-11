@@ -1,0 +1,72 @@
+
+    <view>
+        
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <!-- <view class="common-title">客户信息</view> -->
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">开始时间</view>
+                    <input disabled class="common-tip" value="{{start_date}}"/>
+                    <picker class="picker-common" mode="date" bindchange="bindStartChange" value="{{start_date}}">
+                        <view class="picker-common-v">
+                            当前选择：{{start_date}}
+                        </view>
+                    </picker>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">结束时间</view>
+                    <input disabled class="common-tip" value="{{end_date}}"/>
+                    <picker class="picker-common" mode="date" bindchange="bindEndChange" value="{{end_date}}">
+                        <view class="picker-common-v">
+                            当前选择：{{end_date}}
+                        </view>
+                    </picker>
+                </view>
+                <view class="common-list"  wx:if="{{is_server}}" bindtap="displayServers">
+                    <view class="common-lab">人员</view>
+                    <input disabled class="common-tip" value="{{servers_name}}"/>
+                </view>
+            </view>
+            <view class="customer-order-btn" bindtap="save">确认修改</view>
+            <view class="leo-over-bg"  wx:if="{{show_server_check}}">
+                <view class="leo-over-center">
+                    <view class="leo-over-pannle">
+                        <scroll-view class="dep-form-box" scroll-y>
+                            <block wx:for="{{employee_list}}">
+                                <view class="em-name">{{item.team_name}}</view>
+                                <block wx:for="{{item.children}}" wx:key="" wx:for-index="it_index" wx:for-item="it">
+                                    <view class="em-c-it" bindtap="bindToggleChecked" data-index="{{index}}" data-sindex="{{it_index}}">
+                                        <checkbox-group data-key="{{item.key}}">
+                                            <checkbox disabled class="em-checked" checked="{{it.checked}}"/>
+                                        </checkbox-group>
+                                        {{it.employee_name}}
+                                    </view>
+                                </block>
+                            </block>
+                        </scroll-view>
+                        <view class="dep-form-btn" bindtap="reset">还原</view>
+                        <view class="dep-form-btn" bindtap="sure">确认</view>
+                    </view>
+                </view>
+            </view>
+        </view>
+    </view>

@@ -1,0 +1,38 @@
+<style lang="less">
+
+</style>
+
+<template>
+    <web-view class="" src="{{url}}" @message="message">
+    </web-view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import rq from '../../../common/utils/request';
+    import tool from '../../../common/utils/tool';
+    export default class Web extends wepy.page {
+        components = {};
+        data = {
+            url: ''
+        };
+        methods = {}
+        onLoad(options) {
+            options = tool.decodeQrCodeParam(options);
+            let that=this;
+
+            rq.get('questionTable', {
+                200: result => {
+                    if (options.type == 1) {
+                        that.url = result.data.female;
+                    } else if (options.type == 2) {
+                        that.url = result.data.male;
+                    }
+                    that.$apply();
+                }
+            }, {
+                order_id_str: options.order_id_str
+            })
+        }
+    }
+</script>

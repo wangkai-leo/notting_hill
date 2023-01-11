@@ -1,0 +1,42 @@
+.leo-over-bg {
+  z-index: 1111111;
+}
+.item-l {
+  text-align: center;
+  font-size: 32rpx;
+  padding: 20rpx 0rpx;
+  color: #bbbbbb;
+}
+.leo-over-pannle {
+  height: 750rpx;
+  margin-top: -375rpx;
+  width: 620rpx;
+  margin-left: -310rpx;
+}
+.s-box {
+  height: 550rpx;
+  margin: 30rpx auto;
+}
+.item-l-ac {
+  color: #87a6e7;
+}
+.p-btn {
+  position: relative;
+  width: 210rpx;
+  height: 70rpx;
+  background-color: #87a6e7;
+  text-align: center;
+  color: #fff;
+  line-height: 70rpx;
+  border-radius: 35rpx;
+  font-size: 26rpx;
+  box-shadow: #bfc4d9 0rpx 0rpx 20rpx;
+}
+.p-btn-l {
+  float: left;
+  margin-left: 60rpx;
+}
+.p-btn-r {
+  float: right;
+  margin-right: 60rpx;
+}

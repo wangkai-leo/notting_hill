@@ -1,0 +1,91 @@
+
+<style lang="less">
+.inline-tis {
+  position: relative;
+  display:inline-block;
+  color:#999;
+}
+.common-log-arrows-c{
+  margin-left:10rpx;
+  margin-top:5rpx;
+  float: right;
+  width:26rpx;
+}
+</style>
+
+<template>
+  <view class="inline-tis" wx:if="{{ntpickertype!='date'}}">
+    {{ ntrange[checked_index][ntkey] }}
+    <image class="common-log-arrows-c" src="../../images/arrows-down.png" mode="widthFix" lazy-load="false">
+    </image>
+    <picker wx:if="{{!readonly}}" class="picker-common" range="{{ntrange}}" range-key="{{ntkey}}" @change="bindChange">
+      <view class="picker-common-v">
+        当前选择：{{ ntrange[checked_index][ntkey] }}
+      </view>
+    </picker>
+  </view>
+  <view class="inline-tis" wx:if="{{ntpickertype=='date'}}">
+    {{ checked_name }}
+    <image class="common-log-arrows-c" src="../../images/arrows-down.png" mode="widthFix" lazy-load="false">
+    </image>
+    <picker wx:if="{{!readonly}}" class="picker-common" mode="date" @change="bindDateChange">
+      <view class="picker-common-v">
+        当前选择：{{ checked_name }}
+      </view>
+    </picker>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class Fnav extends wepy.component {
+  props = {
+    ntpickertype:{
+      type: String,
+      twoWay: true
+    },
+    readonly: {
+      type: Boolean,
+      twoWay: true
+    },
+    checked_index: {
+      type: Number,
+      twoWay: true
+    },
+    checked_name: {
+      type: String,
+      default: ''
+    },
+    ntkey: {
+      type: String
+    },
+    ntrange: {
+      type: Array,
+      default: false,
+      twoWay: true
+    },
+
+  }
+  watch = {
+
+  }
+  components = {};
+  data = {
+  };
+  methods = {
+    bindDateChange(e){
+      this.checked_name = e.detail.value;
+      this.$emit('change',this.checked_name);
+    },
+    bindChange(e) {
+      this.checked_index = e.detail.value;
+      this.checked_name = this.ntrange[this.checked_index][this.ntkey];
+      this.$emit('change',this.checked_index);
+    },
+  };
+  onLoad(options) {
+  }
+  events = {
+  };
+}
+</script>

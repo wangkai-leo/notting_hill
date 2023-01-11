@@ -1,0 +1,31 @@
+.rb-nav-footer {
+  position: fixed;
+  bottom: 0rpx;
+  height: 98rpx;
+  width: 750rpx;
+  background: #fff;
+  z-index: 1000;
+}
+.rb-nav-item {
+  width: 120rpx;
+  height: 98rpx;
+  display: block;
+  margin: 0rpx auto;
+}
+.rb-footer-nav {
+  width: 25%;
+  float: left;
+}
+.rb-index-nav {
+  width: 359rpx;
+  height: 90rpx;
+}
+.foot-btn {
+  background: none;
+}
+.button-hover {
+  color: rgba(0, 0, 0, 0);
+}
+.foot-btn:after {
+  border: none;
+}

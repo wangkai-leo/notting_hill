@@ -1,0 +1,182 @@
+<style lang="less">
+    .common-tip {
+        color: #222;
+    }
+    .common-lab-rcode {
+        width: 460rpx;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        float: left;
+    }
+    .common-tip-rcode {
+        width: 150rpx;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        float: right;
+        text-align: right;
+    }
+    .common-tip-0 {
+        color: red;
+    }
+    .common-tip-1 {
+        color: green;
+    }
+    .common-checked {
+        right: 0rpx;
+        left: auto;
+        top: 25rpx;
+    }
+    .common-pannel-cp {
+        position: relative;
+        margin-bottom: 10rpx;
+        font-weight: bold;
+    }
+    .common-pannel-cp:last-child {
+        margin-bottom: 40rpx;
+    }
+    .common-pannel-cp .common-list {
+        border: none;
+    }
+    .common-pannel-c{
+        padding:20rpx 40rpx;
+    }
+    .server-name{
+      font-size:28rpx;
+      color:#999;
+    }
+</style>
+
+<template>
+    <view>
+        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <!--|订单信息-->
+                <view class="common-title common-title-four">四大勾选流程
+                </view>
+                <view class="common-pannel common-pannel-c" wx:if="{{four_cate.length<=0}}">
+                    <view class="server-name">暂无</view>
+                </view>
+                <block wx:for="{{four_cate}}" wx:for-item="it" wx:for-index="i" wx:key="">
+                    <view class="common-pannel common-pannel-cp">
+                        <view class="common-list" @tap="toggleFourGroup" data-index="{{i}}">{{it.title}}
+                            <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false"></image>
+                        </view>
+                        <view class="cppto-statu" @tap="changeTheFourStatus" data-index="{{i}}">{{it.status_text}}
+                        </view>
+                    </view>
+                    <view class="common-pannel" wx:if="{{it.show}}">
+                        <block wx:for="{{it.children}}" wx:for-item="itm" wx:for-index="n" wx:key="">
+                            <view class="common-list" @tap="{{itm.is_finish==1?'':'checkedFourChange'}}" data-key="{{itm.id}}" data-index="{{i}}" data-sindex="{{n}}">
+                                <view class="common-tip-a">{{itm.title}}</view>
+                                <checkbox-group>
+                                    <checkbox class="common-checked" disabled value="{{itm.id}}" checked="{{itm.is_finish==1?true:false}}" name="id" />
+                                </checkbox-group>
+                            </view>
+                        </block>
+                    </view>
+                </block>
+            <!--订单信息|-->
+        </view>
+        <modal title="确定已完成吗" hidden="{{!checked_data}}" confirm-text="确定" cancel-text="取消" @confirm="modalBindaconfirm" @cancel="modalBindcancel"></modal>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import G from '../../../common/global';
+    import rq from '../../../common/utils/request';
+    import tool from '../../../common/utils/tool';
+    import validate from '../../../common/utils/validate';
+    import storage from '../../../common/utils/storage';
+    import dat from '../../../common/utils/date';
+    import file from '../../../common/utils/file';
+    import css from '../../../components/css';
+    import header from '../../../components/header';
+    export default class Index extends wepy.page {
+        components = {
+            css: css, //样式表
+            header: header
+        };
+        data = {
+            isopacity: true,
+            title: '客资信息',
+            isback: true,
+            customer: null,
+            id: -1,
+            four_cate: [],
+            checked_data: false
+        };
+        methods = {
+            modalBindaconfirm() {
+                let that = this;
+                let pindex = that.checked_data.pindex;
+                let index = that.checked_data.index;
+                let sindex = that.checked_data.sindex;
+                rq.get('finishProcessFourcate', {
+                    200: result => {
+                        that.four_cate[index].children[sindex].is_finish = 1;
+                        that.checked_data = false;
+                        that.$apply();
+                    } 
+                }, {
+                    process_id: that.checked_data.value_key,
+                    order_id: that.customer.order_id
+                })
+            },
+            modalBindcancel() {
+                this.checked_data = false;
+            },
+            checkedFourChange(e) {
+                let that = this;
+                let value_key = e.currentTarget.dataset.key;
+                let index = e.currentTarget.dataset.index;
+                let sindex = e.currentTarget.dataset.sindex;
+                that.checked_data = {
+                    // value: value,
+                    value_key: value_key,
+                    index: index,
+                    sindex: sindex,
+                    is_four: true
+                }
+            },
+            changeTheFourStatus(e) {
+                let index = e.currentTarget.dataset.index;
+            },
+            toggleFourGroup(e) {
+                let index = e.currentTarget.dataset.index;
+                if (this.four_cate[index].show) {
+                    this.four_cate[index].show = false;
+                } else {
+                    this.four_cate[index]['show'] = true;
+                }
+            }
+        };
+        getOrderInfo() {
+            let that = this;
+            rq.get('getOneOrderInfo', {
+                200: result => {
+                    that.customer = result.data.data;
+                    that.four_cate = result.data.four_cate;
+                    that.$apply();
+                }
+            }, {
+                user_id: that.id
+            })
+        }
+        onLoad(options) {
+            options = tool.decodeQrCodeParam(options);
+            let that = this;
+            that.id = options.id;
+            that.getOrderInfo();
+        }
+        
+        onShow() {
+        }
+    }
+</script>

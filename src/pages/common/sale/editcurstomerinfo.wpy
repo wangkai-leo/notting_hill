@@ -1,0 +1,105 @@
+<style lang="less">
+
+</style>
+
+<template>
+  <view>
+    <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+    <view class="common-top">
+      <view class="common-content">
+      </view>
+    </view>
+    <view class="common-wrapper">
+      <ntmode>
+        <ntlistn label="新人称呼" :readonly.sync="is_readonly" :ntvalue.sync="customer" ntkey="user_name" placeholder="请输入新人称呼"></ntlistn>
+        <ntlistp label="电话" :readonly.sync="is_readonly" :ntvalue.sync="customer" ntkey="user_mobile" placeholder="请输入电话"></ntlistp>
+        <ntlistd label="婚期" :readonly.sync="is_readonly" :ntvalue.sync="customer" ntkey="wedding_date" nttype="picker" pickertype="date"></ntlistd>
+        <ntlistc label="结婚城市" :readonly.sync="is_readonly" :ntvalue.sync="customer" ntrangeprkey="wedding_province_name"
+          ntrangecikey="wedding_city_name" ntrangearkey="wedding_area_name" nttype="picker" pickertype="region">
+        </ntlistc>
+        <ntlistt label="酒店桌数" :readonly.sync="is_readonly" :ntvalue.sync="customer" ntkey="hotel_tables_number" placeholder="请输入酒店桌数"></ntlistt>
+        <ntlistw label="预算" :readonly.sync="is_readonly" :ntvalue.sync="customer" ntkey="wedding_budget" placeholder="请输入预算"></ntlistw>
+      </ntmode>
+      <view class="customer-create-btn" @tap="submit">保存</view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import G from '../../../common/global';
+import rq from '../../../common/utils/request';
+import tool from '../../../common/utils/tool';
+import css from '../../../components/css';
+import header from '../../../components/header';
+import ntmode from '../../../components/common/ntmode';
+import ntlist from '../../../components/common/ntlist';
+import valdator from '../../../common/utils/validate';
+export default class Index extends wepy.page {
+  components = {
+    css: css, //样式表
+    header: header,
+    ntmode: ntmode,
+
+    ntlist: ntlist,
+    ntlistn: ntlist,
+    ntlistp: ntlist,
+    ntlistt: ntlist,
+    ntlistd: ntlist,
+    ntlistw: ntlist,
+    ntlistc: ntlist
+  };
+  data = {
+    isopacity: true,
+    title: '编辑客资信息',
+    customer: null,
+    id: '',
+    isback: true,
+    is_readonly:false
+  };
+  methods = {
+    submit() {
+      let that = this;
+      if(!valdator.isPhoneNumber(that.customer.user_mobile)){
+        wepy.showToast({
+          title: '请输入正确的手机号',
+          icon:'none',
+          duration: 2000
+        });
+        return false;
+      }
+      rq.get('editUserInfo', {
+        200: result => {
+          wepy.navigateBack({
+            delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+          });
+        }
+      }, {
+        user_id: that.id,
+        user_name: that.customer.user_name,
+        user_mobile: that.customer.user_mobile,
+        wedding_date: that.customer.wedding_date,
+        hotel_tables_number: that.customer.hotel_tables_number,
+        wedding_budget: that.customer.wedding_budget,
+        wedding_province_name: that.customer.wedding_province_name,
+        wedding_city_name: that.customer.wedding_city_name,
+        wedding_area_name: that.customer.wedding_area_name
+      })
+    }
+  };
+  onLoad(options) {
+    options = tool.decodeQrCodeParam(options);
+    let that = this;
+    that.id = options.id;
+    rq.get('followUp', {
+      200: result => {
+        that.customer = result.data.data;
+        that.$apply();
+      }
+    }, {
+      user_id: options.id
+    })
+  }
+  onShow() { }
+}
+</script>

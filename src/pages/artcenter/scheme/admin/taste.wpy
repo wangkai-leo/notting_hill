@@ -1,0 +1,271 @@
+<style lang="less">
+    .common-lab {
+        width: 230rpx;
+    }
+    .common-tip {
+        width: 300rpx;
+        float: right;
+        text-align: right;
+        color: #999;
+    }
+    .common-tip {
+        color: #222;
+    }
+    .server-msg-box {
+        background: #f9f9f9;
+        padding: 35rpx 20rpx;
+        border-radius: 10rpx;
+        font-size: 26rpx;
+        margin: 20rpx 0rpx 0rpx;
+        overflow: hidden;
+    }
+    .server-msg-line {
+        overflow: hidden;
+        margin-bottom: 20rpx;
+        color: #555;
+    }
+    .server-msg-value {
+        position: relative;
+        float: right;
+        text-align: right;
+    }
+    .server-msg-title {
+        float: left;
+    }
+    .server-msg-blo {
+        font-weight: bold;
+        margin-bottom: 40rpx;
+        font-size: 24rpx;
+        color: #333;
+    }
+    .server-group {
+        border-top: #eaeaea solid 1rpx;
+        padding-top: 20rpx;
+    }
+    .server-name {
+        font-size: 26rpx;
+        color: #333;
+        padding: 40rpx 0rpx 15rpx; // float: left;
+        // width: 500rpx;
+    }
+    .edit-btn {
+        position: relative;
+        float: right;
+        font-size: 28rpx;
+        color: #87a6e7; // height: 25rpx;
+        // width: 80rpx;
+    }
+    .edit-btn-del {
+        position: relative;
+        float: right;
+        font-size: 28rpx;
+        color: #999;
+        height: 40rpx;
+        width: 80rpx;
+        padding: 20rpx 0rpx 20rpx 20rpx;
+        text-align: right;
+    }
+    .common-stauts-tip {
+        color: #fb7c7c;
+        float: right;
+    }
+    .common-checked {
+        right: 0rpx;
+        left: auto;
+        top: 25rpx;
+    }
+    .bod-order-btn {
+        background: #fff;
+        border: #87a6e7 solid 1rpx;
+        color:#87a6e7;
+    }
+</style>
+
+<template>
+    <view>
+        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+        <view class="common-top">
+            <view class="common-content"></view>
+        </view>
+        <view class="common-wrapper">
+            <view class="common-title">客户信息</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">客户姓名</view>
+                    <input class="common-tip" disabled value="{{taste_info.client_name}}" type="text" />
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">电话</view>
+                    <input class="common-tip" disabled value="{{taste_info.client_mobile}}" type="text" />
+                </view>
+            </view>
+            <view class="common-title">新人信息</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">新郎姓名</view>
+                    <input class="common-tip" disabled value="{{taste_info.groom_name}}" type="text" />
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">新郎电话</view>
+                    <input class="common-tip" disabled value="{{taste_info.groom_mobile}}" type="text" />
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">新娘姓名</view>
+                    <input class="common-tip" disabled value="{{taste_info.bride_name}}" type="text" />
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">新娘电话</view>
+                    <input class="common-tip" disabled value="{{taste_info.bride_mobile}}" type="text" />
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">销售</view>
+                    <input class="common-tip" disabled value="{{taste_info.sales_name}}" type="text" />
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">策划</view>
+                    <input class="common-tip" disabled value="{{taste_info.planner_name}}" type="text" />
+                </view>
+            </view>
+            <view class="common-title">试菜信息</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">试菜类型</view>
+                    <input class="common-tip" disabled value="{{taste_info.try_type_text}}" type="text" />
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">婚期</view>
+                    <input class="common-tip" disabled value="{{taste_info.schedule_session.schedule_date}}" type="text" />
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">试菜日期</view>
+                    <view class="common-tip">{{taste_info.session.schedule_date}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">宴会厅</view>
+                    <input class="common-tip" disabled value="{{taste_info.session.area_name}}" type="text" />
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">宴会场次</view>
+                    <input class="common-tip" disabled value="{{taste_info.session.session_name}}" type="text" />
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">餐段</view>
+                    <input class="common-tip" disabled value="{{taste_info.wedding_meal_section}}" type="text" />
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">试菜时间</view>
+                    <view class="common-tip">{{taste_info.try_time?taste_info.try_time:''}}</view>
+                    
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">婚宴餐标</view>
+                    <input class="common-tip" disabled value="{{taste_info.wedding_package_name}}" disabled type="text" />
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">试菜人数</view>
+                    <input class="common-tip" disabled value="{{taste_info.try_person_number}}" type="number" />
+                </view>
+            </view>
+
+            <view class="common-title">备注</view>
+            <view class="common-pannel">
+                <textarea class="common-area" disabled value="{{taste_info.remark}}" />
+            </view>
+
+            <view class="customer-order-btn" @tap="submit" data-pass="1">通过</view>
+            <view class="customer-order-btn bod-order-btn" @tap="submit" data-pass="0">驳回</view>
+        </view>
+    </view>
+</template>
+
+<script>
+
+    import wepy from "wepy";
+    import G from "../../../../common/global";
+    import rq from "../../../../common/utils/request";
+    import tool from "../../../../common/utils/tool";
+    import validate from "../../../../common/utils/validate";
+    import storage from "../../../../common/utils/storage";
+    import dat from "../../../../common/utils/date";
+    import file from "../../../../common/utils/file";
+    import can from "../../../../common/utils/canvas";
+    import rule from "../../../../common/rule";
+    import css from "../../../../components/css";
+    import header from "../../../../components/header";
+
+    export default class Index extends wepy.page {
+
+        components = {
+            css: css, //样式表
+            header: header
+        };
+
+
+        data = {
+            isopacity: true,
+            title: "试菜申请",
+            isback: true,
+            taste_info: null,
+            id: 0,
+            user_id: 0,
+            try_dishes_id: 0,
+            is_submited:false,
+            remark: '',
+            try_type: null,
+            try_index: 0
+        };
+
+        methods = {
+            submit(e) {
+                let pass=e.currentTarget.dataset.pass;
+                let that = this;
+                if (this.is_submited) {
+                    return false;
+                }
+                this.is_submited = true;
+                rq.get('reviewTryDishes', {
+                    200: result => {
+                        wepy.navigateBack({
+                            delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                        });
+                        that.$apply();
+                    }
+                }, {
+                    try_dishes_id:that.try_dishes_id,
+                    pass:pass
+                })
+            }
+        };
+
+        onLoad(options) {
+            options = tool.decodeQrCodeParam(options);
+            let that = this;
+            that.user_id = options.user_id;
+            that.try_dishes_id = options.tryid;
+        }
+
+        onShow() {
+            let that = this;
+            rq.get(
+                "getTryDishesDetail", {
+                    200: result => {
+                        that.taste_info = result.data.data;
+                        that.taste_info.package_info = JSON.stringify(result.data.data.package_info);
+                        that.try_type = result.data.try_type;
+                        let i = 0;
+                        that.try_type.forEach(element => {
+                            if (element.try_type == that.taste_info.try_type) {
+                                that.try_index = i;
+                            }
+                            i++;
+                        });
+                        that.$apply();
+                    }
+                }, {
+                    try_dishes_id: that.try_dishes_id,
+                    user_id: that.user_id
+                }
+            )
+        }
+    }
+</script>

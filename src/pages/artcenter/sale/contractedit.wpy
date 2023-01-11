@@ -1,0 +1,299 @@
+<style lang="less">
+    .common-lab {
+        width: 230rpx;
+    }
+    .common-tip {
+        width: 300rpx;
+        float: right;
+        text-align: right;
+        color: #999;
+    }
+    .common-tip {
+        color: #222;
+        width: 400rpx;
+    }
+    .server-msg-box {
+        background: #f9f9f9;
+        padding: 35rpx 20rpx;
+        border-radius: 10rpx;
+        font-size: 26rpx;
+        margin: 20rpx 0rpx 0rpx;
+        overflow: hidden;
+    }
+    .server-msg-line {
+        overflow: hidden;
+        margin-bottom: 20rpx;
+        color: #555;
+    }
+    .server-msg-value {
+        position: relative;
+        float: right;
+        text-align: right;
+    }
+    .server-msg-title {
+        float: left;
+    }
+    .server-msg-blo {
+        font-weight: bold;
+        margin-bottom: 40rpx;
+        font-size: 24rpx;
+        color: #333;
+    }
+    .server-group {
+        border-top: #eaeaea solid 1rpx;
+        padding-top: 20rpx;
+    }
+    .server-name {
+        font-size: 26rpx;
+        color: #333;
+        padding: 40rpx 0rpx 15rpx; // float: left;
+        // width: 500rpx;
+    }
+    .edit-btn {
+        position: relative;
+        float: right;
+        font-size: 28rpx;
+        color: #87a6e7;
+        height: 25rpx;
+        width: 80rpx;
+    }
+    .edit-btn-del {
+        position: relative;
+        float: right;
+        font-size: 28rpx;
+        color: #999;
+        height: 40rpx;
+        width: 80rpx;
+        padding: 20rpx 0rpx 20rpx 20rpx;
+        text-align: right;
+    }
+    .contract-oth-title {
+        font-size: 24rpx;
+        font-weight: bold;
+        margin-bottom: 20rpx;
+    }
+    .contract-cou-title {
+        font-size: 24rpx;
+        float: left;
+    }
+    .contract-pri-title {
+        font-size: 24rpx;
+        float: right;
+    }
+    .common-tip-line {
+        color: #000;
+    }
+    .flesh-btn {
+        float: right;
+        color: #87a6e7;
+    }
+</style>
+
+<template>
+    <view>
+        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <!--|基本信息-->
+            <view>
+                <view>
+                    <view class="common-title">合同编号
+                    </view>
+                    <view class="common-pannel">
+                        <view class="common-list">
+                            <input class="common-tip-line" value="{{contract_info.contract_id}}" @input="bindInputContractId" type="text" placeholder="请输入" />
+                            <!-- <view class="common-tip-line">{{contract_info.contract_id}}
+                                        <view @tap="fleshOrder" class="flesh-btn" wx:if="{{display_flesh}}">刷新合同信息</view>
+                                    </view> -->
+                        </view>
+                    </view>
+                    <view class="common-title">合同名称</view>
+                    <view class="common-pannel">
+                        <view class="common-list">
+                            <input class="common-tip-line" disabled value="{{contract_info.contract_name}}" @input="bindInputContractName" type="text" placeholder="请输入" />
+                        </view>
+                    </view>
+                    <view class="common-title">合同凭证 {{show_img_arr.length}}/9</view>
+                    <view class="common-pannel">
+                        <view class="common-pic-box">
+                            <block wx:for="{{show_img_arr}}" wx:key="">
+                                <view class="common-add-pic">
+                                    <image class="common-add-pic-img" src="{{item}}" mode="aspectFill" lazy-load="false">
+                                    </image>
+                                    <image @tap="deleteImg" data-index="{{index}}" class="capi-del" src="../../../images/delete-icon.png" mode="scaleToFill"
+                                      lazy-load="false">
+                                    </image>
+                                </view>
+                            </block>
+                            <image @tap="uploadFile" wx:if="{{show_img_arr.length<9&&!display_flesh}}" class="common-add-pic" src="../../../images/add-pic.png" mode="aspectFill" lazy-load="false">
+                            </image>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <!--基本信息|-->
+            <view class="common-title">备注信息</view>
+            <view class="common-pannel">
+                <textarea class="common-area" value="{{contract_info.contract_remark}}" @input="bindInputMark" placeholder="请输入客资的备注信息：如预算、风格、喜好等" />
+            </view>
+            <view class="customer-order-btn" wx:if="{{!display_flesh}}" @tap="submit">{{is_create?'创建合同':'保存'}}</view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import G from '../../../common/global';
+    import C from '../../../common/config';
+    import rq from '../../../common/utils/request';
+    import tool from '../../../common/utils/tool';
+    import validate from '../../../common/utils/validate';
+    import storage from '../../../common/utils/storage';
+    import dat from '../../../common/utils/date';
+    import file from '../../../common/utils/file';
+    import css from '../../../components/css';
+    import header from '../../../components/header';
+    export default class Index extends wepy.page {
+        components = {
+            css: css, //样式表
+            header: header
+        };
+        data = {
+            isopacity: true,
+            title: '合同创建',
+            isback: true,
+            order_info: null,
+            id: -1,
+            edit_base: false,
+            show_img_arr: [],
+            contract_info: {},
+            is_create: false,
+            display_flesh: true,
+            schedule_session: null,
+            other_service_total_price: 0
+        };
+        methods = {
+            deleteImg(e){
+               let index= e.currentTarget.dataset.index;
+               this.show_img_arr.splice(index,1);
+            },
+            bindInputMark(e) {
+                this.contract_info.contract_remark = e.detail.value;
+            },
+            uploadFile() {
+                let that = this;
+                wx.chooseImage({
+                    count: '9', //最多可以选择的图片张数,
+                    success: res => {
+                        file.upLoadImgs(C.ENV_URL + 'uploadCommProof', res.tempFilePaths, 0, [], [], function(names, urls) {
+                            that.show_img_arr = that.show_img_arr.concat(urls);
+                            // console.log(that.show_img_arr);
+                            that.$apply();
+                        });
+                    }, //返回图片的本地文件路径列表 tempFilePaths,
+                    fail: () => {},
+                    complete: () => {}
+                });
+            },
+            fleshOrder() {
+                let that = this;
+                rq.get('flushContractInfo', {
+                    200: result => {
+                        that.display_flesh = false;
+                        that.getContractInfo();
+                        that.$apply();
+                    }
+                }, {
+                    order_id: that.contract_info.order_id,
+                    contract_id: that.contract_info.id
+                })
+                this.display_flesh = false;
+            },
+            bindInputContractId(e) {
+                this.contract_info.contract_id = e.detail.value;
+            },
+            bindInputContractName(e) {
+                this.contract_info.contract_name = e.detail.value;
+            },
+            submit() {
+                let that = this;
+                if (that.contract_info.id == '-' || !that.contract_info.id) {
+                    wepy.showToast({
+                        title: '请输入合同编号', //提示的内容,
+                        icon: 'none', //图标,
+                        duration: 2000, //延迟时间,
+                        mask: true, //显示透明蒙层，防止触摸穿透,
+                        success: res => {}
+                    });
+                }
+                let data = {
+                    'contract_str': that.contract_info.contract_id,
+                    'contract_name': that.contract_info.contract_name,
+                    'contract_proof': that.show_img_arr.join(','),
+                    'contract_remark': that.contract_info.contract_remark
+                };
+                if (that.is_create) {
+                    data.user_id = that.id;
+                    rq.get('createContract', {
+                        200: result => {
+                            wepy.navigateBack({
+                                delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                            });
+                        }
+                    }, data)
+                } else {
+                    data.contract_id = that.contract_info.id;
+                    rq.get('updateContract', {
+                        200: result => {
+                            wepy.navigateBack({
+                                delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                            });
+                        }
+                    }, data);
+                }
+            }
+        };
+        getContractInfo() {
+            let that = this;
+            rq.get('getContractInfo', {
+                200: result => {
+                    that.contract_info = result.data.data.contract;
+                    that.show_img_arr = that.contract_info.contract_proof
+                    that.$apply();
+                }
+            }, {
+                user_id: that.id,
+                contract_id:that.contract_id
+            })
+        }
+        onLoad(options) {
+            options = tool.decodeQrCodeParam(options);
+            let that = this;
+            that.id = options.id;
+            that.contract_id = options.contract_id;
+            
+            console.log(that.contract_id);
+            that.is_create = options.is_create;
+            that.display_flesh = false;
+            if (that.is_create) {
+                let contract_name = options.contract_name;
+                rq.get('getOneOrderInfo', {
+                    200: result => {
+                        that.order_info = result.data.data;
+                        that.contract_info.order_id = that.order_info.base_info.order_id;
+                        that.contract_info.contract_name = contract_name;
+                        that.$apply();
+                    }
+                }, {
+                    user_id: that.id
+                })
+            } else {
+                that.getContractInfo();
+            }
+        }
+        onShow() {}
+    }
+</script>

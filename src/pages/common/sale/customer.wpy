@@ -1,0 +1,316 @@
+<style lang="less">
+.common-tip {
+  color: #222;
+}
+
+
+.common-lab-rcode {
+  width: 460rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  float: left;
+}
+
+.common-tip-rcode {
+  width: 150rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  float: right;
+  text-align: right;
+}
+
+.common-tip-0 {
+  color: red;
+}
+
+.common-tip-1 {
+  color: green;
+}
+</style>
+
+<template>
+  <view>
+    <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+    <view class="common-top">
+      <view class="common-content">
+      </view>
+    </view>
+    <view class="common-wrapper">
+      <view class="sale-tab-box">
+        <view class="sale-tab-item {{tab_index==0?'sale-tab-item-check':''}}" @tap="toggleTab" data-index="0">客资信息
+        </view>
+        <view class="sale-tab-item {{tab_index==1?'sale-tab-item-check':''}}" @tap="toggleTab" data-index="1"
+          wx:if="{{!is_search}}">销售跟进</view>
+        <view class="sale-tab-item {{tab_index==2?'sale-tab-item-check':''}}" @tap="toggleTab" data-index="2"
+          wx:if="{{!is_search}}">订单信息</view>
+      </view>
+      <!--|客户信息-->
+      <view wx:if="{{tab_index==0}}">
+        <customerinfo :ntcusinfo.sync="customer"></customerinfo>
+        <view wx:if="{{department=='artcenter'}}">
+          <view class="common-title">联合成交</view>
+          <view class="common-pannel">
+            <view class="common-list">
+              <view class="common-lab common-lab-line">{{ customer.is_union == 1 ? '是' : '否' }}</view>
+            </view>
+          </view>
+          <view class="customer-order-btn" wx:if="{{customer.is_union==1}}" @tap="checkUnit">联合信息</view>
+        </view>
+
+        <view class="common-title" wx:if="{{department=='artcenter'}}">接单名单</view>
+        <view class="common-title" wx:if="{{department=='marry'}}">接单销售</view>
+        <view class="common-pannel">
+          <view class="common-list" wx:if="{{!revice_record||revice_record.length<=0}}">
+            <view class="common-lab common-lab-line">暂无</view>
+          </view>
+          <block wx:for="{{revice_record}}" wx:key="">
+            <view class="common-list">
+              <view class="common-lab common-lab-rcode">{{ item.employee_name }}</view>
+              <view class="common-tip common-tip-rcode common-tip-{{item.receive_status}}">{{ item.receive_status_text
+              }}
+              </view>
+            </view>
+          </block>
+        </view>
+      </view>
+      <!--客户信息|-->
+      <!--|销售跟进-->
+      <view wx:if="{{tab_index==1}}">
+        <customerfollow :ntvalue.sync="sale_info" :customer.sync="customer" :id.sync="id"></customerfollow>
+        <view wx:if="{{department=='marry'}}">
+          <view class="common-title" wx:if="{{user.is_bookteam==0}}">转让信息</view>
+          <view class="common-pannel" wx:if="{{user.is_bookteam==0}}">
+            <view class="common-list" @tap="goToTurn">
+              <view class="common-lab">转让信息</view>
+              <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+              </image>
+            </view>
+          </view>
+          <view wx:if="{{user.is_bookteam==1}}">
+            <view class="common-title">接单团队</view>
+            <view class="common-pannel">
+              <view class="common-list">
+                <view class="common-lab-full">{{ teams_arr_index == -1 ? '请选择' : teams_arr[teams_arr_index].team_name }}
+                </view>
+                <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix"
+                  lazy-load="false">
+                </image>
+                <picker class="picker-common" @change="teamChange" value="{{teams_arr_index}}" range="{{teams_arr}}"
+                  range-key="team_name">
+                  <view class="picker-common-v">
+                    当前选择：{{ teams_arr[teams_arr_index].team_name }}
+                  </view>
+                </picker>
+              </view>
+            </view>
+            <view class="common-title">接单人</view>
+            <view class="common-pannel">
+              <view class="common-list">
+                <view class="common-lab-full">
+                  {{ employee_list_index == -1 ? '请选择' : employee_list[employee_list_index].employee_name }}</view>
+                <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix"
+                  lazy-load="false">
+                </image>
+                <picker class="picker-common" @change="employeeChange" value="{{employee_list_index}}"
+                  range="{{employee_list}}" range-key="employee_name">
+                  <view class="picker-common-v">
+                    当前选择：{{ employee_list[employee_list_index].employee_name }}
+                  </view>
+                </picker>
+              </view>
+            </view>
+            <view class="customer-order-btn" @tap="submit">确定并分配</view>
+          </view>
+        </view>
+      </view>
+      <!--销售跟进|-->
+      <!--|订单信息-->
+      <view wx:if="{{tab_index==2}}">
+        <view wx:if="{{customer.id_dead!=1}}">
+          <view wx:if="{{department=='artcenter'}}">
+            <view wx:if="{{has_order==2}}" class="customer-order-btn" @tap="goToOrderMsg">订单信息</view>
+            <view wx:if="{{has_order==1}}" class="customer-order-btn">生成信息</view>
+          </view>
+          <view wx:if="{{department=='marry'}}">
+            <view wx:if="{{has_order==2&&user.is_bookteam==0}}" class="customer-order-btn" @tap="goToOrderMsg">订单信息
+            </view>
+            <view class="customer-order-btn" @tap="goToCheckFour">四大勾选流程</view>
+          </view>
+        </view>
+      </view>
+      <!--订单信息|-->
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import G from '../../../common/global';
+import rq from '../../../common/utils/request';
+import tool from '../../../common/utils/tool';
+import validate from '../../../common/utils/validate';
+import storage from '../../../common/utils/storage';
+import dat from '../../../common/utils/date';
+import file from '../../../common/utils/file';
+import css from '../../../components/css';
+import header from '../../../components/header';
+
+import customerinfo from '../../../components/common/customerinfo';
+import customerfollow from '../../../components/common/customerfollow';
+import maintain from '../../../components/common/maintain';
+export default class Index extends wepy.page {
+  components = {
+    css: css, //样式表
+    header: header,
+
+    maintain: maintain,
+    customerinfo: customerinfo,
+    customerfollow: customerfollow
+  };
+  data = {
+    isopacity: true,
+    title: '客资信息',
+    isback: true,
+    customer: null,
+    sale_info: null,
+    status_arr: [],
+    tab_index: 0,
+    id: -1,
+    has_order: 0,
+    team_members: '',
+    employee_number_index: 0,
+    user: null,
+
+    revice_record: null,
+    is_search: false,
+
+    department: '',
+
+    is_bookteam: 0
+  };
+  methods = {
+    teamChange(e) {
+      this.teams_arr_index = e.detail.value;
+      this.getTeamEmployee();
+    },
+    goToCheckFour() {
+      wepy.navigateTo({
+        url: '/pages/marry/sale/checkfour?id=' + this.id
+      });
+    },
+    checkUnit() {
+      wepy.navigateTo({
+        url: '/pages/common/server/union?id=' + this.customer.order_id
+      });
+    },
+    goToTurn() {
+      wepy.navigateTo({
+        url: '/pages/common/sale/turninfo?id=' + this.id
+      });
+    },
+    goToOrderMsg() {
+      wepy.navigateTo({
+        url: '/pages/' + this.department + '/sale/ordermsg?id=' + this.id
+      });
+    },
+    toggleTab(e) {
+      this.tab_index = e.currentTarget.dataset.index;
+      if (this.tab_index == 1) {
+        this.followUp();
+      } else if (this.tab_index == 2) {
+        this.getOrderInfo();
+      }
+    }
+  };
+  followUp() {
+    let that = this;
+    rq.get('followUp', {
+      200: result => {
+        that.sale_info = result.data.data;
+        let purpose = [];
+        result.data.user_status.forEach(element => {
+          purpose.push(element.status_name);
+        });
+        that.$apply();
+      }
+    }, {
+      user_id: that.id
+    })
+  }
+  getOrderInfo() {
+    let that = this;
+    rq.get('getOneOrderInfo', {
+      200: result => {
+        if (result.data.data) {
+          that.has_order = 2;
+        } else {
+          that.has_order = 1;
+        }
+        that.$apply();
+      }
+    }, {
+      user_id: that.id
+    })
+  }
+  onLoad(options) {
+    options = tool.decodeQrCodeParam(options);
+    let that = this;
+    that.id = options.id;
+    that.is_search = options.is_search == 'yes' ? true : false;
+    that.department = wepy.getStorageSync('office_line')
+
+    if (that.department == 'marry') {
+      rq.get('getMyInfo', {
+        200: result => {
+          that.user = result.data.data;
+          that.is_bookteam = that.user.is_bookteam;
+          that.$apply();
+        }
+      })
+      rq.get('getTeams', {
+        200: result => {
+          that.teams_arr = result.data.data;
+          that.teams_arr_index = 0;
+          that.getTeamEmployee();
+          that.$apply();
+        }
+      })
+    }
+  }
+  getTeamEmployee() {
+    let that = this;
+    rq.get('getTeamEmployee', {
+      200: result => {
+        that.employee_list = result.data.employee_list;
+        that.employee_list_index = -1;
+        that.$apply();
+      }
+    }, {
+      employee_team_id: that.teams_arr[that.teams_arr_index].id
+    })
+  }
+  onShow() {
+    let that = this;
+    rq.get('getOneUserInfo', {
+      200: result => {
+        that.customer = result.data.data;
+        that.customer.comm_proof = that.customer.comm_proof.split(',');
+        that.$apply();
+      }
+    }, {
+      user_id: that.id
+    })
+    rq.get('getSalesReviceRecord', {
+      200: result => {
+        that.revice_record = result.data.data;
+        that.$apply();
+      }
+    }, {
+      user_id: that.id
+    })
+    that.followUp();
+  }
+}
+</script>

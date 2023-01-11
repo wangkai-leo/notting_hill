@@ -1,0 +1,227 @@
+
+    <view>
+        
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <view class="common-title">客户来源</view>
+            <view class="common-pannel">
+                <view class="common-list" bindtap="showChannelPannel">
+                    <view class="common-lab common-lab-line">{{page_data.channelInfo[channel_index].channel_name}}</view>
+                    <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                    </image>
+                </view>
+            </view>
+            <view class="common-title">客户意向</view>
+            <view class="common-pannel">
+                <view class="common-list" bindtap="showAttentionPannel">
+                    <view class="common-lab common-lab-line">{{page_data.intentionInfo[intent_index].intention_name}}</view>
+                    <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                    </image>
+                </view>
+            </view>
+            <view class="common-title">婚礼信息</view>
+            <view class="common-pannel">
+                <view class="common-list" bindtap="showCityPannel">
+                    <view class="common-lab">意向城市</view>
+                    <view class="common-tip">{{page_data.cityInfo[attend_city_index].city_name}}</view>
+                    <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                    </image>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">结婚城市</view>
+                    <view class="common-tip">{{region[0]}} {{region[1]}} {{region[2]}}</view>
+                    <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                    </image>
+                    <picker mode="region" class="picker-common" bindchange="bindMerryCityChange" value="{{region}}">
+                        <view class="picker-common-v">
+                            当前选择：{{region[0]}}，{{region[1]}}，{{region[2]}}
+                        </view>
+                    </picker>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">婚礼酒店</view>
+                    <input class="common-tip" bindinput="bindInputHotel" value="" type="text" placeholder="请输入婚礼酒店"/>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">婚礼时间</view>
+                    <view class="common-tip">{{merry_date}}</view>
+                    <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                    </image>
+                    <picker class="picker-common" mode="date" value="{{merry_date}}" bindchange="bindMerryDateChange">
+                        <view class="picker-common-v">
+                            当前选择：{{merry_date}}
+                        </view>
+                    </picker>
+                </view>
+            </view>
+            <view class="common-title">客户信息</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">客户姓名</view>
+                    <input class="common-tip" bindinput="bindInputUserName" value="" type="text" placeholder="请填写新人姓名"/>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">手机号</view>
+                    <input class="common-tip" value="" type="number" bindinput="bindInputUserMobile" bindblur="checkPhoneNume" placeholder="请填写新人手机号"/>
+                    <view class="common-warning-tip"  wx:if="{{exit_user}}">客资已存在</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">微信号</view>
+                    <input class="common-tip" value="" type="text" bindinput="bindInputWxCount" bindblur="checkPhoneNume" placeholder="请填写新人微信号"/>
+                </view>
+                <view class="common-swiper-box"  wx:if="{{exit_user}}">
+                    <view class="common-swiper-title">
+                        <view class="common-left-right">
+                            <view class="common-swt-lab">来访记录</view>
+                        </view>
+                    </view>
+                    <block wx:for="{{exit_user}}" wx:key="">
+                        <view class="swiper-container-common">
+                            <view class="com-swt-box">
+                                <view class="com-swt-list">日期：<text>{{item.status_time}}</text></view>
+                                <view class="com-swt-list">编号：<text>{{item.order_id}}</text></view>
+                                <view class="com-swt-list">渠道：<text>{{item.channel_name}}</text></view>
+                                <view class="com-swt-list">意向：<text>{{item.intention_name}}</text></view>
+                                <view class="com-swt-list">销售：<text>{{item.sales_name}}</text></view>
+                                <view class="com-swt-list">状态：<text>{{item.status_name}}</text></view>
+                            </view>
+                            <view class="com-swt-close" bindtap="closeUser" wx:if="{{item.user_status==20}}" data-id="{{item.id}}">关闭客资</view>
+                        </view>
+                    </block>
+                </view>
+            </view>
+            
+  <view class="common-title">{{ $upload$label }} <text  wx:if="{{!$upload$readonly}}">{{ $upload$save_obj[$upload$ntkey].length }}/{{ $upload$size }}</text></view>
+  <view class="common-pannel">
+    <view class="common-pic-box">
+      <view class="upload-none"  wx:if="{{$upload$readonly&&(!$upload$save_obj||$upload$save_obj[$upload$ntkey].length==0)}}">暂无</view>
+      <block  wx:for="{{$upload$save_obj[$upload$ntkey]}}" wx:key="index">
+        <view class="common-add-pic">
+          <image bindtap="$upload$viewCheck" data-index="{{index}}" class="common-add-pic-img" src="{{item}}" mode="aspectFill" lazy-load="false">
+          </image>
+          <image wx:if="{{!$upload$readonly}}" bindtap="$upload$deleteImg" data-index="{{index}}" class="capi-del" src="../../../images/delete-icon.png" mode="scaleToFill" lazy-load="false">
+          </image>
+        </view>
+      </block>
+      <image wx:if="{{!$upload$readonly&&$upload$save_obj[$upload$ntkey].length<$upload$size}}" bindtap="$upload$uploadFile" class="common-add-pic" src="../../../images/add-pic.png" mode="aspectFill" lazy-load="false">
+      </image>
+    </view>
+  </view>
+
+
+            <!-- <view class="common-title">沟通证明 {{show_img_arr.length}}/9</view>
+            <view class="common-pannel">
+                <view class="common-pic-box">
+                    <block wx:for="{{show_img_arr}}" wx:key="">
+                        <image class="common-add-pic" src="{{item}}" mode="aspectFill" lazy-load="false">
+                        </image>
+                    </block>
+                    <image wx:if="{{show_img_arr.length<9}}" bindtap="uploadFile" class="common-add-pic" src="../../../images/add-pic.png" mode="aspectFill" lazy-load="false">
+                    </image>
+                </view>
+            </view> -->
+            <view class="common-title">备注信息</view>
+            <view class="common-pannel">
+                <textarea class="common-area" value="" bindinput="bindInputMark" placeholder="请输入客资的备注信息：如预算、风格、喜好等"/>
+            </view>
+            <!--线下客服直接发布客资，线上客服艺术中心可以指定接单团队自动分配，婚庆可以指定到特定的人-->
+            <view wx:if="{{user.is_server}}">
+                <view class="common-title">接单信息</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <view class="common-lab-full">{{teams[teams_index].team_name}}</view>
+                        <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                        </image>
+                        <picker class="picker-common" value="{{teams_index}}" range="{{teams}}" range-key="team_name" bindchange="bindInputTeamChange">
+                            <view class="picker-common-v">
+                                当前选择：{{teams[teams_index].team_name}}
+                            </view>
+                        </picker>
+                    </view>
+
+                    <view class="common-list" wx:if="{{department=='marry'}}">
+                        <view class="common-lab-full">{{team_members[team_members_index].employee_name}}</view>
+                        <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                        </image>
+                        <picker class="picker-common" value="{{team_members_index}}" range="{{team_members}}" range-key="employee_name" bindchange="bindChangeEmployee">
+                            <view class="picker-common-v">
+                                当前选择：{{team_members[team_members_index].employee_name}}
+                            </view>
+                        </picker>
+                    </view>
+                </view>
+                <view class="common-check-wrap" bindtap="toggleAutoAllot" wx:if="{{department=='artcenter'}}">
+                    <view class="common-check-box">
+                        <image class="common-checked" wx:if="{{auto_allot}}" src="../../../images/checked-icon.png" mode="widthFix" lazy-load="false">
+                        </image>
+                    </view>
+                    客资自动分配
+                </view>
+            </view>
+            <view class="customer-create-btn" bindtap="submit">确认并分配</view>
+        </view>
+
+        
+    <view class="leo-over-bg"  wx:if="{{$mpicker$rang_display}}">
+        <view class="leo-over-center">
+            <view class="leo-over-pannle">
+                <scroll-view scroll-y class="s-box">
+                    <block wx:for="{{$mpicker$rang_data}}" wx:key="">
+                        <view bindtap="$mpicker$checkedItem" data-index="{{index}}" class="item-l {{$mpicker$checked_index==index?'item-l-ac':''}}">{{item[$mpicker$rang_key]}}</view>
+                    </block>
+                </scroll-view>
+                <view class="p-btn p-btn-l" bindtap="$mpicker$cancel">取 消</view>
+                <view class="p-btn p-btn-r" bindtap="$mpicker$checkNew">确 认</view>
+            </view>
+        </view>
+    </view>
+
+        
+    <view class="leo-over-bg"  wx:if="{{$npicker$rang_display}}">
+        <view class="leo-over-center">
+            <view class="leo-over-pannle">
+                <scroll-view scroll-y class="s-box">
+                    <block wx:for="{{$npicker$rang_data}}" wx:key="">
+                        <view bindtap="$npicker$checkedItem" data-index="{{index}}" class="item-l {{$npicker$checked_index==index?'item-l-ac':''}}">{{item[$npicker$rang_key]}}</view>
+                    </block>
+                </scroll-view>
+                <view class="p-btn p-btn-l" bindtap="$npicker$cancel">取 消</view>
+                <view class="p-btn p-btn-r" bindtap="$npicker$checkNew">确 认</view>
+            </view>
+        </view>
+    </view>
+
+        
+    <view class="leo-over-bg"  wx:if="{{$opicker$rang_display}}">
+        <view class="leo-over-center">
+            <view class="leo-over-pannle">
+                <scroll-view scroll-y class="s-box">
+                    <block wx:for="{{$opicker$rang_data}}" wx:key="">
+                        <view bindtap="$opicker$checkedItem" data-index="{{index}}" class="item-l {{$opicker$checked_index==index?'item-l-ac':''}}">{{item[$opicker$rang_key]}}</view>
+                    </block>
+                </scroll-view>
+                <view class="p-btn p-btn-l" bindtap="$opicker$cancel">取 消</view>
+                <view class="p-btn p-btn-r" bindtap="$opicker$checkNew">确 认</view>
+            </view>
+        </view>
+    </view>
+
+    </view>

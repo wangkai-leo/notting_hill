@@ -1,0 +1,52 @@
+
+    <view>
+        
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <!--|订单信息-->
+                <view class="common-title common-title-four">四大勾选流程
+                </view>
+                <view class="common-pannel common-pannel-c"  wx:if="{{four_cate.length<=0}}">
+                    <view class="server-name">暂无</view>
+                </view>
+                <block  wx:for="{{four_cate}}" wx:for-item="it" wx:for-index="i" wx:key="">
+                    <view class="common-pannel common-pannel-cp">
+                        <view class="common-list" bindtap="toggleFourGroup" data-index="{{i}}">{{it.title}}
+                            <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false"/>
+                        </view>
+                        <view class="cppto-statu" bindtap="changeTheFourStatus" data-index="{{i}}">{{it.status_text}}
+                        </view>
+                    </view>
+                    <view class="common-pannel" wx:if="{{it.show}}">
+                        <block wx:for="{{it.children}}" wx:for-item="itm" wx:for-index="n" wx:key="">
+                            <view class="common-list" bindtap="{{itm.is_finish==1?'':'checkedFourChange'}}" data-key="{{itm.id}}" data-index="{{i}}" data-sindex="{{n}}">
+                                <view class="common-tip-a">{{itm.title}}</view>
+                                <checkbox-group>
+                                    <checkbox class="common-checked" disabled value="{{itm.id}}" checked="{{itm.is_finish==1?true:false}}" name="id"/>
+                                </checkbox-group>
+                            </view>
+                        </block>
+                    </view>
+                </block>
+            <!--订单信息|-->
+        </view>
+        <modal title="确定已完成吗" hidden="{{!checked_data}}" confirm-text="确定" cancel-text="取消" bindconfirm="modalBindaconfirm" bindcancel="modalBindcancel"/>
+    </view>

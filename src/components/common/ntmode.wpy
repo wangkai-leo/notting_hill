@@ -1,0 +1,50 @@
+
+<style lang="less">
+.common-title{
+  position: relative;
+    font-size: 28rpx;
+    line-height: 50rpx;
+    padding-left: 20rpx;
+    margin-bottom: 15rpx;
+}
+.common-pannel {
+    background-color: #fff;
+    border-radius: 20rpx;
+    padding: 0rpx 25rpx;
+    box-shadow: #dce1fc 0rpx 0rpx 20rpx;
+    margin-bottom: 40rpx;
+}
+</style>
+
+<template>
+<view>
+  <view class="common-title" wx:if="{{label}}">{{label}}
+    <slot name="btn"></slot>
+  </view>
+    <view class="common-pannel" >
+      <slot></slot>
+    </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class Fnav extends wepy.component {
+    props = {
+      label:{
+        type:String
+      },
+    }
+    watch={
+    }
+    components = {};
+    data = {
+    };
+    methods = {
+    };
+    onLoad(options) {
+    }
+    events = {
+    };
+}
+</script>

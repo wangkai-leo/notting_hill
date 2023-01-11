@@ -1,0 +1,154 @@
+<style lang="less">
+    .common-lab {
+        width: 230rpx;
+    }
+    .common-tip {
+        width: 300rpx;
+        float: right;
+        text-align: right;
+        color: #999;
+    }
+    .common-tip {
+        color: #222;
+    }
+    .server-msg-box {
+        background: #f9f9f9;
+        padding: 35rpx 20rpx;
+        border-radius: 10rpx;
+        font-size: 26rpx;
+        margin: 20rpx 0rpx 0rpx;
+        overflow: hidden;
+    }
+    .server-msg-line {
+        overflow: hidden;
+        margin-bottom: 20rpx;
+        color: #555;
+    }
+    .server-msg-value {
+        position: relative;
+        float: right;
+        text-align: right;
+    }
+    .server-msg-title {
+        float: left;
+    }
+    .server-msg-blo {
+        font-weight: bold;
+        margin-bottom: 40rpx;
+        font-size: 24rpx;
+        color: #333;
+    }
+    .server-group {
+        border-top: #eaeaea solid 1rpx;
+        padding-top: 20rpx;
+    }
+    .server-name {
+        font-size: 26rpx;
+        color: #333;
+        padding: 40rpx 0rpx 15rpx; // float: left;
+        // width: 500rpx;
+    }
+    .edit-btn {
+        position: relative;
+        float: right;
+        font-size: 28rpx;
+        color: #87a6e7;
+        height: 25rpx;
+        width: 80rpx;
+    }
+    .edit-btn-del {
+        position: relative;
+        float: right;
+        font-size: 28rpx;
+        color: #999;
+        height: 40rpx;
+        width: 80rpx;
+        padding: 20rpx 0rpx 20rpx 20rpx;
+        text-align: right;
+    }
+    .common-stauts-tip {
+        color: #fb7c7c;
+        float: right;
+    }
+    .common-checked {
+        right: 0rpx;
+        left: auto;
+        top: 25rpx;
+    }
+</style>
+
+<template>
+    <view>
+        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <block wx:for="{{request_list}}" wx:key="">
+                <view class="customer-info" @tap="goToDetail" data-index="{{index}}">
+                    <view class="customer-info-header">
+                        <view class="customer-num">订单编号：{{item.order_id_str}}</view>
+                    </view>
+                    <view class="customer-info-msgs" data-id="{{item.order_id}}">
+                        <view class="customer-item">客户姓名：<text>{{item.client_name}}</text></view>
+                        <view class="customer-item">申请人：<text>{{item.planner_name}}</text></view>
+                        <view class="customer-item">销售姓名：<text>{{item.sales_name}}</text></view>
+                    </view>
+                </view>
+            </block>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import G from '../../../common/global';
+    import rq from '../../../common/utils/request';
+    import tool from '../../../common/utils/tool';
+    import validate from '../../../common/utils/validate';
+    import storage from '../../../common/utils/storage';
+    import dat from '../../../common/utils/date';
+    import file from '../../../common/utils/file';
+    import css from '../../../components/css';
+    import header from '../../../components/header';
+    export default class Index extends wepy.page {
+        components = {
+            css: css, //样式表
+            header: header
+        };
+        data = {
+            isopacity: true,
+            title: '请款审核',
+            isback: true,
+            request_list: null,
+            id: -1,
+            // user_id: -1,
+            // user: null,
+        };
+        methods = {
+            goToDetail(e) {
+                let index = e.currentTarget.dataset.index;
+                let item=this.request_list[index];
+                wepy.navigateTo({
+                    url: '/pages/marry/scheme/reqaudit?order_id=' + item.order_id + '&request_id=' + item.id
+                });
+            }
+        };
+        onLoad(options) {
+            options = tool.decodeQrCodeParam(options);
+            let that = this;
+            // that.user_id = options.user_id;
+            // that.user = wepy.getStorageSync('user');
+        }
+        onShow() {
+            let that = this;
+            rq.get('getReviewRequestMoneyList', {
+                200: result => {
+                    that.request_list = result.data.data;
+                    that.$apply();
+                }
+            })
+        }
+    }
+</script>

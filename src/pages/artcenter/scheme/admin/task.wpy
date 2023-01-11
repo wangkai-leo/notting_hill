@@ -1,0 +1,335 @@
+<style lang="less">
+    .common-lab {
+        width: 230rpx;
+    }
+    .common-tip {
+        width: 300rpx;
+        float: right;
+        text-align: right;
+        color: #999;
+    }
+    .common-tip {
+        color: #222;
+        width: 400rpx;
+    }
+    .server-msg-box {
+        background: #f9f9f9;
+        padding: 35rpx 20rpx;
+        border-radius: 10rpx;
+        font-size: 26rpx;
+        margin: 20rpx 0rpx 0rpx;
+        overflow: hidden;
+    }
+    .server-msg-line {
+        overflow: hidden;
+        margin-bottom: 20rpx;
+        color: #555;
+    }
+    .server-msg-value {
+        position: relative;
+        float: right;
+        text-align: right;
+    }
+    .server-msg-title {
+        float: left;
+    }
+    .server-msg-blo {
+        font-weight: bold;
+        margin-bottom: 40rpx;
+        font-size: 24rpx;
+        color: #333;
+    }
+    .server-group {
+        border-top: #eaeaea solid 1rpx;
+        padding-top: 20rpx;
+    }
+    .server-name {
+        font-size: 26rpx;
+        color: #333;
+        padding: 40rpx 0rpx 15rpx; // float: left;
+        // width: 500rpx;
+    }
+    .edit-btn {
+        position: relative;
+        float: right;
+        font-size: 28rpx;
+        color: #87a6e7;
+        // height: 25rpx;
+        // width: 80rpx;
+    }
+    .edit-btn-del {
+        position: relative;
+        float: right;
+        font-size: 28rpx;
+        color: #999;
+        height: 40rpx;
+        width: 80rpx;
+        padding: 20rpx 0rpx 20rpx 20rpx;
+        text-align: right;
+    }
+    .contract-oth-title {
+        font-size: 24rpx;
+        font-weight: bold;
+        margin-bottom: 20rpx;
+    }
+    .contract-cou-title {
+        font-size: 24rpx;
+        float: left;
+    }
+    .contract-pri-title {
+        font-size: 24rpx;
+        float: right;
+    }
+    .common-tip-line {
+        color: #000;
+    }
+    .flesh-btn {
+        float: right;
+        color: #87a6e7;
+    }
+    .bod-order-btn {
+        background: #fff;
+        border: #87a6e7 solid 1rpx;
+        color:#87a6e7;
+    }
+</style>
+
+<template>
+    <view>
+        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+        <view class="common-top">
+            <view class="common-content"></view>
+        </view>
+        <view class="common-wrapper">
+            <!--|基本信息-->
+            <view>
+                <view>
+                    <view class="common-title">合同编号</view>
+                    <view class="common-pannel">
+                        <view class="common-list">
+                            <view class="common-tip-line">
+                                {{task_info.main_contract}}
+                            </view>
+                        </view>
+                    </view>
+                    <view class="common-title">活动信息</view>
+                    <view class="common-pannel">
+                        <!-- <view class="common-list">
+                            <view class="common-lab">活动类型</view>
+                            <input class="common-tip" value="{{task_info.task_type}}" @input="bindInputActType" type="text" placeholder="请输入" />
+                        </view> -->
+                        <view class="common-list">
+                            <view class="common-lab">新郎姓名</view>
+                            <input class="common-tip" disabled value="{{task_info.groom_name}}" type="text" placeholder="请输入" />
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">新郎手机</view>
+                            <input class="common-tip" disabled value="{{task_info.groom_mobile}}" type="text" placeholder="请输入" />
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">新娘姓名</view>
+                            <input class="common-tip" disabled value="{{task_info.bride_name}}" type="text" placeholder="请输入" />
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">新娘手机</view>
+                            <input class="common-tip" disabled value="{{task_info.bride_mobile}}" type="text" placeholder="请输入" />
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">销售</view>
+                            <input class="common-tip" disabled value="{{task_info.sales_name}}" type="text" placeholder="请输入" />
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">策划</view>
+                            <input class="common-tip" disabled value="{{task_info.planner_name}}" type="text" placeholder="请输入" />
+                        </view>
+                    </view>
+                    <view class="common-title">活动时间</view>
+                    <view class="common-pannel">
+                        <view class="common-list">
+                            <view class="common-lab">婚礼日期</view>
+                            <input class="common-tip" disabled value="{{task_info.schedule_session.schedule_date}}" type="text" placeholder="请输入" />
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">宴会厅</view>
+                            <view class="common-tip">{{task_info.schedule_session.area_name}}</view>
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">宴会场次</view>
+                            <input class="common-tip" disabled value="{{task_info.schedule_session.session_name}}" type="text" placeholder="请输入" />
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">到店时间</view>
+                            <input class="common-tip" @input="bindInputArriveTime" value="{{task_info.arrival_time}}" type="text" placeholder="请输入" />
+                        </view>
+                        <!-- <view class="common-list">
+                            <view class="common-lab">餐段</view>
+                            <input class="common-tip" @input="bindInputMealSection" value="{{task_info.wedding_meal_section}}" type="text" placeholder="请输入" />
+                        </view> -->
+                    </view>
+                    <view class="common-title">活动需求</view>
+                    <view class="common-pannel">
+                        <view class="common-list">
+                            <view class="common-lab">台型</view>
+                            <input class="common-tip" disabled @input="bindInputTableType" value="{{task_info.wedding_table_type}}" type="text" placeholder="请输入" />
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">桌数</view>
+                            <input class="common-tip" disabled value="{{task_info.wedding_table_number}}" @input="bindInputTableNumber" type="text" placeholder="请输入" />
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">宴会餐标</view>
+                            <view class="common-tip">{{task_info.wedding_package_name}}</view>
+                        </view>
+                    </view>
+                </view>
+                <view class="common-title">最终菜单</view>
+                <view class="common-pannel common-pannel-b">
+                    <view class="server-name">冷菜</view>
+                    <view class="server-msg-box">
+                        <block wx:for="{{task_info.package_info.cool}}" wx:key="">
+                            <view class="server-msg-line" wx:if="{{item.is_delete!=1}}">
+                                <view class="server-msg-title {{item.is_delete==1?'server-msg-title-del':''}}">{{item.product_name}} {{item.change_remark?'('+item.change_remark+')':''}}
+                                </view>
+                            </view>
+                        </block>
+                    </view>
+                    <view class="server-name">热菜</view>
+                    <view class="server-msg-box">
+                        <block wx:for="{{task_info.package_info.hot}}" wx:key="">
+                            <view class="server-msg-line" wx:if="{{item.is_delete!=1}}">
+                                <view class="server-msg-title {{item.is_delete==1?'server-msg-title-del':''}}">{{item.product_name}} {{item.change_remark?'('+item.change_remark+')':''}}
+                                </view>
+                            </view>
+                        </block>
+                    </view>
+                </view>
+            </view>
+            <!--基本信息|-->
+            <view class="common-title">运营须知</view>
+            <view class="common-pannel">
+                <textarea disabled class="common-area" value="{{task_info.instruction_operation}}" @input="bindInputOperationMark" placeholder="请输入" />
+            </view>
+            <view class="common-title">宴会厅须知</view>
+            <view class="common-pannel">
+                <textarea disabled class="common-area" value="{{task_info.instruction_room}}" @input="bindInputRoomMark" placeholder="请输入" />
+            </view>
+            <view class="common-title">工程部须知</view>
+            <view class="common-pannel">
+                <textarea disabled class="common-area" value="{{task_info.instruction_engineering}}" @input="bindInputEnginnerMark" placeholder="请输入" />
+            </view>
+            <view class="common-title">厨房须知</view>
+            <view class="common-pannel">
+                <textarea disabled class="common-area" value="{{task_info.instruction_kitchen}}" @input="bindInputKitchenMark" placeholder="请输入" />
+            </view>
+            <view class="common-title">其他须知</view>
+            <view class="common-pannel">
+                <textarea disabled class="common-area" value="{{task_info.instruction_other}}" @input="bindInputOtherMark" placeholder="请输入" />
+            </view>
+            <!-- <view class="customer-order-btn" @tap="submit">保存</view> -->
+            <view class="common-title" wx:if="{{task_info.task_status==1}}">运营组别</view>
+            <view class="common-pannel" wx:if="{{task_info.task_status==1}}">
+                <view class="common-list">
+                    {{task_info.team_name}}
+                </view>
+            </view>
+            <view wx:if="{{task_info.task_status!=1}}">
+                <view class="common-title">运营组别</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        {{teams_info[teams_index].team_name}}
+                    </view>
+                </view>
+                <view class="customer-order-btn" @tap="submit" data-pass="1">通过</view>
+            <view class="customer-order-btn bod-order-btn" @tap="submit" data-pass="0">驳回</view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from "wepy";
+    import G from "../../../../common/global";
+    import C from "../../../../common/config";
+    import rq from "../../../../common/utils/request";
+    import tool from "../../../../common/utils/tool";
+    import validate from "../../../../common/utils/validate";
+    import storage from "../../../../common/utils/storage";
+    import dat from "../../../../common/utils/date";
+    import file from "../../../../common/utils/file";
+    import can from "../../../../common/utils/canvas";
+    import rule from "../../../../common/rule";
+    import css from "../../../../components/css";
+    import header from "../../../../components/header";
+    export default class Index extends wepy.page {
+        components = {
+            css: css, //样式表
+            header: header
+        };
+        data = {
+            isopacity: true,
+            title: "婚礼任务单",
+            isback: true,
+            id: -1,
+            order_id_str: -1,
+            task_info: {},
+            teams_info: {},
+            teams_index: 0,
+            display_flesh: true,
+
+            is_submited:false
+        };
+        methods = {
+            submit(e) {
+                let pass=e.currentTarget.dataset.pass;
+                let that = this;
+                if (this.is_submited) {
+                    return false;
+                }
+                this.is_submited = true;
+                rq.get('reviewTaskInfo', {
+                    200: result => {
+                        wepy.navigateBack({
+                            delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                        });
+                        that.$apply();
+                    }
+                }, {
+                    wedding_task_id:that.task_info.id,
+                    pass:pass
+                })
+            }
+        };
+        
+        onLoad(options) {
+            options = tool.decodeQrCodeParam(options);
+            let that = this;
+            that.id = options.id;
+            that.order_id_str = options.order_id_str;
+            rq.get("getWeddingTask", {
+                200: result => {
+                    that.task_info = result.data.data;
+                    that.$apply();
+                    rq.get("getTeams", {
+                        200: result => {
+                            that.teams_info = result.data.data;
+                            let i=0;
+                            that.teams_info.forEach(element => {
+                                if(element.team_name==that.task_info.team_name){
+                                    that.teams_index=i;
+                                }
+                                i++;
+                            });
+                            that.$apply();
+                        }
+                    }, {
+                        team_type: 2
+                    });
+                }
+            }, {
+                order_id_str: that.order_id_str,
+                order_id: that.id
+            });
+        }
+        onShow() {}
+    }
+</script>

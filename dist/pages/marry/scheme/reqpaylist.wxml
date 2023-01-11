@@ -1,0 +1,53 @@
+
+    <view>
+        
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <block  wx:for="{{request_list}}" wx:key="">
+                <view class="common-pannel common-pannel-b">
+                    <view>
+                        <view class="server-name">申请请款
+                            <text class="common-lab-btn">{{item.review_status_text}}</text>
+                        </view>
+                        <view class="server-msg-box" bindtap="goToDetail" data-id="{{item.id}}">
+                            <view class="server-msg-line">
+                                <view class="server-msg-title">请款时间</view>
+                                <view class="common-tip">{{item.request_date}}</view>
+                            </view>
+                            <view class="server-msg-line">
+                                <view class="server-msg-title">请款金额</view>
+                                <view class="common-tip">{{item.request_money}}</view>
+                            </view>
+                            <view class="server-msg-line">
+                                <view class="server-msg-title">请款原因</view>
+                                <view class="common-tip">{{item.request_reason}}</view>
+                            </view>
+                            <view class="server-msg-line">
+                                <view class="server-msg-title">备注</view>
+                                <view class="common-tip">{{item.request_remark}}</view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </block>
+            <view class="customer-order-btn" bindtap="goToRequestPay">发起申请</view>
+        </view>
+    </view>

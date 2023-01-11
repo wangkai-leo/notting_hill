@@ -1,0 +1,134 @@
+@import "./../../../components/header.wxss";
+@import "./../../../components/css.wxss";
+.common-lab {
+  width: 230rpx;
+}
+.common-tip {
+  width: 300rpx;
+  float: right;
+  text-align: right;
+  color: #999;
+}
+.common-tip {
+  color: #222;
+}
+.server-msg-box {
+  background: #f9f9f9;
+  padding: 35rpx 20rpx;
+  border-radius: 10rpx;
+  font-size: 26rpx;
+  margin: 20rpx 0rpx 0rpx;
+  overflow: hidden;
+}
+.server-msg-line {
+  overflow: hidden;
+  margin-bottom: 20rpx;
+  color: #555;
+}
+.server-msg-value {
+  position: relative;
+  float: right;
+  text-align: right;
+}
+.server-msg-title {
+  float: left;
+}
+.server-msg-blo {
+  font-weight: bold;
+  margin-bottom: 40rpx;
+  font-size: 24rpx;
+  color: #333;
+}
+.server-group {
+  border-top: #eaeaea solid 1rpx;
+  padding-top: 20rpx;
+}
+.server-name {
+  font-size: 26rpx;
+  color: #333;
+  padding: 40rpx 0rpx 15rpx;
+  overflow: hidden;
+}
+.edit-btn {
+  position: relative;
+  float: right;
+  font-size: 28rpx;
+  color: #87a6e7;
+  height: 25rpx;
+  width: 80rpx;
+}
+.edit-btn-del {
+  position: relative;
+  float: right;
+  font-size: 28rpx;
+  color: #999;
+  height: 40rpx;
+  width: 80rpx;
+  padding: 20rpx 0rpx 20rpx 20rpx;
+  text-align: right;
+}
+.common-stauts-tip {
+  color: #fb7c7c;
+  float: right;
+}
+.common-checked {
+  right: 0rpx;
+  left: auto;
+  top: 25rpx;
+}
+.common-tip-o {
+  position: absolute;
+  right: 75rpx;
+  top: 26rpx;
+  font-style: italic;
+}
+.common-lab-line {
+  width: 580rpx;
+}
+.c-link {
+  position: absolute;
+  color: #87a6e7;
+  right: 50rpx;
+}
+.common-ov-h {
+  padding: 0rpx 0rpx 30rpx 0rpx;
+}
+.order-p-ptit {
+  font-size: 28rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+  position: relative;
+  padding: 30rpx 0rpx 0rpx 10rpx;
+}
+.common-pannel-cp {
+  position: relative;
+  margin-bottom: 10rpx;
+  font-weight: bold;
+}
+.common-pannel-cp:last-child {
+  margin-bottom: 40rpx;
+}
+.common-ppt-o {
+  font-size: 22rpx;
+  font-weight: normal;
+  color: #999;
+  float: right;
+}
+.cppto-statu {
+  position: absolute;
+  color: #87a6e7;
+  margin-right: 10rpx;
+  font-size: 22rpx;
+  font-weight: normal;
+  right: 60rpx;
+  top: 29rpx;
+}
+.common-tip-a {
+  width: 650rpx;
+}
+.common-pannel-cp .common-list {
+  border: none;
+}
+.common-title-four {
+  margin-top: 45rpx;
+}

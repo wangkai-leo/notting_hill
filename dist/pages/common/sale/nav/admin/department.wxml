@@ -1,0 +1,85 @@
+
+    <view>
+        
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <view class="common-title">{{page_info.team_info.team_name}}</view>
+            <view class="common-pannel">
+                <view class="dep-lead">队长：{{page_info.team_info.employee_name}}</view>
+                <view class="dep-base-box">
+                    <view class="dep-2">
+                        <view class="dep-num">{{page_info.team_info.employee_num}}</view>
+                        <view class="dep-tip">成员人数</view>
+                    </view>
+                    <view class="dep-2" bindtap="goToTeamOrder">
+                        <view class="dep-num">{{page_info.team_info.month_user_num}}</view>
+                        <view class="dep-tip">接单数</view>
+                    </view>
+                </view>
+            </view>
+            <view class="common-title">成员详情</view>
+            <block  wx:for="{{page_info.employee_list}}" wx:key="">
+                <view class="common-pannel">
+                    <view class="dep-lead">{{item.employee_name}} <text class="dep-em-sta">{{item.employee_status_text}}</text><text class="{{item.online_status==1?'gray-color':'red-color'}}">({{item.online_status_text}})</text><text class="dep-em-edit" bindtap="check" data-index="{{index}}">编辑</text></view>
+                    <view class="dep-base-box">
+                        <view class="dep-3">
+                            <view class="dep-num">{{item.employee_now_clients}}/{{item.employee_max_clients}}</view>
+                            <view class="dep-tip">本月客资</view>
+                        </view>
+                        <view class="dep-3">
+                            <view class="dep-num">{{item.following_num}}</view>
+                            <view class="dep-tip">总维护客资</view>
+                        </view>
+                        <view class="dep-3">
+                            <view class="dep-num">{{item.un_follow_num}}</view>
+                            <view class="dep-tip">未跟进客资数</view>
+                        </view>
+                    </view>
+                </view>
+            </block>
+        </view>
+        <view class="leo-over-bg"  wx:if="{{check_item}}">
+            <view class="leo-over-center">
+                <view class="leo-over-pannle">
+                    <view class="dep-form-box">
+                        <view class="dep-inpu-lab">客资上限</view>
+                        <view class="dep-input-box">
+                            <input class="" bindinput="bindInput" value="{{check_item.employee_max_clients}}" type="text" placeholder="请输入" maxlength="140"/>
+                        </view>
+                    </view>
+                    <view class="dep-form-box">
+                        <view class="dep-inpu-lab">客资状态</view>
+                        <view class="dep-input-box">{{check_item.employee_status_text}} {{check_item.online_status_text}} 
+                            <image class="common-log-arrows" src="../../../../../images/arrows-down.png" mode="widthFix" lazy-load="false">
+                            </image>
+                            <picker class="picker-common" bindchange="bindChange" value="{{status_index}}" range="{{employee_status}}">
+                                <view class="picker-common-v">
+                                    当前选择：{{employee_status[status_index]}}
+                                </view>
+                            </picker>
+                        </view>
+                    </view>
+                    <view class="dep-form-btn" bindtap="cancel">取消</view>
+                    <view class="dep-form-btn" bindtap="submit">确认</view>
+                </view>
+            </view>
+        </view>
+    </view>

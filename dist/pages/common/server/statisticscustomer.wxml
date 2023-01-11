@@ -1,0 +1,22 @@
+
+  <view class="common-wrapper">
+    <view class="common-pannel">
+      <view class="common-list-sa">
+        <view class="cus-5-rows">编号</view>
+        <view class="cus-5-rows">渠道</view>
+        <view class="cus-5-rows">城市</view>
+        <view class="cus-5-rows">发布人</view>
+        <view class="cus-5-rows">销售</view>
+      </view>
+      <block  wx:for="{{list}}" wx:key="">
+        <view class="common-list-sa" bindtap="goToDetail" data-id="{{item.user_id}}">
+          <view class="cus-5-rows">{{ item.order_id }}</view>
+          <view class="cus-5-rows">{{ item.channel_name }}</view>
+          <view class="cus-5-rows">{{ item.city_name }}</view>
+          <view class="cus-5-rows">{{ item.submit_name }}</view>
+          <view class="cus-5-rows">{{ item.sale_name }}</view>
+        </view>
+      </block>
+      
+    </view>
+  </view>

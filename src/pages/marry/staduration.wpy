@@ -1,0 +1,294 @@
+<style lang="less">
+    .common-lab {
+        width: 230rpx;
+    }
+    .common-tip {
+        width: 300rpx;
+        float: right;
+        text-align: right;
+        color: #222;
+    }
+    .server-msg-box {
+        background: #f9f9f9;
+        padding: 35rpx 20rpx;
+        border-radius: 10rpx;
+        font-size: 26rpx;
+        margin: 20rpx 0rpx 0rpx;
+        overflow: hidden;
+    }
+    .server-msg-line {
+        overflow: hidden;
+        margin-bottom: 20rpx;
+        color: #555;
+    }
+    .server-msg-value {
+        position: relative;
+        float: right;
+        text-align: right;
+    }
+    .server-msg-title {
+        float: left;
+    }
+    .server-msg-blo {
+        font-weight: bold;
+        margin-bottom: 40rpx;
+        font-size: 24rpx;
+        color: #333;
+    }
+    .server-group {
+        border-top: #eaeaea solid 1rpx;
+        padding-top: 20rpx;
+    }
+    .server-name {
+        font-size: 26rpx;
+        color: #333;
+        padding: 40rpx 0rpx 15rpx; // float: left;
+        // width: 500rpx;
+    }
+    .edit-btn {
+        position: relative;
+        float: right;
+        font-size: 28rpx;
+        color: #87a6e7; // height: 25rpx;
+        // width: 80rpx;
+    }
+    .edit-btn-del {
+        position: relative;
+        float: right;
+        font-size: 28rpx;
+        color: #999;
+        height: 40rpx;
+        width: 80rpx;
+        padding: 20rpx 0rpx 20rpx 20rpx;
+        text-align: right;
+    }
+    .common-stauts-tip {
+        color: #fb7c7c;
+        float: right;
+    }
+    .common-checked {
+        right: 0rpx;
+        left: auto;
+        top: 25rpx;
+    }
+    .dep-form-btn {
+        width: 260rpx;
+        height: 70rpx;
+        line-height: 70rpx;
+        text-align: center;
+        background-color: #87a6e7;
+        color: #fff;
+        font-size: 26rpx;
+        border-radius: 10rpx;
+        margin-left: 50rpx;
+        float: left;
+        box-shadow: #eaeaea 5rpx 5rpx 10rpx;
+        margin-top: 30rpx;
+    }
+    .dep-form-btn:last-child {
+        float: right;
+        margin-right: 50rpx;
+        margin-left: 0rpx;
+    }
+    .leo-over-pannle {
+        height: 960rpx;
+        margin-top: -480rpx;
+    }
+    .dep-form-box {
+        height: 800rpx;
+    }
+    .em-name {
+        font-size: 28rpx;
+        padding: 25rpx 30rpx;
+    }
+    .em-checked {
+        margin-left: 40rpx;
+        float: left;
+        margin-right: 10rpx;
+    }
+    .em-c-it {
+        overflow: hidden;
+        padding: 5rpx 0rpx;
+        font-size: 26rpx;
+    }
+</style>
+
+<template>
+    <view>
+        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <!-- <view class="common-title">客户信息</view> -->
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">开始时间</view>
+                    <input disabled class="common-tip" value="{{start_date}}" />
+                    <picker class="picker-common" mode="date" @change="bindStartChange" value="{{start_date}}">
+                        <view class="picker-common-v">
+                            当前选择：{{start_date}}
+                        </view>
+                    </picker>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">结束时间</view>
+                    <input disabled class="common-tip" value="{{end_date}}" />
+                    <picker class="picker-common" mode="date" @change="bindEndChange" value="{{end_date}}">
+                        <view class="picker-common-v">
+                            当前选择：{{end_date}}
+                        </view>
+                    </picker>
+                </view>
+                <view class="common-list" wx:if="{{is_server}}" @tap="displayServers">
+                    <view class="common-lab">人员</view>
+                    <input disabled class="common-tip" value="{{servers_name}}" />
+                </view>
+            </view>
+            <view class="customer-order-btn" @tap="save">确认修改</view>
+            <view class="leo-over-bg" wx:if="{{show_server_check}}">
+                <view class="leo-over-center">
+                    <view class="leo-over-pannle">
+                        <scroll-view class="dep-form-box" scroll-y>
+                            <block wx:for="{{employee_list}}">
+                                <view class="em-name">{{item.team_name}}</view>
+                                <block wx:for="{{item.children}}" wx:key="" wx:for-index="it_index" wx:for-item="it">
+                                    <view class="em-c-it" @tap="bindToggleChecked" data-index="{{index}}" data-sindex="{{it_index}}">
+                                        <checkbox-group data-key="{{item.key}}">
+                                            <checkbox disabled class="em-checked" checked="{{it.checked}}" />
+                                        </checkbox-group>
+                                        {{it.employee_name}}
+                                    </view>
+                                </block>
+                            </block>
+                        </scroll-view>
+                        <view class="dep-form-btn" @tap="reset">还原</view>
+                        <view class="dep-form-btn" @tap="sure">确认</view>
+                    </view>
+                </view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import G from '../../common/global';
+    import rq from '../../common/utils/request';
+    import tool from '../../common/utils/tool';
+    import validate from '../../common/utils/validate';
+    import storage from '../../common/utils/storage';
+    import dat from '../../common/utils/date';
+    import file from '../../common/utils/file';
+    
+    import css from '../../components/css';
+    import header from '../../components/header';
+    export default class Index extends wepy.page {
+        components = {
+            css: css, //样式表
+            header: header
+        };
+        data = {
+            isopacity: true,
+            title: '统计时间',
+            isback: true,
+            start_date: '',
+            end_date: '',
+            is_server: false,
+            employee_list: null,
+            servers_name: '全部',
+            servers_ids: '',
+            show_server_check: false,
+            is_pay:false
+        };
+        methods = {
+            reset() {
+                this.servers_ids = '';
+                this.servers_name = '全部';
+                this.show_server_check = false;
+            },
+            sure() {
+                let pur_name = '';
+                let pur_ids = '';
+                this.employee_list.forEach(element => {
+                    element.children.forEach(it => {
+                        if (it.checked) {
+                            if (!pur_ids) {
+                                pur_ids = it.id;
+                                pur_name = it.employee_name;
+                            } else {
+                                pur_ids += ',' + it.id;
+                                pur_name += ',' + it.employee_name;
+                            }
+                        }
+                    });
+                });
+                this.servers_ids = pur_ids;
+                this.servers_name = pur_name;
+                this.show_server_check = false;
+            },
+            bindToggleChecked(e) {
+                let index = e.currentTarget.dataset.index;
+                let sindex = e.currentTarget.dataset.sindex;
+                console.log(index);
+                console.log(sindex);
+                if (this.employee_list[index].children[sindex].checked) {
+                    this.employee_list[index].children[sindex].checked = false;
+                } else {
+                    this.employee_list[index].children[sindex].checked = true;
+                }
+            },
+            displayServers() {
+                this.show_server_check = true;
+            },
+            save() {
+                let that = this;
+                if (that.is_server) {
+                    wepy.setStorageSync('pick_date', {
+                        start_date: that.start_date,
+                        end_date: that.end_date,
+                        servers_ids: that.servers_ids
+                    });
+                } else {
+                    wepy.setStorageSync('pick_date', {
+                        start_date: that.start_date,
+                        end_date: that.end_date,
+                        is_pay:that.is_pay
+                    });
+                }
+                wepy.navigateBack({
+                    delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                });
+            },
+            bindStartChange(e) {
+                this.start_date = e.detail.value;
+            },
+            bindEndChange(e) {
+                this.end_date = e.detail.value;
+            },
+        };
+        onLoad(options) {
+            options = tool.decodeQrCodeParam(options);
+            let that = this;
+            this.is_pay=options.pay;
+            this.start_date = options.start_date;
+            this.end_date = options.end_date;
+            this.is_pay=options.pay;
+            let user = wepy.getStorageSync('user');
+            if (user.is_server || user.is_server_offline) {
+                that.is_server = true;
+                rq.get('getLoginerServerTeamEmployee', {
+                    200: result => {
+                        that.employee_list = result.data.employee_list;
+                        // array.forEach(element => {
+                            
+                        // });
+                        that.$apply();
+                    }
+                }, {})
+            }
+        }
+        onShow() {}
+    }
+</script>

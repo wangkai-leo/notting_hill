@@ -1,0 +1,31 @@
+@import "./../customerfollow.wxss";
+@import "./../customerinfo.wxss";
+@import "./../maintain.wxss";
+@import "./../ntpicker.wxss";
+.common-tip {
+  color: #222;
+}
+.sale-tab-item {
+  width: 345rpx;
+}
+.common-lab-rcode {
+  width: 460rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  float: left;
+}
+.common-tip-rcode {
+  width: 150rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  float: right;
+  text-align: right;
+}
+.common-tip-0 {
+  color: red;
+}
+.common-tip-1 {
+  color: green;
+}

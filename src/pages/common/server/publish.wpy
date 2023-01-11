@@ -1,0 +1,500 @@
+<style lang="less">
+
+</style>
+
+<template>
+    <view>
+        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <view class="common-title">客户来源</view>
+            <view class="common-pannel">
+                <view class="common-list" @tap="showChannelPannel">
+                    <view class="common-lab common-lab-line">{{page_data.channelInfo[channel_index].channel_name}}</view>
+                    <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                    </image>
+                </view>
+            </view>
+            <view class="common-title">客户意向</view>
+            <view class="common-pannel">
+                <view class="common-list" @tap="showAttentionPannel">
+                    <view class="common-lab common-lab-line">{{page_data.intentionInfo[intent_index].intention_name}}</view>
+                    <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                    </image>
+                </view>
+            </view>
+            <view class="common-title">婚礼信息</view>
+            <view class="common-pannel">
+                <view class="common-list" @tap="showCityPannel">
+                    <view class="common-lab">意向城市</view>
+                    <view class="common-tip">{{page_data.cityInfo[attend_city_index].city_name}}</view>
+                    <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                    </image>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">结婚城市</view>
+                    <view class="common-tip">{{region[0]}} {{region[1]}} {{region[2]}}</view>
+                    <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                    </image>
+                    <picker mode="region" class="picker-common" @change="bindMerryCityChange" value="{{region}}">
+                        <view class="picker-common-v">
+                            当前选择：{{region[0]}}，{{region[1]}}，{{region[2]}}
+                        </view>
+                    </picker>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">婚礼酒店</view>
+                    <input class="common-tip" @input="bindInputHotel" value="" type="text" placeholder="请输入婚礼酒店"></input>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">婚礼时间</view>
+                    <view class="common-tip">{{merry_date}}</view>
+                    <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                    </image>
+                    <picker class="picker-common" mode="date" value="{{merry_date}}" @change="bindMerryDateChange">
+                        <view class="picker-common-v">
+                            当前选择：{{merry_date}}
+                        </view>
+                    </picker>
+                </view>
+            </view>
+            <view class="common-title">客户信息</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">客户姓名</view>
+                    <input class="common-tip" @input="bindInputUserName" value="" type="text" placeholder="请填写新人姓名"></input>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">手机号</view>
+                    <input class="common-tip" value="" type="number" @input="bindInputUserMobile" @blur="checkPhoneNume" placeholder="请填写新人手机号"></input>
+                    <view class="common-warning-tip" wx:if="{{exit_user}}">客资已存在</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">微信号</view>
+                    <input class="common-tip" value="" type="text" @input="bindInputWxCount" @blur="checkPhoneNume" placeholder="请填写新人微信号"></input>
+                </view>
+                <view class="common-swiper-box" wx:if="{{exit_user}}">
+                    <view class="common-swiper-title">
+                        <view class="common-left-right">
+                            <view class="common-swt-lab">来访记录</view>
+                        </view>
+                    </view>
+                    <block wx:for="{{exit_user}}" wx:key="">
+                        <view class="swiper-container-common">
+                            <view class="com-swt-box">
+                                <view class="com-swt-list">日期：<text>{{item.status_time}}</text></view>
+                                <view class="com-swt-list">编号：<text>{{item.order_id}}</text></view>
+                                <view class="com-swt-list">渠道：<text>{{item.channel_name}}</text></view>
+                                <view class="com-swt-list">意向：<text>{{item.intention_name}}</text></view>
+                                <view class="com-swt-list">销售：<text>{{item.sales_name}}</text></view>
+                                <view class="com-swt-list">状态：<text>{{item.status_name}}</text></view>
+                            </view>
+                            <view class="com-swt-close" @tap="closeUser" wx:if="{{item.user_status==20}}" data-id="{{item.id}}">关闭客资</view>
+                        </view>
+                    </block>
+                </view>
+            </view>
+            <upload label="沟通证明" size="9" :save_obj.sync="uplaoded" ntkey="images" :readonly.sync="readonly"></upload>
+
+            <!-- <view class="common-title">沟通证明 {{show_img_arr.length}}/9</view>
+            <view class="common-pannel">
+                <view class="common-pic-box">
+                    <block wx:for="{{show_img_arr}}" wx:key="">
+                        <image class="common-add-pic" src="{{item}}" mode="aspectFill" lazy-load="false">
+                        </image>
+                    </block>
+                    <image wx:if="{{show_img_arr.length<9}}" @tap="uploadFile" class="common-add-pic" src="../../../images/add-pic.png" mode="aspectFill" lazy-load="false">
+                    </image>
+                </view>
+            </view> -->
+            <view class="common-title">备注信息</view>
+            <view class="common-pannel">
+                <textarea class="common-area" value="" @input="bindInputMark" placeholder="请输入客资的备注信息：如预算、风格、喜好等" />
+            </view>
+            <!--线下客服直接发布客资，线上客服艺术中心可以指定接单团队自动分配，婚庆可以指定到特定的人-->
+            <view wx:if="{{user.is_server}}">
+                <view class="common-title">接单信息</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <view class="common-lab-full">{{teams[teams_index].team_name}}</view>
+                        <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                        </image>
+                        <picker class="picker-common" value="{{teams_index}}" range="{{teams}}" range-key="team_name" @change="bindInputTeamChange">
+                            <view class="picker-common-v">
+                                当前选择：{{teams[teams_index].team_name}}
+                            </view>
+                        </picker>
+                    </view>
+
+                    <view class="common-list" wx:if="{{department=='marry'}}">
+                        <view class="common-lab-full">{{team_members[team_members_index].employee_name}}</view>
+                        <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                        </image>
+                        <picker class="picker-common" value="{{team_members_index}}" range="{{team_members}}" range-key="employee_name" @change="bindChangeEmployee">
+                            <view class="picker-common-v">
+                                当前选择：{{team_members[team_members_index].employee_name}}
+                            </view>
+                        </picker>
+                    </view>
+                </view>
+                <view class="common-check-wrap" @tap="toggleAutoAllot" wx:if="{{department=='artcenter'}}">
+                    <view class="common-check-box">
+                        <image class="common-checked" wx:if="{{auto_allot}}" src="../../../images/checked-icon.png" mode="widthFix" lazy-load="false">
+                        </image>
+                    </view>
+                    客资自动分配
+                </view>
+            </view>
+            <view class="customer-create-btn" @tap="submit">确认并分配</view>
+        </view>
+
+        <mpicker :rang_data.sync="channelInfo" :rang_display.sync="channel_display" :rang_index.sync="channel_index" :rang_key.sync="channel_key_name" @changeMp.user="bindChannelChange"></mpicker>
+        <npicker :rang_data.sync="intentionInfo" :rang_display.sync="intention_display" :rang_index.sync="intent_index" :rang_key.sync="intention_key_name" @changeMp.user="bindAttentChange"></npicker>
+        <opicker :rang_data.sync="cityInfo" :rang_display.sync="city_display" :rang_index.sync="attend_city_index" :rang_key.sync="city_key_name" @changeMp.user="bindAttendCityChange"></opicker>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import C from '../../../common/config';
+    import rq from '../../../common/utils/request';
+    import tool from '../../../common/utils/tool';
+    import validate from '../../../common/utils/validate';
+    import file from '../../../common/utils/file';
+    import css from '../../../components/css';
+    import header from '../../../components/header';
+    import mpicker from '../../../components/mpicker';
+    import npicker from '../../../components/mpicker';
+    import opicker from '../../../components/mpicker';
+    import upload from "../../../components/common/upload";
+
+    export default class Index extends wepy.page {
+        components = {
+            css: css, //样式表
+            header: header,
+            mpicker: mpicker,
+            npicker: npicker,
+            opicker: opicker,
+            upload: upload
+        };
+        data = {
+            isopacity: true,
+            title: '发布客资',
+            isback: true,
+            page_data: null,
+            teams: null,
+            teams_rand: ['全部'],
+            teams_index: 0,
+            merry_city_index: 0,
+            merry_date: '请选择婚礼时间',
+            wedding_hotel: '',
+            user_name: '',
+            user_mobile: '',
+            wechat_id: '',
+            user_remark: '',
+            exit_user: null,
+
+            submit_lock: false,
+            // show_img_arr: [],
+            auto_allot: true,
+            region: ['-', '-', '-'],
+            user: null,
+            channelInfo: [],
+            channel_key_name: 'channel_name',
+            channel_index: 0,
+            channel_display: false,
+            intentionInfo: [],
+            intention_key_name: 'intention_name',
+            intent_index: 0,
+            intention_display: false,
+            cityInfo: [],
+            city_key_name: 'city_name',
+            attend_city_index: 0,
+            city_display: false,
+            team_members: null,
+            team_members_index: 0,
+
+            is_submit: 1,
+
+            department:'',
+
+            readonly:false,
+            uplaoded:{
+              images: [],
+            },
+        };
+        methods = {
+            bindChangeEmployee(e) {
+                this.team_members_index = e.detail.value;
+            },
+            showChannelPannel() {
+                this.channel_display = true;
+            },
+            showAttentionPannel() {
+                this.intention_display = true;
+            },
+            showCityPannel() {
+                this.city_display = true;
+            },
+            bindInputTeamChange(e) {
+                this.teams_index = e.detail.value;
+                if(this.department=='marry'){
+                  this.team_members_index = 0;
+                  this.getTeamEmployee(this.teams[this.teams_index].team_id);
+                }
+            },
+            toggleAutoAllot() {
+                this.auto_allot = !this.auto_allot
+            },
+            closeUser(e) {
+                let that = this;
+                let id = e.currentTarget.dataset.id;
+                console.log(that.exit_user);
+                rq.get('closeUser', {
+                    200: result => {
+                        that.exit_user = null;
+                        that.$apply();
+                    }
+                }, {
+                    id: that.exit_user.id
+                })
+            },
+            bindInputMark(e) {
+                this.user_remark = e.detail.value;
+            },
+            bindInputWxCount(e) {
+                this.wechat_id = e.detail.value;
+            },
+            checkPhoneNume(e) {
+                let that = this;
+                rq.get('isExistUser', {
+                    201: result => {
+                        let user = result.data.userInfo;
+                        for (let key in user) {
+                            if (!user[key]) {
+                                user[key] = '-';
+                            }
+                        }
+                        that.exit_user = user;
+                        that.is_submit=result.data.is_submit; 
+                        // console.log(that.exit_user);
+                        that.$apply();
+                    },
+                    200: result => {
+                        that.exit_user = null;
+                        that.is_submit=result.data.is_submit; 
+                        that.$apply();
+                    }
+                }, {
+                    user_mobile: that.user_mobile,
+                    wechat_id: that.wechat_id,
+                    intention_id: that.page_data.intentionInfo[that.intent_index].id
+                })
+                if (!validate.isPhoneNumber(this.user_mobile) && !validate.isEmpty(this.user_mobile)) {
+                    wepy.showToast({
+                        title: '手机号不正确', //提示的内容,
+                        icon: 'none', //图标,
+                        duration: 2000, //延迟时间,
+                        mask: true, //显示透明蒙层，防止触摸穿透,
+                        success: res => {}
+                    });
+                };
+            },
+            bindInputUserMobile(e) {
+                let that = this;
+                that.user_mobile = e.detail.value;
+            },
+            bindInputUserName(e) {
+                this.user_name = e.detail.value;
+            },
+            bindInputHotel(e) {
+                this.wedding_hotel = e.detail.value;
+            },
+            bindChannelChange(index) {
+                this.channel_index = index;
+                console.log('cds');
+                this.getDistributionTeams();
+            },
+            bindAttentChange(index) {
+                this.intent_index = index;
+                this.getDistributionTeams();
+            },
+            bindAttendCityChange(index) {
+                this.attend_city_index = index;
+                this.getDistributionTeams();
+            },
+            bindMerryCityChange(e) {
+                let values = e.detail.value;
+                this.region = e.detail.value;
+                this.merry_city_index = values[0] + ' ' + values[1];
+            },
+            bindMerryDateChange(e) {
+                this.merry_date = e.detail.value;
+            },
+            submit() {
+                let that = this;
+                if (that.submit_lock) {
+                    return false;
+                }
+                let form_data = {
+                    channel_id: that.page_data.channelInfo[that.channel_index].id,
+                    intention_id: that.page_data.intentionInfo[that.intent_index].id,
+                    intention_city: that.page_data.cityInfo[that.attend_city_index].id,
+                    wedding_province_name: that.region[0],
+                    wedding_city_name: that.region[1],
+                    wedding_area_name: that.region[2],
+                    wedding_hotel: that.wedding_hotel,
+                    wedding_date: that.merry_date == '请选择婚礼时间' ? '' : that.merry_date,
+                    user_name: that.user_name,
+                    user_mobile: that.user_mobile,
+                    wechat_id: that.wechat_id,
+                    comm_proof: that.uplaoded.images.join(','),
+                    user_remark: that.user_remark
+                }
+                if(this.user.is_server){
+                  if(this.teams_index != 0){
+                    let index = this.teams_index;
+                    form_data.team_id = this.teams[index].team_id;
+                  }
+                  if(this.department=='artcenter'){
+                    form_data.auto_distribution = that.auto_allot ? '1' : '0'
+                  }
+                  if(this.department=='marry' && this.team_members_index!=0){
+                    form_data['employee_id'] = this.team_members[that.team_members_index].id
+                  }
+                }
+
+                if (!form_data.user_mobile && !form_data.wechat_id) {
+                    wepy.showToast({
+                        title: '请填写新人手机或微信', //提示的内容,
+                        icon: 'none', //图标,
+                        duration: 2000, //延迟时间,
+                        mask: true, //显示透明蒙层，防止触摸穿透,
+                        success: res => {}
+                    });
+                    return false;
+                }
+                if (form_data.user_mobile && !validate.isPhoneNumber(form_data.user_mobile)) {
+                    wepy.showToast({
+                        title: '请填写正确的手机号', //提示的内容,
+                        icon: 'none', //图标,
+                        duration: 2000, //延迟时间,
+                        mask: true, //显示透明蒙层，防止触摸穿透,
+                        success: res => {}
+                    });
+                    return false;
+                }
+                if (that.is_submit == 0) {
+                    wepy.showToast({
+                        title: '已存在相同客资', //提示的内容,
+                        icon: 'none', //图标,
+                        duration: 2000, //延迟时间,
+                        mask: true, //显示透明蒙层，防止触摸穿透,
+                        success: res => {}
+                    });
+                    return false;
+                }
+                that.submit_lock = true;
+                rq.get('isExistUser', {
+                    201: result => {
+                        let user = result.data.userInfo;
+                        for (let key in user) {
+                            if (!user[key]) {
+                                user[key] = '-';
+                            }
+                        }
+                        that.submit_lock = false;
+                        that.exit_user = user;
+                        that.$apply();
+                        wepy.showToast({
+                            title: '已存在相同客资', //提示的内容,
+                            icon: 'none', //图标,
+                            duration: 2000, //延迟时间,
+                            mask: true, //显示透明蒙层，防止触摸穿透,
+                            success: res => {}
+                        });
+                    },
+                    200: result => {
+                        that.exit_user = null;
+                        that.$apply();
+                        wepy.showLoading({
+                            title: '提交中...', //提示的内容,
+                            mask: true, //显示透明蒙层，防止触摸穿透,
+                            success: res => {}
+                        });
+                        rq.get('insertUserInfo', {
+                            200: result => {
+                                wepy.navigateBack({
+                                    delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                                });
+                            }
+                        }, form_data);
+                    }
+                }, {
+                    user_mobile: that.user_mobile,
+                    wechat_id: that.wechat_id,
+                    intention_id: that.page_data.intentionInfo[that.intent_index].id
+                })
+            }
+        };
+        getTeamEmployee(employee_team_id) {
+            let that = this;
+            rq.get('getTeamEmployee', {
+                200: result => {
+                    if (employee_team_id == 0) {
+                        that.team_members=[];
+                        that.team_members.unshift({
+                            id: 0,
+                            employee_name: '选择团队后再选择执行人'
+                        })
+                    } else {
+                        that.team_members = result.data.employee_list;
+                        that.team_members.unshift({
+                            id: 0,
+                            employee_name: '请选择'
+                        })
+                    }
+                    that.$apply();
+                }
+            }, {
+                employee_team_id: employee_team_id
+            })
+        }
+        getDistributionTeams() {
+            let that = this;
+            rq.get('getDistributionTeams', {
+                200: result => {
+                    that.teams = result.data.data;
+                    that.teams.unshift({
+                        team_id: 0,
+                        team_name: '全部'
+                    });
+                    that.$apply();
+                }
+            }, {
+                channel_id: that.page_data.channelInfo[that.channel_index].id,
+                intention_id: that.page_data.intentionInfo[that.intent_index].id,
+                intention_city: that.page_data.cityInfo[that.attend_city_index].id,
+            })
+        }
+        onLoad(options) {
+            let that = this;
+            this.user = wepy.getStorageSync('user');
+            rq.get('getInitData', {
+                200: result => {
+                    that.page_data = result.data;
+                    that.channelInfo = that.page_data.channelInfo;
+                    that.cityInfo = that.page_data.cityInfo;
+                    that.intentionInfo = that.page_data.intentionInfo;
+                    that.$apply();
+                    that.getDistributionTeams();
+                }
+            })
+            this.department=wepy.getStorageSync('office_line');
+        }
+        onShow() {}
+    }
+</script>

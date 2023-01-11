@@ -1,0 +1,469 @@
+<style lang="less">
+    .cus-5-rows {
+        width: 20%;
+        float: left;
+        text-align: center;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        height: 32rpx;
+        font-size:22rpx;
+    }
+    .cus-3-rows {
+        width: 33.3%;
+        float: left;
+        text-align: center;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        height: 32rpx;
+    }
+    .common-lab-btn{
+      top:0rpx;
+    }
+    .common-list-sa{
+      position: relative;
+      font-size: 26rpx;
+      color: #333333;
+      padding: 30rpx 0rpx;
+      border-bottom: #dad8d8 solid 1rpx;
+      overflow: hidden;
+    }
+</style>
+
+<template>
+    <view class="container">
+        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view wx:if="{{!is_search}}">
+            <view class="common-wrapper" wx:if="{{!is_filter}}">
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <view class="common-lab">总客资</view>
+                        <text class="common-lab-btn" @tap="editStatus">筛选</text>
+                    </view>
+                </view>
+                <!--列表-->
+                <view class="common-pannel" wx:if="{{!user.is_scheme}}">
+                    <view class="common-list-sa">
+                        <view class="cus-5-rows">日期</view>
+                        <view class="cus-5-rows">编号</view>
+                        <view class="cus-5-rows">渠道</view>
+                        <view class="cus-5-rows" wx:if="{{!user.is_server && !user.is_server_offline}}">城市</view>
+                        <view class="cus-5-rows" wx:if="{{user.is_server || user.is_server_offline}}">意向</view>
+                        <view class="cus-5-rows">销售</view>
+                    </view>
+                    <block wx:for="{{userList}}" wx:key="">
+                        <!--|客服和销售-->
+                        <view class="common-list" @tap="goToDetail" data-id="{{item.user_id}}">
+                            <view class="cus-5-rows">{{item.create_date}}</view>
+                            <view class="cus-5-rows">{{item.order_id}}</view>
+                            <view class="cus-5-rows">{{item.channel_name}}</view>
+                            <view class="cus-5-rows" wx:if="{{!user.is_server && !user.is_server_offline}}">{{item.intention_city_name}}</view>
+                            <view class="cus-5-rows" wx:if="{{user.is_server || user.is_server_offline}}">{{item.intention_name}}</view>
+                            <view class="cus-5-rows">{{item.sales_name}}</view>
+                        </view>
+                        <!--客服和销售|-->
+                    </block>
+                </view>
+                <view class="common-pannel" wx:if="{{user.is_scheme}}">
+                    <view class="common-list">
+                        <view class="cus-3-rows">日期（执行日期）</view>
+                        <view class="cus-3-rows">客资编号</view>
+                        <view class="cus-3-rows">策划姓名</view>
+                    </view>
+                    <block wx:for="{{userList}}" wx:key="">
+                        <!--|客服和销售-->
+                        <view class="common-list" @tap="goToDetail" data-id="{{item.user_id}}">
+                            <view class="cus-3-rows">{{item.wedding_date}}</view>
+                            <view class="cus-3-rows">{{item.order_id}}</view>
+                            <view class="cus-3-rows">{{item.planner_name}}</view>
+                        </view>
+                        <!--客服和销售|-->
+                    </block>
+                </view>
+            </view>
+            <view class="common-wrapper" wx:if="{{is_filter}}">
+                <view class="common-title">日期</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <view class="common-lab">开始时间</view>
+                        <input disabled class="common-tip" value="{{op.start_date}}" start="{{op.start_date}}" end="{{op.end_date}}" placeholder="请选择" />
+                        <picker class="picker-common" mode="date" @change="bindStartChange">
+                            <view class="picker-common-v">
+                                当前选择：{{start_date}}
+                            </view>
+                        </picker>
+                    </view>
+                    <view class="common-list">
+                        <view class="common-lab">结束时间</view>
+                        <input disabled class="common-tip" value="{{op.end_date}}" start="{{op.start_date}}" end="{{op.end_date}}" placeholder="请选择" />
+                        <picker class="picker-common" mode="date" @change="bindEndChange">
+                            <view class="picker-common-v">
+                                当前选择：{{end_date}}
+                            </view>
+                        </picker>
+                    </view>
+                </view>
+                <view class="common-title" wx:if="{{user.is_sale}}">城市</view>
+                <view class="common-pannel" wx:if="{{user.is_sale}}">
+                    <view class="common-list">
+                        <input class="common-tip" disabled value="{{op.intention_city_name}}" type="text" placeholder="请选择"></input>
+                        <picker class="picker-common" range="{{intention_city_arr}}" @change="bindCityChange">
+                            <view class="picker-common-v">
+                                当前选择：
+                            </view>
+                        </picker>
+                    </view>
+                </view>
+                <view class="common-title">客资编号</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <input class="common-tip" value="{{op.order_id}}" type="text" @input="bindInputOrderId" placeholder="请输入编号"></input>
+                    </view>
+                </view>
+                <view class="common-title">客资渠道</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <input class="common-tip" disabled value="{{op.channel_name}}" type="text" placeholder="请选择"></input>
+                        <picker class="picker-common" range="{{channel_arr}}" @change="bindChannelChange">
+                            <view class="picker-common-v">
+                                当前选择：
+                            </view>
+                        </picker>
+                    </view>
+                </view>
+                <view class="common-title">客资意向</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <input class="common-tip" disabled value="{{op.intention_name}}" type="text" placeholder="请选择"></input>
+                        <picker class="picker-common" range="{{intention_arr}}" @change="bindIntentionChange">
+                            <view class="picker-common-v">
+                                当前选择：
+                            </view>
+                        </picker>
+                    </view>
+                </view>
+                <view class="common-title">销售</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <input class="common-tip" disabled value="{{op.sales_name}}" type="text" placeholder="请选择"></input>
+                        <picker class="picker-common" range="{{sales_arr}}" @change="bindSalesChange">
+                            <view class="picker-common-v">
+                                当前选择：
+                            </view>
+                        </picker>
+                    </view>
+                </view>
+                <view class="customer-order-btn" @tap="search">确认</view>
+            </view>
+        </view>
+        <view wx:if="{{is_search}}">
+            <view class="common-wrapper" wx:if="{{show_search}}">
+                <view class="common-title">客资编号</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <input class="common-tip" value="{{op.order_id_str}}" type="text" @input="bindInputOrderIdStr" placeholder="请输入编号"></input>
+                    </view>
+                </view>
+                <view class="common-title">手机</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <input class="common-tip" value="{{op.user_mobile}}" type="text" @input="bindInputMobile" placeholder="请输入手机号"></input>
+                    </view>
+                </view>
+                <view class="common-title">微信号</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        <input class="common-tip" value="{{op.wechat_id}}" type="text" @input="bindInputwechat" placeholder="请输入微信号"></input>
+                    </view>
+                </view>
+                <view class="customer-order-btn" @tap="searchNow">确定</view>
+            </view>
+            <!--列表-->
+            <view class="common-wrapper" wx:if="{{!show_search}}">
+                <view class="common-pannel">
+                    <view class="common-list-sa">
+                        <view class="cus-5-rows">日期</view>
+                        <view class="cus-5-rows">编号</view>
+                        <view class="cus-5-rows">渠道</view>
+                        <view class="cus-5-rows" wx:if="{{!user.is_server && !user.is_server_offline}}">城市</view>
+                        <view class="cus-5-rows" wx:if="{{user.is_server || user.is_server_offline}}">意向</view>
+                        <view class="cus-5-rows">销售</view>
+                    </view>
+                    <block wx:for="{{userList}}" wx:key="">
+                        <!--|客服和销售-->
+                        <view class="common-list" @tap="goToDetail" data-id="{{item.user_id}}">
+                            <view class="cus-5-rows">{{item.create_date}}</view>
+                            <view class="cus-5-rows">{{item.order_id}}</view>
+                            <view class="cus-5-rows">{{item.channel_name}}</view>
+                            <view class="cus-5-rows" wx:if="{{!user.is_server && !user.is_server_offline}}">{{item.intention_city_name}}</view>
+                            <view class="cus-5-rows" wx:if="{{user.is_server || user.is_server_offline}}">{{item.intention_name}}</view>
+                            <view class="cus-5-rows">{{item.sales_name}}</view>
+                        </view>
+                        <!--客服和销售|-->
+                    </block>
+                </view>
+                <view class="customer-order-btn" @tap="showSearchBox">搜索</view>
+            </view>
+        </view>
+        <!--列表-->
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import rq from '../../common/utils/request';
+    import tool from '../../common/utils/tool';
+    import css from '../../components/css';
+    import header from '../../components/header';
+    export default class Index extends wepy.page {
+        components = {
+            css: css, //样式表
+            header: header
+        };
+        data = {
+            isback: true,
+            isopacity: true,
+            title: '客资',
+            is_hide: true,
+            userList: null,
+            user: null,
+            user_act: 0, //0 客服 1销售 策划
+            sourceList: [],
+            params: {},
+            is_filter: false,
+            channel_arr: [],
+            intention_arr: [],
+            sales_arr: [],
+            intention_city_arr: [],
+            op: {
+                start_date: '',
+                end_date: '',
+                order_id: '',
+                channel_name: '',
+                intention_name: '',
+                sales_name: '',
+                order_id_str: '',
+                user_mobile: '',
+                wechat_id: '',
+                intention_city_name: ''
+            },
+            is_search: false,
+            show_search: true
+        };
+        methods = {
+            showSearchBox() {
+                this.show_search = true;
+            },
+            searchNow() {
+                let that = this;
+                if (!that.op.order_id_str && !that.op.user_mobile && !that.op.wechat_id) {
+                    wepy.showToast({
+                        title: '请输入至少一项', //提示的内容,
+                        icon: 'none', //图标,
+                        duration: 2000, //延迟时间,
+                        mask: true, //显示透明蒙层，防止触摸穿透,
+                        success: res => {}
+                    });
+                    return false;
+                }
+                rq.get('searchAllUser', {
+                    200: result => {
+                        that.show_search = false;
+                        that.userList = that.sourceList = result.data.data;
+                        that.$apply();
+                    }
+                }, {
+                    order_id_str: that.op.order_id_str,
+                    user_mobile: that.op.user_mobile,
+                    wechat_id: that.op.wechat_id
+                })
+            },
+            bindCityChange(e) {
+                this.op.intention_city_name = this.intention_city_arr[e.detail.value];
+            },
+            bindInputOrderIdStr(e) {
+                this.op.order_id_str = e.detail.value;
+            },
+            bindInputMobile(e) {
+                this.op.user_mobile = e.detail.value;
+            },
+            bindInputwechat(e) {
+                this.op.wechat_id = e.detail.value;
+            },
+            bindStartChange(e) {
+                this.op.start_date = e.detail.value;
+            },
+            bindEndChange(e) {
+                this.op.end_date = e.detail.value;
+            },
+            bindInputOrderId(e) {
+                this.op.order_id = e.detail.value;
+            },
+            bindSalesChange(e) {
+                this.op.sales_name = this.sales_arr[e.detail.value];
+            },
+            bindIntentionChange(e) {
+                this.op.intention_name = this.intention_arr[e.detail.value];
+            },
+            bindChannelChange(e) {
+                this.op.channel_name = this.channel_arr[e.detail.value];
+            },
+            search() {
+                this.is_filter = false;
+                let pur = [];
+                this.sourceList.forEach(element => {
+                    let is_add = true;
+                    let s_order_id = this.op.order_id;
+                    if (this.user.is_scheme) {
+                        if (!element.wedding_date || new Date(element.wedding_date).getTime() < new Date(this.op.start_date).getTime() || new Date(element.wedding_date).getTime() > new Date(this.op.end_date).getTime()) {
+                            is_add = false;
+                        };
+                    } else {
+                        if (!element.create_time || element.create_time < new Date(this.op.start_date).getTime() / 1000 || element.create_time > new Date(this.op.end_date).getTime() / 1000) {
+                            is_add = false;
+                        };
+                    }
+                    if (s_order_id && element.order_id.indexOf(s_order_id) < 0) {
+                        is_add = false;
+                    }
+                    if (this.op.channel_name && element.channel_name != this.op.channel_name) {
+                        is_add = false;
+                    }
+                    if (this.op.intention_name && element.intention_name != this.op.intention_name) {
+                        is_add = false;
+                    }
+                    if (this.op.sales_name && element.sales_name != this.op.sales_name) {
+                        is_add = false;
+                    }
+                    if (this.op.intention_city_name && element.intention_city_name != this.op.intention_city_name) {
+                        is_add = false;
+                    }
+                    if (is_add) {
+                        pur.push(element);
+                    }
+                });
+                this.userList = pur;
+            },
+            editStatus() {
+                this.is_filter = true;
+            },
+            goToDetail(e) {
+                let id = e.currentTarget.dataset.id;
+                if (this.user.is_server || this.user.is_server_offline) {
+                    wepy.navigateTo({
+                        url: '/pages/common/server/customer?id=' + id
+                    });
+                } else if (this.user.is_sale) {
+                    wepy.navigateTo({
+                        url: '/pages/common/sale/customer?id=' + id + '&is_search=yes'
+                    });
+                }
+            }
+        };
+        onLoad(options) {
+            let that = this;
+            options = tool.decodeQrCodeParam(options);
+            console.log(options);
+            that.params = options;
+            that.is_search = that.params.is_search;
+            console.log(that.is_search);
+        }
+        arrayHaveItem(list, it) {
+            let has = false;
+            list.forEach(el => {
+                if (el == it) {
+                    has = true;
+                }
+            });
+            if (!it) {
+                has = true;
+            }
+            return has;
+        }
+        prepareAdition(list) {
+            list.forEach(element => {
+                if (!this.arrayHaveItem(this.channel_arr, element.channel_name)) {
+                    this.channel_arr.push(element.channel_name);
+                }
+                if (!this.arrayHaveItem(this.intention_arr, element.intention_name)) {
+                    this.intention_arr.push(element.intention_name);
+                }
+                if (!this.arrayHaveItem(this.sales_arr, element.sales_name)) {
+                    this.sales_arr.push(element.sales_name);
+                }
+                if (!this.arrayHaveItem(this.intention_city_arr, element.intention_city_name)) {
+                    this.intention_city_arr.push(element.intention_city_name);
+                }
+            });
+        }
+        onShow() {
+            let that = this;
+            let user = this.user = wepy.getStorageSync('user');
+            if (!user) {
+                wepy.redirectTo({
+                    url: '/pages/login'
+                });
+            } else {
+                let api_name = '';
+                user.is_server || user.is_server_offline ? api_name = 'getServerDataStatisticsDetail' : '';
+                user.is_sale ? api_name = 'getDataStatisticsDetail' : '';
+                user.is_scheme ? api_name = 'getImplementOrderStatistics' : '';
+                user.is_excute ? api_name = 'getOperationUsers' : '';
+                if (that.is_search) {
+                    return false;
+                }
+                let data = {};
+                if (user.is_scheme) {
+                    data = {
+                        pay_date_start: that.params.pay_date_start,
+                        pay_date_end: that.params.pay_date_end,
+                        order_date_start: that.params.order_date_start,
+                        order_date_end: that.params.order_date_end,
+                        data_type: that.params.data_type
+                    }
+                } else {
+                    if (that.params.map) {
+                        data = {
+                            map: that.params.map
+                        }
+                    } else if (that.params.user_status) {
+                        data = {
+                            start_date: that.params.start_date,
+                            end_date: that.params.end_date,
+                            employee_ids: that.params.employee_ids,
+                            user_status: that.params.user_status,
+                        }
+                    } else {
+                        data = {
+                            start_date: that.params.start_date,
+                            end_date: that.params.end_date,
+                            channel_id: that.params.channel_id,
+                            intention_id: that.params.intention_id,
+                            employee_ids: that.params.employee_ids,
+                            intention_city: that.params.intention_city,
+                            is_achievement: that.params.is_achievement
+                        }
+                    }
+                }
+                that.op.start_date = that.params.start_date;
+                that.op.end_date = that.params.end_date;
+                rq.get(api_name, {
+                    200: result => {
+                        if (user.is_scheme) {
+                            that.userList = that.sourceList = result.data.data_list;
+                        } else {
+                            that.userList = that.sourceList = result.data.data;
+                        }
+                        that.prepareAdition(that.sourceList);
+                        that.$apply();
+                    }
+                }, data)
+            }
+        }
+    }
+</script>

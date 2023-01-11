@@ -1,0 +1,269 @@
+<style lang="less">
+
+</style>
+
+<template>
+    <view>
+        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <view class="common-title">客户意向</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab-full">{{intention_rand[intention_index]}}</view>
+                    <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                    </image>
+                    <picker class="picker-common" @change="bindIntentChange" value="{{intention_index}}" range="{{intention_rand}}">
+                        <view class="picker-common-v">
+                            当前选择：{{intention_rand[intention_index]}}
+                        </view>
+                    </picker>
+                </view>
+            </view>
+            <view class="common-title">客户信息</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">客户姓名</view>
+                    <input type="text" class="common-tip" disabled value="{{customer.user_name}}"></input>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">手机号</view>
+                    <input type="text" class="common-tip" disabled value="{{customer.user_mobile}}"></input>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">微信号</view>
+                    <input type="text" class="common-tip" disabled value="{{customer.wechat_id}}"></input>
+                </view>
+            </view>
+            <view class="common-title">备注信息 {{show_img_arr.length}}/9</view>
+            <view class="common-pannel">
+                <view class="common-pic-box">
+                    <block wx:for="{{show_img_arr}}" wx:key="">
+                        <image class="common-add-pic" src="{{item}}" mode="aspectFill" lazy-load="false">
+                        </image>
+                    </block>
+                    <image wx:if="{{show_img_arr.length<9}}" @tap="uploadFile" class="common-add-pic" src="../../../images/add-pic.png" mode="aspectFill" lazy-load="false">
+                    </image>
+                </view>
+            </view>
+            <view class="common-title">备注信息</view>
+            <view class="common-pannel">
+                <textarea class="common-area" @input="inputLog" value="" placeholder="请输入备注信息" />
+            </view>
+            <view class="common-title">接单团队</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab-full">{{team_index==-1?'全部':teams_rand[team_index]}}</view>
+                    <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                    </image>
+                    <picker class="picker-common" @change="bindTeamChange" value="{{team_index}}" range="{{teams_rand}}">
+                        <view class="picker-common-v">
+                            当前选择：{{teams_rand[team_index]}}
+                        </view>
+                    </picker>
+                </view>
+            </view>
+            <view class="common-title">接单人(若无指定可不选)</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab" wx:if="{{team_index!=-1&&employee_list.length<=0}}">暂无成员</view>
+                    <view class="common-lab" wx:if="{{team_index==-1}}">未指定</view>
+                    <view class="common-lab-full" wx:if="{{team_index!=-1&&employee_list.length>0}}">{{employee_list_index==-1?'未指定':employee_list[employee_list_index].employee_name}}</view>
+                    <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                    </image>
+                    <picker wx:if="{{employee_list.length>0}}" class="picker-common" @change="bindEmployeeChange" value="{{employee_list_index}}" range="{{employee_list}}" range-key="employee_name">
+                        <view class="picker-common-v">
+                            当前选择：{{employee_list[employee_list_index]}}
+                        </view>
+                    </picker>
+                </view>
+            </view>
+            <view class="customer-create-btn" @tap="submit">确认分配</view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import G from '../../../common/global';
+    import C from '../../../common/config';
+    import rq from '../../../common/utils/request';
+    import tool from '../../../common/utils/tool';
+    import validate from '../../../common/utils/validate';
+    import storage from '../../../common/utils/storage';
+    import dat from '../../../common/utils/date';
+    import file from '../../../common/utils/file';
+    import css from '../../../components/css';
+    import header from '../../../components/header';
+    export default class Index extends wepy.page {
+        components = {
+            css: css, //样式表
+            header: header
+        };
+        data = {
+            isopacity: true,
+            title: '转让申请',
+            id: '',
+            customer: null,
+            teams_rand: [],
+            employee_list: [],
+            employee_list_index: -1,
+            teams: null,
+            status_remark: '',
+            intention: null,
+            intention_rand: [],
+            intention_index: 0,
+            ord_intention_index: 0,
+            team_index: 0,
+            show_img_arr: [],
+            isback: true,
+        };
+        methods = {
+            bindIntentChange(e) {
+                this.intention_index = e.detail.value;
+                this.customer.intention_name = this.intention_rand[this.intention_index];
+                this.getTeamList();
+            },
+            inputLog(e) {
+                this.status_remark = e.detail.value;
+            },
+            uploadFile() {
+                let that = this;
+                wx.chooseImage({
+                    count: '9', //最多可以选择的图片张数,
+                    success: res => {
+                        file.upLoadImgs(C.ENV_URL + 'uploadCommProof', res.tempFilePaths, 0, [], [], function(names, urls) {
+                            // that.upload_img_arr = that.upload_img_arr.concat(names);
+                            that.show_img_arr = that.show_img_arr.concat(urls);
+                            console.log(that.show_img_arr);
+                            that.$apply();
+                        });
+                        // that.$apply();
+                    }, //返回图片的本地文件路径列表 tempFilePaths,
+                    fail: () => {},
+                    complete: () => {}
+                });
+            },
+            bindEmployeeChange(e) {
+                this.employee_list_index = e.detail.value;
+            },
+            bindTeamChange(e) {
+                this.team_index = e.detail.value;
+                this.getTeamEmployee();
+            },
+            submit() {
+                let that = this;
+                // if (that.intention_index == that.ord_intention_index) {
+                //     wepy.showToast({
+                //         title: '请选择转让意向', //提示的内容,
+                //         icon: 'none', //图标,
+                //         duration: 2000, //延迟时间,
+                //         mask: true, //显示透明蒙层，防止触摸穿透,
+                //         success: res => {}
+                //     });
+                //     return false;
+                // }
+                console.log(that.intention_index)
+                console.log(that.intention[that.intention_index].id)
+
+                let data = {
+                    user_id: that.id,
+                    intention_id: that.intention[that.intention_index].id,
+                    user_name: that.customer.user_name,
+                    user_mobile: that.customer.user_mobile,
+                    wechat_id: that.customer.wechat_id,
+                    comm_proof: that.show_img_arr.join(','),
+                    user_remark: that.status_remark,
+                    designated_team: that.teams[that.team_index].id
+                }
+                if(that.employee_list_index!=-1){
+                  data['designated_employee']=that.employee_list[that.employee_list_index].id;
+                }
+                rq.get('submitTransferCustomer', {
+                    200: result => {
+                        wepy.navigateBack({
+                            delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                        });
+                    }
+                }, data)
+            }
+        };
+        getTeamList() {
+            let that = this;
+            rq.get('getTeams', {
+                200: result => {
+                    let purpose = [];
+                    that.teams = result.data.data;
+                    that.teams.forEach(element => {
+                        purpose.push(element.team_name);
+                    });
+                    that.teams_rand = purpose;
+                    that.team_index = 0;
+                    that.$apply();
+                    that.getTeamEmployee();
+                }
+            }, {
+                intention_id: this.intention[this.intention_index].id
+            })
+        }
+        getTeamEmployee() {
+            let that = this;
+            //如果不存在这个团队的话，提示
+            if (!that.teams[that.team_index]) {
+                wepy.showToast({
+                    title: '该意向暂无团队，不能发起申请', //提示的内容,
+                    icon: 'none', //图标,
+                    duration: 2000, //延迟时间,
+                    mask: true, //显示透明蒙层，防止触摸穿透,
+                    success: res => {}
+                });
+                return false;
+            }
+            rq.get('getTeamEmployee', {
+                200: result => {
+                    that.employee_list = result.data.employee_list;
+                    that.employee_list_index = -1;
+                    that.$apply();
+                }
+            }, {
+                employee_team_id: that.teams[that.team_index].id
+            })
+        }
+        onLoad(options) {
+            options = tool.decodeQrCodeParam(options);
+            let that = this;
+            that.id = options.id;
+            rq.get('transferCustomerInfo', {
+                200: result => {
+                    that.customer = result.data.user_info;
+                    that.teams = result.data.teams;
+                    that.intention = result.data.intention;
+                    // let purpose = [];
+                    // result.data.teams.forEach(element => {
+                    //     purpose.push(element.team_name);
+                    // });
+                    // that.teams_rand = purpose;
+                    let pur = [];
+                    let i = 0;
+                    that.intention.forEach(element => {
+                        if (element.intention_name == that.customer.intention_name) {
+                            that.intention_index = i;
+                            that.ord_intention_index = i;
+                        }
+                        pur.push(element.intention_name);
+                        i++;
+                    });
+                    that.intention_rand = pur;
+                    that.$apply();
+                    that.getTeamList();
+                }
+            }, {
+                user_id: options.id
+            })
+        }
+        onShow() {}
+    }
+</script>

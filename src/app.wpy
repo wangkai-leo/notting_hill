@@ -1,0 +1,411 @@
+<style lang="less">
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+/**弹出层样式 start**/
+.leo-over-bg {
+  position: fixed;
+  background: rgba(0, 0, 0, 0.6);
+  top: 0rpx;
+  left: 0rpx;
+  z-index: 888;
+  width: 100%;
+  height: 100%;
+}
+
+.leo-over-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}
+
+.leo-over-pannle {
+  position: relative;
+  background: #fff;
+  width: 650rpx;
+  height: 640rpx;
+  margin-left: -325rpx;
+  margin-top: -320rpx;
+  border-radius: 20rpx;
+  padding-top: 20rpx;
+}
+
+.leo-close-btn-cou {
+  position: fixed;
+  width: 50rpx;
+  height: 50rpx;
+  position: absolute;
+  right: 20rpx;
+  font-weight: bold;
+}
+
+/**弹出层样式 end**/
+</style>
+
+<script>
+import wepy from 'wepy';
+import 'wepy-async-function';
+import api from './common/api';
+import G from './common/global';
+import mini from './common/common';
+import C from './common/config';
+import media from './common/utils/media';
+import storage from './common/utils/storage';
+import rq from './common/utils/request';
+export default class extends wepy.app {
+  config = {
+    pages: 'is_dev'?[
+      //////////////////////////////////////////////////公共
+      'pages/index',
+      'pages/login',
+      'pages/profile',
+      'pages/statistics', //只有婚庆才有
+      'pages/dashbaord',
+
+      'pages/common/changpw',
+      'pages/common/customerlist',
+      'pages/common/statisticscustomer', //统计数据客资
+      //客服
+      'pages/common/server/publish',
+      'pages/common/server/union',
+      'pages/common/server/customer',
+      //策划
+      'pages/common/scheme/task', //婚礼任务单
+      'pages/common/scheme/taste', //试菜列表 
+      'pages/common/scheme/tastedetail', //发起试菜申请 
+      'pages/common/scheme/feedback', //试菜反馈 
+      'pages/common/scheme/depot', //礼品存放申请 
+      'pages/common/scheme/depotlist', //礼品存放申请 
+      'pages/common/scheme/ordermenu', //试菜详情 
+      'pages/common/scheme/schedule', //试菜档期
+
+      //运营
+      'pages/common/execute/trydishlist', //试菜列表
+      'pages/common/execute/trydetail', //试菜列表
+      'pages/common/execute/task',//执行任务单
+      'pages/common/execute/taste',//执行试菜申请列表
+      'pages/common/execute/depotlist',//礼品存放列表
+      'pages/common/execute/depot',//礼品存放详情
+
+      //公共销售
+      'pages/common/sale/chargeback', //退客申请
+      'pages/common/sale/editcurstomerinfo', //编辑客资信息
+      'pages/common/sale/editlog', //添加客资跟进
+      'pages/common/sale/turninfo', //客资转让信息
+      'pages/common/sale/editturn', //新建转让
+      'pages/common/sale/customer', //客资信息 
+      'pages/common/sale/nav/takeorders', //接单列表
+      'pages/common/sale/nav/distribute', //强制分配
+      'pages/common/sale/ordercomplete', //完成订单
+      'pages/common/sale/prepay', //意向定金
+      'pages/common/sale/refund', //申请退单
+      'pages/common/sale/orderpay', //订单支付证明
+      'pages/common/sale/nav/admin/audit', //订单审核
+      'pages/common/sale/nav/admin/reject', //驳回订单支付
+      'pages/common/sale/nav/admin/auditdetail', //订单审核
+      'pages/common/sale/nav/admin/team', //团队列表
+      'pages/common/sale/nav/admin/department', //部门详情
+      'pages/common/sale/nav/admin/unsubscribe', //退客申请列表
+      'pages/common/sale/nav/admin/statistics', //数据统计
+      'pages/common/sale/nav/admin/transdetail', //转让性情
+      'pages/common/sale/nav/admin/auditchargeback', //退客和已死客资审核
+      'pages/common/sale/nav/admin/teamorders',
+
+      //////////////////////////////////////////////////婚庆
+      'pages/marry/misscount',
+      'pages/marry/staduration',
+      //客服
+      'pages/marry/server/unipublish',
+      //销售
+      'pages/marry/sale/ordermsg', //订单信息
+      'pages/marry/sale/schedule', //婚礼档期
+      'pages/marry/sale/ordermenu', //菜单信息
+      'pages/marry/sale/contract', //合同列表
+      'pages/marry/sale/contractedit', //创建合同
+      'pages/marry/sale/contractdetail', //创建合同
+      'pages/marry/sale/checkfour', //客资信息 
+      //策划
+      'pages/marry/scheme/customer', //客资信息 
+      'pages/marry/scheme/requestpay', //请款申请
+      'pages/marry/scheme/reqpaylist', //请款列表
+      'pages/marry/scheme/reqauditlist', //请款审核列表
+      'pages/marry/scheme/reqaudit', //请款审核
+      'pages/marry/scheme/web', //试菜档期
+
+      // //////////////////////////////////////////////////艺术中心
+      //客服
+      'pages/artcenter/server/statistics',
+      //销售
+      'pages/artcenter/sale/ordermsg', //订单信息
+      'pages/artcenter/sale/schedule', //婚礼档期
+      'pages/artcenter/sale/ordermenu', //菜单信息
+      'pages/artcenter/sale/contract', //合同列表
+      'pages/artcenter/sale/contractedit', //创建合同
+      'pages/artcenter/sale/contractdetail', //创建合同
+      //策划
+      'pages/artcenter/scheme/customer', //客资信息 
+      'pages/artcenter/scheme/admin/audit', //试菜档期
+      'pages/artcenter/scheme/admin/taste', //试菜档期
+      'pages/artcenter/scheme/admin/task', //试菜档期
+    ]:[
+      'pages/index',
+      'pages/login',
+      'pages/profile',
+      'pages/statistics', //只有婚庆才有
+      'pages/dashbaord',
+    ],
+    subpackages: 'is_dev'?[]:[{
+      "root": "pages/common",
+      "pages": [
+          'changpw',
+          'customerlist',
+          'statisticscustomer', //统计数据客资
+          'server/publish',
+          'server/union',
+          'server/customer',
+          'scheme/task', //婚礼任务单
+          'scheme/taste', //试菜列表 
+          'scheme/tastedetail', //发起试菜申请 
+          'scheme/feedback', //试菜反馈 
+          'scheme/depot', //礼品存放申请 
+          'scheme/depotlist', //礼品存放申请 
+          'scheme/ordermenu', //试菜详情 
+          'scheme/schedule', //试菜档期
+          'execute/trydishlist', //试菜列表
+          'execute/trydetail', //试菜列表
+          'execute/task',//执行任务单
+          'execute/taste',//执行试菜申请列表
+          'execute/depotlist',//礼品存放列表
+          'execute/depot',//礼品存放详情
+          'sale/chargeback', //退客申请
+          'sale/editcurstomerinfo', //编辑客资信息
+          'sale/editlog', //添加客资跟进
+          'sale/turninfo', //客资转让信息
+          'sale/editturn', //新建转让
+          'sale/customer', //客资信息 
+          'sale/nav/takeorders', //接单列表
+          'sale/nav/distribute', //强制分配
+          'sale/ordercomplete', //完成订单
+          'sale/prepay', //意向定金
+          'sale/refund', //申请退单
+          'sale/orderpay', //订单支付证明
+          'sale/nav/admin/audit', //订单审核
+          'sale/nav/admin/reject', //驳回订单支付
+          'sale/nav/admin/auditdetail', //订单审核
+          'sale/nav/admin/team', //团队列表
+          'sale/nav/admin/department', //部门详情
+          'sale/nav/admin/unsubscribe', //退客申请列表
+          'sale/nav/admin/statistics', //数据统计
+          'sale/nav/admin/transdetail', //转让性情
+          'sale/nav/admin/auditchargeback', //退客和已死客资审核
+          'sale/nav/admin/teamorders',
+      ]
+    },{
+      "root": "pages/artcenter",
+      "pages": [
+        //客服
+        'server/statistics',
+        //销售
+        'sale/ordermsg', //订单信息
+        'sale/schedule', //婚礼档期
+        'sale/ordermenu', //菜单信息
+        'sale/contract', //合同列表
+        'sale/contractedit', //创建合同
+        'sale/contractdetail', //创建合同
+        //策划
+        'scheme/customer', //客资信息 
+        'scheme/admin/audit', //试菜档期
+        'scheme/admin/taste', //试菜档期
+        'scheme/admin/task', //试菜档期
+      ]
+    },{
+      "root": "pages/marry",
+      "pages": [
+        'misscount',
+        'staduration',
+        //客服
+        'server/unipublish',
+        //销售
+        'sale/ordermsg', //订单信息
+        'sale/schedule', //婚礼档期
+        'sale/ordermenu', //菜单信息
+        'sale/contract', //合同列表
+        'sale/contractedit', //创建合同
+        'sale/contractdetail', //创建合同
+        'sale/checkfour', //客资信息 
+        //策划
+        'scheme/customer', //客资信息 
+        'scheme/requestpay', //请款申请
+        'scheme/reqpaylist', //请款列表
+        'scheme/reqauditlist', //请款审核列表
+        'scheme/reqaudit', //请款审核
+        'scheme/web', //试菜档期
+      ]
+    }],
+    
+    tabBar: 'wxad7c32c969fca3be'?{
+      "color": "#777",
+      "selectedColor": "#000",
+      "backgroundColor": "#fff",
+      "list": [{
+        "selectedIconPath": "./images/tab-a-action.png",
+        "iconPath": "./images/tab-a.png",
+        "pagePath": "pages/index",
+        "text": "客资"
+      }, {
+        "selectedIconPath": "./images/tab-b-action.png",
+        "iconPath": "./images/tab-b.png",
+        "pagePath": "pages/dashbaord",
+        "text": "菜单"
+      }, {
+        "selectedIconPath": "./images/tab-c-action.png",
+        "iconPath": "./images/tab-c.png",
+        "pagePath": "pages/profile",
+        "text": "我的"
+      }]
+    }:{
+      "color": "#777",
+      "selectedColor": "#000",
+      "backgroundColor": "#fff",
+      "list": [{
+        "selectedIconPath": "./images/tab-d-action.png",
+        "iconPath": "./images/tab-d.png",
+        "pagePath": "pages/statistics",
+        "text": "统计"
+      }, {
+        "selectedIconPath": "./images/tab-a-action.png",
+        "iconPath": "./images/tab-a.png",
+        "pagePath": "pages/index",
+        "text": "客资"
+      }, {
+        "selectedIconPath": "./images/tab-b-action.png",
+        "iconPath": "./images/tab-b.png",
+        "pagePath": "pages/dashbaord",
+        "text": "菜单"
+      }, {
+        "selectedIconPath": "./images/tab-c-action.png",
+        "iconPath": "./images/tab-c.png",
+        "pagePath": "pages/profile",
+        "text": "我的"
+      }]
+    },
+
+    window: {
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: 'Loading...',
+      navigationBarTextStyle: 'black',
+      navigationStyle: 'custom' //全屏
+    },
+  };
+
+  constructor() {
+    super();
+    this.use('requestfix');
+    this.use('promisify');
+    // request拦截器,每次与服务器交互，带上key值
+    this.intercept('request', {
+      // request 的拦截器，在每次发送request请求时都会加上session
+      config(p) {
+        if (p.method && p.method.toUpperCase() === 'POST') {
+          // 只有POST的情况才注入                    
+          let user_info = p.data.uid ? p.data.uid : storage.get('user_info');
+          let employee_company = storage.get('employee_company');
+          if (user_info) {
+            if (p.data) {
+              p.data.uid = user_info;
+              p.data.employee_company = employee_company;
+              // p.data.uid='ke.song@nike.com';
+              p.data._t = +new Date();
+            } else {
+              p.data = {
+                uid: user_info,
+                employee_company: employee_company,
+                _t: +new Date()
+              };
+            }
+          }
+        } else if (p.method && p.method.toUpperCase() === 'GET') {
+          p.url = p.url + '.json';
+        }
+        return p;
+      }
+    });
+  }
+
+  getOpenId(code) {
+    return wepy.request({
+      url: C.LOGIN_URL,
+      method: C.ENV_METHOD,
+      data: {
+        code: code
+      },
+      header: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    })
+  }
+  isBind(openid) {
+    return wepy.request({
+      url: C.ENV_URL + 'isBind',
+      method: C.ENV_METHOD,
+      data: {
+        openid: openid
+      },
+      header: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    })
+  }
+
+  doLogin(count) {
+    let that = this;
+    wepy.login().then((result) => {
+      that.getOpenId(result.code).then((result) => {
+        storage.set('user_info', {
+          user_open_id: result.data.user_mini_open_id
+        });
+        storage.set('user_union_id', result.data.user_union_id);
+      })
+    })
+  }
+
+  onLaunch() {
+    let that = this;
+    wepy.setStorageSync('office_line', C.OFFLICE_LINE);
+    if (C.OFFLICE_LINE == 'artcenter') {
+      wepy.setStorageSync('employee_company', 1);
+      wepy.setStorageSync('appid', 'wxad7c32c969fca3be');
+    } else {
+      wepy.setStorageSync('employee_company', 3);
+      wepy.setStorageSync('appid', 'wx7e38e3128978153b');
+    }
+    //提醒自动更新
+    mini.autoUpdate();
+    //检测是否是iphonex屏幕尺寸
+    mini.isIphonex();
+    //打印配置信息
+    mini.logConfigMsg();
+    //多语言
+    mini.loadLanguagePackage();
+    //获取页面标题文案中心于顶部的距离
+    mini.getBoundingClientCenterTop();
+  }
+  onShow() {
+    if (C.HAS_BGM) {
+      media.startBackgroundMusic();
+    }
+  }
+  onHide() {
+    if (C.HAS_BGM) {
+      media.puaseBackgroundMusic();
+    }
+  }
+}
+</script>

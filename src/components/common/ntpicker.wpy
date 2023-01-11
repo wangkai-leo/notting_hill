@@ -1,0 +1,76 @@
+
+<style lang="less">
+.common-nt-full {
+    float: left;
+}
+</style>
+
+<template>
+  <view class="common-title">{{ label }}</view>
+  <view class="common-pannel">
+    <view class="common-list">
+      <view class="common-nt-full">{{ checked_name?checked_name:ntrange[checked_index][ntkey] }}</view>
+      <image class="common-log-arrows" src="../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+      </image>
+      <picker wx:if="{{!readonly}}" class="picker-common" range="{{ntrange}}" range-key="{{ntkey}}"
+        @change="bindChange">
+        <view class="picker-common-v">
+          当前选择：{{ ntrange[checked_index] }}
+        </view>
+      </picker>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class Fnav extends wepy.component {
+  props = {
+    readonly: {
+      type: Boolean,
+      twoWay: true
+    },
+    checked_index: {
+      type: Number,
+      twoWay: true
+    },
+    checked_name: {
+      type: String,
+      default:''
+    },
+    ntkey: {
+      type: String
+    },
+    label: {
+      type: String
+    },
+    ntrange: {
+      type: Array,
+      default: false,
+      twoWay: true
+    },
+
+  }
+  watch = {
+    ntrange() {
+      this.checked_name = this.ntrange[0][this.ntkey];
+      this.$apply();
+    }
+  }
+  components = {};
+  data = {
+  };
+  methods = {
+    bindChange(e) {
+      this.checked_index = e.detail.value;
+      this.checked_name = this.ntrange[this.checked_index][this.ntkey];
+      this.$emit('change')
+      this.$apply();
+    },
+  };
+  onLoad(options) {
+  }
+  events = {
+  };
+}
+</script>

@@ -1,0 +1,46 @@
+
+  <view class="container">
+    
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+    <view class="common-top">
+      <view class="common-content">
+      </view>
+    </view>
+    
+  <view class="common-wrapper" wx:if="{{user.is_server||user.is_server_offline}}">
+    <view class="common-pannel">
+      <view class="common-list-sa">
+        <view class="cus-5-rows">编号</view>
+        <view class="cus-5-rows">渠道</view>
+        <view class="cus-5-rows">城市</view>
+        <view class="cus-5-rows">发布人</view>
+        <view class="cus-5-rows">销售</view>
+      </view>
+      <block  wx:for="{{$serverstatisticscustomer$list}}" wx:key="">
+        <view class="common-list-sa" bindtap="$serverstatisticscustomer$goToDetail" data-id="{{item.user_id}}">
+          <view class="cus-5-rows">{{ item.order_id }}</view>
+          <view class="cus-5-rows">{{ item.channel_name }}</view>
+          <view class="cus-5-rows">{{ item.city_name }}</view>
+          <view class="cus-5-rows">{{ item.submit_name }}</view>
+          <view class="cus-5-rows">{{ item.sale_name }}</view>
+        </view>
+      </block>
+      
+    </view>
+  </view>
+
+  </view>

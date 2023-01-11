@@ -1,0 +1,94 @@
+<style lang="less">
+</style>
+
+<template>
+    <view>
+        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <view class="common-title">联合订单</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">订单编号</view>
+                    <view class="common-tip">{{union_first_data.order_id}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">客服</view>
+                    <view class="common-tip">{{union_first_data.submit_name}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">销售团队</view>
+                    <view class="common-tip">{{union_first_data.team_name}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">销售</view>
+                    <view class="common-tip">{{union_first_data.sales_name}}</view>
+                </view>
+            </view>
+            <view class="common-title">被联合订单</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">订单编号</view>
+                    <view class="common-tip">{{union_second_data.order_id}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">客服</view>
+                    <view class="common-tip">{{union_second_data.submit_name}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">销售团队</view>
+                    <view class="common-tip">{{union_second_data.team_name}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">销售</view>
+                    <view class="common-tip">{{union_second_data.sales_name}}</view>
+                </view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import rq from '../../../common/utils/request';
+    import tool from '../../../common/utils/tool';
+    import css from '../../../components/css';
+    import header from '../../../components/header';
+    export default class Index extends wepy.page {
+        components = {
+            css: css, //样式表
+            header: header
+        };
+        data = {
+            isopacity: true,
+            title: '联合信息',
+            isback: true,
+            contract_index: 0,
+            union_first_data: null,
+            union_second_data:null
+        };
+        methods = {
+            chooseContract(e) {
+                this.contract_index = e.detail.value;
+            },
+        };
+        onLoad(options) {
+            options = tool.decodeQrCodeParam(options);
+            let that = this;
+            
+            rq.get('getUnionOrder', {
+                200: result => {
+                    that.union_first_data = result.data.first;
+                    that.union_second_data = result.data.second;
+                    that.$apply();
+                }
+            }, {
+                order_id: options.id
+            })
+        }
+        onShow() {}
+    }
+</script>

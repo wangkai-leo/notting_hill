@@ -1,0 +1,114 @@
+
+    <view>
+        
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+        <view class="common-top">
+            <view class="common-content"/>
+        </view>
+        <view class="common-wrapper">
+            <view class="common-title">客户信息</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">客户姓名</view>
+                    <input class="common-tip" disabled value="{{taste_list.client_name}}" bindinput="bindInputUserName" type="text"/>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">电话</view>
+                    <input class="common-tip" disabled value="{{taste_list.client_mobile}}" bindinput="bindInputUserMobile" type="text"/>
+                </view>
+            </view>
+            <view class="common-title">新人信息</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">新郎姓名</view>
+                    <input class="common-tip" disabled="{{!edit_base}}" value="{{taste_list.groom_name}}" bindinput="bindInputGroomName" type="text" placeholder="请输入"/>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">新郎电话</view>
+                    <input class="common-tip" disabled="{{!edit_base}}" value="{{taste_list.groom_mobile}}" bindinput="bindInputGroomMobile" type="text" placeholder="请输入"/>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">新娘姓名</view>
+                    <input class="common-tip" disabled="{{!edit_base}}" value="{{taste_list.bride_name}}" bindinput="bindInputBrideName" type="text" placeholder="请输入"/>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">新娘电话</view>
+                    <input class="common-tip" disabled="{{!edit_base}}" value="{{taste_list.bride_mobile}}" bindinput="bindInputBrideMobile" type="text" placeholder="请输入"/>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">销售</view>
+                    <input class="common-tip" disabled="{{!edit_base}}" value="{{taste_list.sales_name}}" bindinput="bindInputBrideMobile" type="text" placeholder="请输入"/>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">策划</view>
+                    <input class="common-tip" disabled="{{!edit_base}}" value="{{taste_list.planner_name}}" bindinput="bindInputBrideMobile" type="text" placeholder="请输入"/>
+                </view>
+            </view>
+            <view class="common-title">试菜信息</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">婚期</view>
+                    <input class="common-tip" disabled="{{!edit_base}}" value="{{taste_list.schedule_session.schedule_date}}" bindinput="bindInputBrideMobile" type="text" placeholder="请输入"/>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">餐段</view>
+                    <input class="common-tip" disabled value="{{taste_list.wedding_meal_section}}" bindinput="bindInputMeal" type="text" placeholder="请输入"/>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">试菜日期</view>
+                    <view class="common-tip">{{taste_list.session.schedule_date}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">宴会厅</view>
+                    <input class="common-tip" disabled value="{{taste_list.session.area_name}}" bindinput="bindInputAddress" type="text" placeholder="请输入"/>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">宴会场次</view>
+                    <input class="common-tip" disabled value="{{taste_list.session.session_name}}" bindinput="bindInputSession" type="text" placeholder="请输入"/>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">试菜时间</view>
+                    <view class="common-tip">{{taste_list.try_time?taste_list.try_time:''}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">婚宴餐标</view>
+                    <input class="common-tip" disabled value="{{taste_list.wedding_package_name}}" bindinput="bindInput" type="text" placeholder="请输入"/>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">试菜人数</view>
+                    <input class="common-tip" disabled value="{{taste_list.try_person_number}}" bindinput="bindInputPersonNum" type="text" placeholder="请输入"/>
+                </view>
+            </view>
+            <view class="customer-order-btn"  wx:if="{{user.is_excute&&!user.is_excute_leader&&taste_list.task_status==0}}" bindtap="goToFeedback">填写试菜反馈</view>
+            <view  wx:if="{{user.is_excute_leader}}">
+                <view class="common-title">执行人</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        {{teams_employee[employee_index].employee_name}}
+                        <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                        </image>
+                        <picker class="picker-common" bindchange="bindTeamChange" value="{{employee_index}}" range="{{teams_employee}}" range-key="employee_name">
+                            <view class="picker-common-v">
+                                当前选择：{{teams_employee[employee_index].employee_name}}
+                            </view>
+                        </picker>
+                    </view>
+                </view>
+                <view class="customer-order-btn" bindtap="assignTask">确认分配</view>
+            </view>
+        </view>
+    </view>

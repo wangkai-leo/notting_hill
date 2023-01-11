@@ -1,0 +1,107 @@
+@import "./../../../../../components/header.wxss";
+@import "./../../../../../components/css.wxss";
+.dep-lead {
+  overflow: hidden;
+  font-size: 26rpx;
+  padding: 40rpx 0rpx;
+  border-bottom: #f0f0f0 solid 1rpx;
+}
+.dep-num {
+  font-size: 42rpx;
+  color: #86a5e6;
+  font-weight: bold;
+  text-align: center;
+}
+.dep-tip {
+  font-size: 26rpx;
+  color: #555555;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 40rpx;
+}
+.dep-2 {
+  width: 50%;
+  float: left;
+}
+.dep-3 {
+  width: 33.33%;
+  float: left;
+}
+.dep-base-box {
+  position: relative;
+  overflow: hidden;
+  padding: 50rpx 0rpx;
+}
+.dep-em-sta {
+  margin-left: 20rpx;
+  color: #75b864;
+}
+.common-pannel {
+  padding: 10rpx 35rpx;
+}
+.dep-em-edit {
+  color: #87a6e7;
+  float: right;
+}
+.dep-inpu-lab {
+  font-size: 26rpx;
+  color: #333333;
+  float: left;
+  line-height: 60rpx;
+}
+.dep-form-box {
+  position: relative;
+  overflow: hidden;
+  margin: 0rpx auto 30rpx auto;
+  width: 560rpx;
+}
+.dep-input-box {
+  border: #f0f0f0 solid 1rpx;
+  border-radius: 5rpx;
+  float: right;
+  width: 420rpx;
+  font-size: 26rpx;
+  line-height: 60rpx;
+  height: 60rpx;
+  padding: 0rpx 10rpx;
+}
+.dep-input-box input {
+  font-size: 26rpx;
+  line-height: 60rpx;
+  display: block;
+  height: 60rpx;
+}
+.common-log-arrows {
+  margin-top: 15rpx;
+}
+.dep-form-btn {
+  width: 260rpx;
+  height: 70rpx;
+  line-height: 70rpx;
+  text-align: center;
+  background-color: #87a6e7;
+  color: #fff;
+  font-size: 26rpx;
+  border-radius: 10rpx;
+  margin-left: 50rpx;
+  float: left;
+  box-shadow: #eaeaea 5rpx 5rpx 10rpx;
+  margin-top: 30rpx;
+}
+.dep-form-btn:last-child {
+  float: right;
+  margin-right: 50rpx;
+  margin-left: 0rpx;
+}
+.leo-over-pannle {
+  padding-top: 60rpx;
+  height: 350rpx;
+}
+.gray-color {
+  color: #777;
+  margin-left: 15rpx;
+}
+.red-color {
+  color: #ff0000;
+  margin-left: 20rpx;
+}

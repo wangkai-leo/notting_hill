@@ -1,0 +1,7 @@
+@import "./../../../../../components/header.wxss";
+@import "./../../../../../components/css.wxss";
+.bod-order-btn {
+  background: #fff;
+  border: #87a6e7 solid 1rpx;
+  color: #87a6e7;
+}

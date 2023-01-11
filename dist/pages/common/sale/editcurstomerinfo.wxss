@@ -1,0 +1,4 @@
+@import "./../../../components/common/ntlist.wxss";
+@import "./../../../components/common/ntmode.wxss";
+@import "./../../../components/header.wxss";
+@import "./../../../components/css.wxss";

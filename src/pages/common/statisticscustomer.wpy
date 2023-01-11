@@ -1,0 +1,61 @@
+<style lang="less">
+</style>
+
+<template>
+  <view class="container">
+    <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+    <view class="common-top">
+      <view class="common-content">
+      </view>
+    </view>
+    <serverstatisticscustomer :list.sync="list" wx:if="{{user.is_server||user.is_server_offline}}">
+    </serverstatisticscustomer>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import rq from '../../common/utils/request';
+import tool from '../../common/utils/tool';
+import css from '../../components/css';
+import header from '../../components/header';
+import statisticscustomer from './server/statisticscustomer';
+export default class Index extends wepy.page {
+  components = {
+    css: css, //样式表
+    header: header,
+    serverstatisticscustomer: statisticscustomer
+  };
+  data = {
+    isback: true,
+    isopacity: true,
+    title: '客资',
+    user: null,
+
+    list: [],
+    list_success:[],
+    params: null
+  };
+  methods = {
+
+  };
+  onLoad(options) {
+    let that = this;
+    that.params = tool.decodeQrCodeParam(options);
+    if(!that.params.view){
+      that.params['where_map']=JSON.stringify(wepy.getStorageSync('channel'))
+    }
+    that.user = wepy.getStorageSync('user');
+    if (that.user.is_server || that.user.is_server_offline)
+      rq.get('getServerUserList', {
+        200: result => {
+          that.list = result.data.data.list;
+          that.$apply();
+        }
+      }, that.params)
+  }
+  onShow() {
+
+  }
+}
+</script>

@@ -1,0 +1,162 @@
+<style lang="less">
+    .loading {
+        width: 750rpx;
+        position: absolute;
+    }
+    .loading-box {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 1;
+    }
+    .logo {
+        position: absolute;
+        width: 429rpx;
+        z-index: 5;
+        left: 50%;
+        margin-left: -225rpx;
+        top: 300rpx;
+    }
+    .text-msg-box {
+        width: 100%;
+        position: absolute;
+        z-index: 4;
+        bottom: 130rpx;
+    }
+    .text-msg {
+        text-align: center;
+        font-size: 32rpx;
+        color: #fff;
+        margin-bottom: 5rpx;
+    }
+    .text-msg-l {
+        margin-bottom: 45rpx;
+    }
+    .text-msg-l-dio {
+        animation: text-msg-l-dio 1200ms linear infinite;
+        margin-left: 5rpx;
+    }
+    .text-msg-l-dio-b {
+        animation-delay: 300ms;
+    }
+    .text-msg-l-dio-c {
+        animation-delay: 600ms;
+    }
+    @keyframes text-msg-l-dio {
+        0% {
+            opacity: 0;
+        }
+        49% {
+            opacity: 0;
+        }
+        50% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+    .customer-create-btn {
+        position: fixed;
+        bottom: 20rpx;
+        z-index: 999;
+        left: 33rpx;
+    }
+    .select-content {
+        padding-bottom: 100rpx;
+    }
+</style>
+
+<template>
+    <view class="container">
+        <view wx:if="{{!loading}}">
+            <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+            <view class="common-top">
+                <view class="common-content">
+                </view>
+            </view>
+            <view class="common-wrapper">
+                <!--列表-->
+                <block wx:for="{{userList}}" wx:key="">
+                    <!--|客服和销售-->
+                    <view class="customer-info">
+                        <view class="customer-info-header">
+                            <view class="customer-num">编号：{{item.order_id}}</view>
+                            <view class="customer-date">{{item.status_time}}</view>
+                        </view>
+                        <view class="customer-info-msgs" @tap="goToDetail" data-id="{{item.id}}">
+                            <view class="customer-item">新人姓名：<text>{{item.user_name}}</text></view>
+                            <view class="customer-item">客资意向：<text>{{item.intention_name}}</text></view>
+                            <view class="customer-item">渠道来源：<text>{{item.channel_name}}</text></view>
+                            <view class="customer-item">客资状态：<text>{{item.status_name}}</text></view>
+                        </view>
+                    </view>
+                    <!--客服和销售|-->
+                </block>
+            </view>
+            <!--列表-->
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import G from '../../../../../common/global';
+    import rq from '../../../../../common/utils/request';
+    import tool from '../../../../../common/utils/tool';
+    import validate from '../../../../../common/utils/validate';
+    import storage from '../../../../../common/utils/storage';
+    import dat from '../../../../../common/utils/date';
+    import file from '../../../../../common/utils/file';
+    import css from '../../../../../components/css';
+    import header from '../../../../../components/header';
+    export default class Index extends wepy.page {
+        components = {
+            css: css, //样式表
+            header: header
+        };
+        data = {
+            isback: true,
+            isopacity: true,
+            title: '客资',
+            loading: true,
+            is_hide: true,
+            userList: null,
+            user: null,
+            user_act: 0, //0 客服 1销售 策划
+        };
+        methods = {
+            goToExcuteDetail(e) {
+                let id = e.currentTarget.dataset.id;
+                let tid = e.currentTarget.dataset.tid;
+                wepy.navigateTo({
+                    url: '/pages/common/execute/task?order_id_str=' + tid + '&id=' + id
+                });
+            },
+            goToDetail(e) {
+                let id = e.currentTarget.dataset.id;
+                wepy.navigateTo({
+                    url: '/pages/common/sale/customer?id=' + id
+                });
+            },
+            toggleDisplay(e) {
+                let index = e.currentTarget.dataset.index;
+                this.userList[index].is_hide = !this.userList[index].is_hide;
+            }
+        };
+        onLoad(options) {
+            let that = this;
+            that.loading = false;
+        }
+        onShow() {
+            let that = this;
+            rq.get('getTeamOrder', {
+                200: result => {
+                    that.userList = result.data.data;
+                    that.$apply();
+                }
+            })
+        }
+    }
+</script>

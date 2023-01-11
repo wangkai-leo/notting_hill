@@ -1,0 +1,22 @@
+.cus-5-rows {
+  width: 20%;
+  float: left;
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  height: 28rpx;
+  line-height: 28rpx;
+  font-size: 22rpx;
+}
+.common-lab-btn {
+  top: 5rpx;
+}
+.common-list-sa {
+  position: relative;
+  font-size: 26rpx;
+  color: #333333;
+  padding: 30rpx 0rpx;
+  border-bottom: #dad8d8 solid 1rpx;
+  overflow: hidden;
+}

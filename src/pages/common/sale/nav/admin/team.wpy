@@ -1,0 +1,86 @@
+<style lang="less">
+    .common-city {
+        padding:20rpx;
+    }
+</style>
+
+<template>
+    <view>
+        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <block wx:for="{{user_list}}" wx:key="">
+                <view class="common-city">
+                    <view class="common-title" @tap="toggleTeams" data-index="{{index}}">{{item.city_name}}
+                        <image class="option-log-arrows" src="{{item.show_teams?'../../../../../images/arrows-down.png':'../../../../../images/arrows-right.png'}}" mode="widthFix" lazy-load="false">
+                        </image>
+                    </view>
+                    <view class="common-pannel" wx:if="{{item.show_teams}}">
+                        <block wx:for="{{item.children}}" wx:key="">
+                            <view class="common-list">
+                                <view class="common-lab-line" @tap="goToDepart" data-id="{{item.id}}">{{item.team_name}}
+                                    <image class="common-log-arrows" src="../../../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                                    </image>
+                                </view>
+                            </view>
+                        </block>
+                    </view>
+                </view>
+            </block>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import G from '../../../../../common/global';
+    import rq from '../../../../../common/utils/request';
+    import tool from '../../../../../common/utils/tool';
+    import validate from '../../../../../common/utils/validate';
+    import storage from '../../../../../common/utils/storage';
+    import dat from '../../../../../common/utils/date';
+    import file from '../../../../../common/utils/file';
+    import css from '../../../../../components/css';
+    import header from '../../../../../components/header';
+    export default class Index extends wepy.page {
+        components = {
+            css: css, //样式表
+            header: header
+        };
+        data = {
+            isopacity: true,
+            title: '团队管理',
+            isback: true,
+            user_list: null
+        };
+        methods = {
+            goToDepart(e){
+                let id=e.currentTarget.dataset.id;
+                wepy.navigateTo({ url: 'department?team_id='+id });
+            },
+            toggleTeams(e) {
+                let index=e.currentTarget.dataset.index;
+                this.user_list[index].show_teams=!this.user_list[index].show_teams;
+            },
+            submit() {
+            }
+        };
+        onLoad(options) {
+            let that = this;
+            that.user = wepy.getStorageSync('user');
+            rq.get('getTeamsManageList', {
+                200: result => {
+                    that.user_list = result.data.data;
+                    that.user_list.forEach(element => {
+                        element.show_teams = false;
+                    });
+                    that.$apply();
+                }
+            })
+        }
+        onShow() {}
+    }
+</script>

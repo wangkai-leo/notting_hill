@@ -1,0 +1,293 @@
+<style lang="less">
+    .common-lab {
+        width: 230rpx;
+    }
+    .common-tip {
+        width: 300rpx;
+        float: right;
+        text-align: right;
+        color: #999;
+    }
+
+    .common-tip {
+        color: #222;
+    }
+    .server-msg-box {
+        background: #f9f9f9;
+        padding: 35rpx 20rpx;
+        border-radius: 10rpx;
+        font-size: 26rpx;
+        margin: 20rpx 0rpx 0rpx;
+        overflow: hidden;
+    }
+    .server-msg-line {
+        overflow: hidden;
+        margin-bottom: 20rpx;
+        color: #555;
+    }
+    .server-msg-value {
+        position: relative;
+        float: right;
+        text-align: right;
+    }
+    .server-msg-title {
+        float: left;
+    }
+    .server-msg-blo {
+        font-weight: bold;
+        margin-bottom: 40rpx;
+        font-size: 24rpx;
+        color: #333;
+    }
+    .server-group {
+        border-top: #eaeaea solid 1rpx;
+        padding-top: 20rpx;
+    }
+    .server-name {
+        font-size: 26rpx;
+        color: #333;
+        padding: 40rpx 0rpx 15rpx; // float: left;
+        // width: 500rpx;
+    }
+    .edit-btn {
+        position: relative;
+        float: right;
+        font-size: 28rpx;
+        color: #87a6e7;
+        height: 25rpx;
+        width: 80rpx;
+    }
+    .edit-btn-del {
+        position: relative;
+        float: right;
+        font-size: 28rpx;
+        color: #999;
+        height: 40rpx;
+        width: 80rpx;
+        padding: 20rpx 0rpx 20rpx 20rpx;
+        text-align: right;
+    }
+    .common-stauts-tip {
+        color: #fb7c7c;
+        float: right;
+    }
+    .common-checked {
+        right: 0rpx;
+        left: auto;
+        top: 25rpx;
+    }
+</style>
+
+<template>
+    <view>
+        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+        <view class="common-top">
+            <view class="common-content"></view>
+        </view>
+        <view class="common-wrapper">
+            <view class="common-title">客户信息</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">客户姓名</view>
+                    <input class="common-tip" disabled value="{{taste_list.client_name}}" @input="bindInputUserName" type="text" />
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">电话</view>
+                    <input class="common-tip" disabled value="{{taste_list.client_mobile}}" @input="bindInputUserMobile" type="text" />
+                </view>
+            </view>
+            <view class="common-title">新人信息</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">新郎姓名</view>
+                    <input class="common-tip" disabled="{{!edit_base}}" value="{{taste_list.groom_name}}" @input="bindInputGroomName" type="text" placeholder="请输入" />
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">新郎电话</view>
+                    <input class="common-tip" disabled="{{!edit_base}}" value="{{taste_list.groom_mobile}}" @input="bindInputGroomMobile" type="text" placeholder="请输入" />
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">新娘姓名</view>
+                    <input class="common-tip" disabled="{{!edit_base}}" value="{{taste_list.bride_name}}" @input="bindInputBrideName" type="text" placeholder="请输入" />
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">新娘电话</view>
+                    <input class="common-tip" disabled="{{!edit_base}}" value="{{taste_list.bride_mobile}}" @input="bindInputBrideMobile" type="text" placeholder="请输入" />
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">销售</view>
+                    <input class="common-tip" disabled="{{!edit_base}}" value="{{taste_list.sales_name}}" @input="bindInputBrideMobile" type="text" placeholder="请输入" />
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">策划</view>
+                    <input class="common-tip" disabled="{{!edit_base}}" value="{{taste_list.planner_name}}" @input="bindInputBrideMobile" type="text" placeholder="请输入" />
+                </view>
+            </view>
+            <view class="common-title">试菜信息</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">婚期</view>
+                    <input class="common-tip" disabled="{{!edit_base}}" value="{{taste_list.schedule_session.schedule_date}}" @input="bindInputBrideMobile" type="text" placeholder="请输入" />
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">餐段</view>
+                    <input class="common-tip" disabled value="{{taste_list.wedding_meal_section}}" @input="bindInputMeal" type="text" placeholder="请输入" />
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">试菜日期</view>
+                    <view class="common-tip">{{taste_list.session.schedule_date}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">宴会厅</view>
+                    <input class="common-tip" disabled value="{{taste_list.session.area_name}}" @input="bindInputAddress" type="text" placeholder="请输入" />
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">宴会场次</view>
+                    <input class="common-tip" disabled value="{{taste_list.session.session_name}}" @input="bindInputSession" type="text" placeholder="请输入" />
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">试菜时间</view>
+                    <view class="common-tip">{{taste_list.try_time?taste_list.try_time:''}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">婚宴餐标</view>
+                    <input class="common-tip" disabled value="{{taste_list.wedding_package_name}}" @input="bindInput" type="text" placeholder="请输入" />
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">试菜人数</view>
+                    <input class="common-tip" disabled value="{{taste_list.try_person_number}}" @input="bindInputPersonNum" type="text" placeholder="请输入" />
+                </view>
+            </view>
+            <view class="customer-order-btn" wx:if="{{user.is_excute&&!user.is_excute_leader&&taste_list.task_status==0}}" @tap="goToFeedback">填写试菜反馈</view>
+            <view wx:if="{{user.is_excute_leader}}">
+                <view class="common-title">执行人</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        {{teams_employee[employee_index].employee_name}}
+                        <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                        </image>
+                        <picker class="picker-common" @change="bindTeamChange" value="{{employee_index}}" range="{{teams_employee}}" range-key="employee_name">
+                            <view class="picker-common-v">
+                                当前选择：{{teams_employee[employee_index].employee_name}}
+                            </view>
+                        </picker>
+                    </view>
+                </view>
+                <view class="customer-order-btn" @tap="assignTask">确认分配</view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from "wepy";
+    import G from "../../../common/global";
+    import rq from "../../../common/utils/request";
+    import tool from "../../../common/utils/tool";
+    import validate from "../../../common/utils/validate";
+    import storage from "../../../common/utils/storage";
+    import dat from "../../../common/utils/date";
+    import file from "../../../common/utils/file";
+    
+    
+    import css from "../../../components/css";
+    import header from "../../../components/header";
+    export default class Index extends wepy.page {
+        components = {
+            css: css, //样式表
+            header: header
+        };
+        data = {
+            isopacity: true,
+            title: "分配试菜",
+            isback: true,
+            taste_list: null,
+            id: 0,
+            user_id: 0,
+            try_dishes_id: 0,
+            user: null,
+            teams_employee: null,
+            employee_index: 0
+        };
+        methods = {
+            assignTask() {
+                let that=this;
+                rq.get("distributionTryDishes", {
+                        200: result => {
+                            wepy.navigateBack({
+                              delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                            });
+                        }
+                    }, {
+                        try_dishes_id: that.try_dishes_id,
+                        employee_id: that.teams_employee[that.employee_index].id
+                    }
+                );
+            },
+            bindTeamChange(e) {
+                this.employee_index = e.detail.value;
+            },
+            bindTimeChange(e) {
+                this.taste_list.try_time = e.detail.value;
+            },
+            bindDateChange(e) {
+                this.taste_list.try_date = e.detail.value;
+            },
+            goToFeedback() {
+                wepy.navigateTo({
+                    url: '/pages/artcenter/scheme/feedback?id=' + this.try_dishes_id
+                });
+            },
+            bindInputUserMobile(e) {
+                this.taste_list.client_mobile = e.detail.value;
+            },
+            bindInputUserName(e) {
+                this.taste_list.client_name = e.detail.value;
+            },
+            bindInputMeal(e) {
+                this.taste_list.wedding_meal_section = e.detail.value;
+            },
+            bindInputMealDate(e) {
+                this.taste_list.try_date = e.detail.value;
+            },
+            bindInputAddress(e) {
+                this.taste_list.try_address = e.detail.value;
+            },
+            bindInputSession(e) {
+                this.taste_list.try_session = e.detail.value;
+            },
+            bindInputMealTime(e) {
+                this.taste_list.try_time = e.detail.value;
+            },
+            bindInputPersonNum(e) {
+                this.taste_list.try_person_number = e.detail.value;
+            }
+        };
+        onLoad(options) {
+            options = tool.decodeQrCodeParam(options);
+            let that = this;
+            that.id = options.id;
+            that.user_id = options.user_id;
+            that.try_dishes_id = options.try_dishes_id;
+        }
+        onShow() {
+            let that = this;
+            this.user = wepy.getStorageSync('user');
+            rq.get("getTryDishesDetail", {
+                200: result => {
+                    that.taste_list = result.data.data;
+                    that.$apply();
+                }
+            }, {
+                try_dishes_id: that.try_dishes_id,
+                user_id: that.user_id
+            });
+            rq.get("getLoginerTeamEmployee", {
+                200: result => {
+                    that.teams_employee = result.data.employee_list;
+                    that.$apply();
+                }
+            }, {});
+        }
+    }
+</script>

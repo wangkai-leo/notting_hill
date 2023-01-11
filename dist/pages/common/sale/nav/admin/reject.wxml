@@ -1,0 +1,61 @@
+
+    <view>
+        
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="full-wrapper">
+            <view class="sale-tab-box-audit">
+                <view class="full-tab-item {{tab_index==0?'sale-tab-item-check':''}}" bindtap="toggleTab" data-index="0">驳回订单</view>
+                <view class="full-tab-item {{tab_index==1?'sale-tab-item-check':''}}" bindtap="toggleTab" data-index="1">驳回支付</view>
+            </view>
+            <!--|订单审核-->
+            <view class="box-con"  wx:if="{{tab_index==0}}">
+                <block wx:for="{{customer_reject}}" wx:key="">
+                    <view class="customer-info" bindtap="goToSaleCustomer" data-id="{{item.id}}">
+                        <view class="customer-info-header">
+                            <view class="customer-num">编号：{{item.order_id_str}}</view>
+                        </view>
+                        <view class="customer-info-msgs" data-id="{{item.order_id}}">
+                            <view class="customer-item">新人姓名：<text>{{item.client_name}}</text></view>
+                            <view class="customer-item">客资意向：<text>{{item.intention_name}}</text></view>
+                            <view class="customer-item">渠道来源：<text>{{item.channel_name}}</text></view>
+                            <view class="customer-item">客资状态：<text>{{item.user_status_text}}</text></view>
+                        </view>
+                    </view>
+                </block>
+            </view>
+            <!--订单审核|-->
+            <!--|转让-->
+            <view class="box-con"  wx:if="{{tab_index==1}}">
+                <block wx:for="{{pay_reject}}" wx:key="">
+                    <view class="customer-info" bindtap="goToOderPay" data-id="{{item.id}}">
+                        <view class="customer-info-header">
+                            <view class="customer-num">编号：{{item.order_id_str}}</view>
+                        </view>
+                        <view class="customer-info-msgs" data-id="{{item.order_id}}">
+                            <view class="customer-item">新人姓名：<text>{{item.client_name}}</text></view>
+                            <view class="customer-item">金额：<text>{{item.deposit_amount}}</text></view>
+                        </view>
+                    </view>
+                </block>
+            </view>
+            <!--转让|-->
+        </view>
+    </view>

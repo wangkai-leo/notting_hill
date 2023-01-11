@@ -1,0 +1,54 @@
+
+    <view>
+        
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <block  wx:for="{{contract_list}}" wx:key="">
+                <view class="common-pannel" bindtap="goToContractDetail" data-id="{{item.id}}">
+                    <view class="common-list">
+                        <view class="common-tip">合同编号：{{item.contract_id}}
+                            <view class="common-fl" wx:if="{{index==0}}">{{item.contract_status_text}}</view>
+                        </view>
+                    </view>
+                    <view class="common-list">
+                        <view class="common-tip">{{item.contract_name}}</view>
+                    </view>
+                    <view class="common-list">
+                        <view class="common-tip">发起人：{{item.employee_name}}</view>
+                    </view>
+                </view>
+            </block>
+            <view class="customer-create-btn">创建合同
+                <picker class="picker-common" bindchange="chooseContract" value="{{contract_index}}" range="{{contract_model}}" range-key="contract_name">
+                    <view class="picker-common-v">
+                        当前选择：{{contract_model[contract_index].contract_name}}
+                    </view>
+                </picker>
+            </view>
+            <!-- <view class="customer-create-btn" wx:if="{{display_create_button}}">创建合同
+                <picker class="picker-common" bindchange="chooseContract" value="{{contract_index}}" range="{{contract_model}}" range-key="contract_name">
+                    <view class="picker-common-v">
+                        当前选择：{{contract_model[contract_index].contract_name}}
+                    </view>
+                </picker>
+            </view> -->
+        </view>
+    </view>

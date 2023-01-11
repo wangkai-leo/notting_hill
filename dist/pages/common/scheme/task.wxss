@@ -1,0 +1,87 @@
+@import "./../../../components/header.wxss";
+@import "./../../../components/css.wxss";
+.common-lab {
+  width: 230rpx;
+}
+.common-tip {
+  width: 300rpx;
+  float: right;
+  text-align: right;
+  color: #999;
+}
+.common-tip {
+  color: #222;
+  width: 400rpx;
+}
+.server-msg-box {
+  background: #f9f9f9;
+  padding: 35rpx 20rpx;
+  border-radius: 10rpx;
+  font-size: 26rpx;
+  margin: 20rpx 0rpx 0rpx;
+  overflow: hidden;
+}
+.server-msg-line {
+  overflow: hidden;
+  margin-bottom: 20rpx;
+  color: #555;
+}
+.server-msg-value {
+  position: relative;
+  float: right;
+  text-align: right;
+}
+.server-msg-title {
+  float: left;
+}
+.server-msg-blo {
+  font-weight: bold;
+  margin-bottom: 40rpx;
+  font-size: 24rpx;
+  color: #333;
+}
+.server-group {
+  border-top: #eaeaea solid 1rpx;
+  padding-top: 20rpx;
+}
+.server-name {
+  font-size: 26rpx;
+  color: #333;
+  padding: 40rpx 0rpx 15rpx;
+}
+.edit-btn {
+  position: relative;
+  float: right;
+  font-size: 28rpx;
+  color: #87a6e7;
+}
+.edit-btn-del {
+  position: relative;
+  float: right;
+  font-size: 28rpx;
+  color: #999;
+  height: 40rpx;
+  width: 80rpx;
+  padding: 20rpx 0rpx 20rpx 20rpx;
+  text-align: right;
+}
+.contract-oth-title {
+  font-size: 24rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+}
+.contract-cou-title {
+  font-size: 24rpx;
+  float: left;
+}
+.contract-pri-title {
+  font-size: 24rpx;
+  float: right;
+}
+.common-tip-line {
+  color: #000;
+}
+.flesh-btn {
+  float: right;
+  color: #87a6e7;
+}

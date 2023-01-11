@@ -1,0 +1,89 @@
+
+<style lang="less">
+.common-title{
+  position: relative;
+    font-size: 28rpx;
+    line-height: 50rpx;
+    padding-left: 20rpx;
+    margin-bottom: 15rpx;
+}
+
+.common-pannel {
+    background-color: #fff;
+    border-radius: 20rpx;
+    padding: 0rpx 25rpx;
+    box-shadow: #dce1fc 0rpx 0rpx 20rpx;
+    margin-bottom: 40rpx;
+}
+.common-nt-full{
+  float: left;
+}
+</style>
+
+<template>
+<view>
+  <view class="common-title">
+    {{label}}
+    <slot></slot>
+  </view>
+    <view class="common-pannel" >
+      <!--textarea-->
+      <textarea 
+      wx:if="{{nttype=='area' && readonly}}" disabled class="common-area" value="{{ntvalue[ntkey]}}" />
+      <textarea wx:if="{{nttype=='area' && !readonly}}" class="common-area" 
+      @input="bindInput" placeholder="{{placeholder}}" value="{{ntvalue[ntkey]}}" />
+      <!--textarea-->
+
+      <!--input-->
+      <view class="common-list" wx:if="{{nttype=='text'}}">
+        <view class="common-nt-full">{{ntvalue[ntkey]}}</view>
+      </view>
+      <!--input-->
+    </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class Fnav extends wepy.component {
+    props = {
+      label:{
+        type:String
+      },
+      placeholder:{
+        type:String
+      },
+      ntvalue:{
+        type:Object,
+        twoWay:true
+      },
+      ntkey:{
+        type:String
+      },
+      nttype:{
+        type:String,
+        default:'text'
+      },
+      readonly:{
+        type:Boolean,
+        default:true,
+        twoWay:true
+      }
+    }
+    watch={
+    }
+    components = {};
+    data = {
+    };
+    methods = {
+      bindInput(e){
+        this.ntvalue[this.ntkey]=e.detail.value;
+      }
+    };
+    onLoad(options) {
+      this.$apply();
+    }
+    events = {
+    };
+}
+</script>

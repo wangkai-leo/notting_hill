@@ -1,0 +1,255 @@
+<style lang="less">
+.container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.proflie-fn {
+  background: #fff;
+  width: 700rpx;
+  padding: 50rpx;
+  height: 1000rpx;
+}
+
+.customer-create-btn {
+  position: fixed;
+  bottom: 50rpx;
+}
+
+.profile-reset-pass {
+  font-size: 26rpx;
+  line-height: 29rpx;
+  margin-top: 50rpx;
+}
+
+.common-pass-box {
+  margin-top: 40rpx;
+  overflow: hidden;
+  width: 650rpx;
+  margin: 40rpx auto 0rpx;
+}
+
+.common-pass-input {
+  font-size: 26rpx;
+  margin-top: 20rpx;
+}
+
+.common-pass-subm {
+  font-size: 26rpx;
+  background: #87a6e7;
+  color: #fff;
+  padding: 10rpx;
+  text-align: center;
+  border-radius: 20rpx;
+  width: 300rpx;
+  margin-top: 40rpx;
+}
+
+.common-online-status {
+  font-size: 24rpx;
+  float: left;
+  padding: 10rpx 30rpx;
+  margin-left: 20rpx;
+  border-radius: 10rpx;
+  color: #87a6e7;
+  // background-color: #f0f0f0;
+  background-color: #87a6e7;
+}
+
+.common-online-status-act {
+  color: #fff;
+  background-color: #87a6e7;
+}
+
+.common-online-status-lea {
+  color: #fff;
+  background-color: #ffb2a5;
+}
+
+button {
+  display: block;
+  padding: 0rpx;
+  margin: 0rpx;
+  border: none;
+  background: none;
+  text-align: left;
+  color: #000;
+}
+
+button::after {
+  border: none;
+}
+
+.button-hover {
+  background: none;
+  color: #000;
+}
+</style>
+
+<template>
+  <view class="container">
+    <view class="common-top">
+      <view class="common-content">
+      </view>
+    </view>
+    <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+    <view class="common-wrapper">
+      <view class="common-user-info">
+        <view class="common-user-msg">
+          <view class="common-user-name">{{ user.employee_name }}</view>
+          <view class="common-user-position">{{ user.type_name }}</view>
+          <view class="common-user-department">{{ user.team_name }}</view>
+        </view>
+        <open-data class="common-user-avr" type="userAvatarUrl"></open-data>
+      </view>
+      <view class="common-online-status {{user.online_status==1?'common-online-status-act':'common-online-status-lea'}}"
+        @tap="turn">{{ user.online_status == 1 ? '在线' : '离线' }}</view>
+      <view class="common-online-status common-online-status-act" @tap="changeAccount"
+        wx:if="{{user.bind_sale_id!=0}}">切换账号</view>
+    </view>
+    <view class="proflie-fn">
+      <view class="common-title">辅助功能</view>
+      <view class="profile-reset-pass" @tap="goTochangePassword">
+        <image class="common-pass-icon" src="../../images/pass-icon.png" mode="scaleToFill" lazy-load="false">
+        </image>
+        修改密码
+        <image class="option-log-arrows" src="../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+        </image>
+      </view>
+      <button class="profile-reset-pass" open-type="share" wx:if="{{department=='artcenter'}}">
+        <image class="common-pass-icon" src="../../images/share-icon.png" mode="scaleToFill" lazy-load="false">
+        </image>
+        分享小程序
+        <image class="option-log-arrows" src="../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+        </image>
+      </button>
+    </view>
+    <view class="customer-create-btn" @tap="logOut">退出登录</view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import css from '../../components/css';
+import rq from '../../common/utils/request';
+import header from '../../components/header';
+export default class Index extends wepy.page {
+  components = {
+    css: css, //样式表
+    header: header
+  };
+  data = {
+    isback: false,
+    isopacity: true,
+    title: '个人中心',
+    loading: false,
+    user: null,
+    show_form: false,
+    is_lock: false,
+    department: ''
+  };
+  methods = {
+    turn() {
+      let that = this;
+      that.is_lock = true;
+      rq.get('changeOnlineStatus', {
+        200: result => {
+          that.is_lock = false;
+          if (that.user.online_status == 1) {
+            that.user.online_status = 0;
+          } else {
+            that.user.online_status = 1;
+          }
+          that.$apply();
+        }
+      }, {})
+    },
+    goTochangePassword() {
+      wepy.navigateTo({ url: '/pages/common/changpw' });
+    },
+    changeAccount() {
+      this.getMyInfo(this.user.bind_sale_uid);
+    },
+    logOut() {
+      wepy.setStorageSync('user', null);
+      wepy.reLaunch({
+        url: '/pages/login'
+      });
+    }
+  };
+
+  getMyInfo(uid) {
+    let that = this;
+    let params = {}
+    if (uid) {
+      params['uid'] = uid;
+    }
+    rq.get('getMyInfo', {
+      200: result => {
+        that.user = result.data.data;
+        if (uid) {
+          result.data.data.is_sale =
+            result.data.data.employee_type == 4 ||
+              result.data.data.employee_type == 3 ||
+              result.data.data.employee_type == 2 ? true : false;
+
+          result.data.data.is_sale_leader =
+            result.data.data.employee_type == 3 ||
+              result.data.data.employee_type == 2 ? true : false;
+
+          result.data.data.is_server =
+            result.data.data.employee_type == 13 ? true : false;
+
+          result.data.data.is_server_offline =
+            result.data.data.employee_type == 16 ? true : false;
+
+          result.data.data.is_scheme =
+            result.data.data.employee_type == 8 ||
+              result.data.data.employee_type == 7 ? true : false;
+
+          result.data.data.is_scheme_leader =
+            result.data.data.employee_type == 7 ? true : false;
+
+          result.data.data.is_excute =
+            result.data.data.employee_type == 14 ||
+              result.data.data.employee_type == 15 ? true : false;
+
+          result.data.data.is_excute_leader =
+            result.data.data.employee_type == 15 ? true : false;
+
+          wepy.setStorageSync('user_info', uid);
+          wepy.setStorageSync('user', that.user);
+          
+          wepy.reLaunch({url:'/pages/common/profile'});
+        }
+        that.$apply();
+      }
+    }, params)
+  }
+
+  onLoad(options) {
+    let that = this;
+    that.department = wepy.getStorageSync('office_line');
+    rq.get('getMyInfo', {
+      200: result => {
+        that.user = result.data.data;
+        that.$apply();
+      }
+    })
+  }
+  onShow() { }
+  onShareAppMessage() {
+    return {
+      title: '诺丁山',
+      path: '/pages/index',
+      imageUrl: '../../images/share.jpeg',
+      success: res => { },
+      fail: () => { },
+      complete: () => { }
+    };
+  }
+
+}
+</script>

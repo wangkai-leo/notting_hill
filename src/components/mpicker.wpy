@@ -1,0 +1,110 @@
+<style lang="less">
+    .leo-over-bg {
+        z-index: 1111111;
+    }
+    .item-l {
+        text-align: center;
+        font-size: 32rpx;
+        padding: 20rpx 0rpx;
+        color: #bbbbbb;
+    }
+    .leo-over-pannle {
+        height: 750rpx;
+        margin-top: -375rpx;
+        width: 620rpx;
+        margin-left:-310rpx;
+    }
+    .s-box {
+        height: 550rpx;
+        margin: 30rpx auto;
+    }
+    .item-l-ac {
+        color: #87a6e7;
+    }
+    .p-btn {
+        position: relative;
+        width: 210rpx;
+        height: 70rpx;
+        background-color: #87a6e7;
+        text-align: center;
+        color: #fff;
+        line-height: 70rpx;
+        border-radius: 35rpx;
+        font-size: 26rpx;
+        box-shadow: #bfc4d9 0rpx 0rpx 20rpx;
+    }
+    .p-btn-l{
+        float: left;
+        margin-left: 60rpx;
+    }
+    .p-btn-r{
+        float: right;
+        margin-right: 60rpx;
+    }
+</style>
+
+<template>
+    <view class="leo-over-bg" wx:if="{{rang_display}}">
+        <view class="leo-over-center">
+            <view class="leo-over-pannle">
+                <scroll-view scroll-y class="s-box">
+                    <block wx:for="{{rang_data}}" wx:key="">
+                        <view @tap="checkedItem" data-index="{{index}}" class="item-l {{checked_index==index?'item-l-ac':''}}">{{item[rang_key]}}</view>
+                    </block>
+                </scroll-view>
+                <view class="p-btn p-btn-l" @tap="cancel">取 消</view>
+                <view class="p-btn p-btn-r" @tap="checkNew">确 认</view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    export default class Mpicker extends wepy.component {
+        props = {
+            rang_data: {
+                type:Array,
+                twoWay:true
+            },
+            rang_index: {
+                type:Number,
+                twoWay:true
+            },
+            rang_key: {
+                type:String,
+                twoWay:true
+            },
+            rang_display: {
+                type:Boolean,
+                twoWay:true
+            }
+        }
+        data = {
+            checked_index:0
+        }
+        components = {}
+        methods = {
+            cancel(){
+                this.rang_display=false;
+                this.checked_index=this.rang_index;
+            },
+            checkedItem(e) {
+                this.checked_index = e.currentTarget.dataset.index;
+            },
+            checkNew(){
+                this.rang_index=this.checked_index;
+                this.rang_display=false;
+                this.$emit('changeMp',this.rang_index);
+            },
+        }
+        events = {}
+        watch = {}
+        computed = {}
+        onLoad() {
+            this.checked_index=this.rang_index;
+        };
+        onShow() {
+        };
+    }
+</script>

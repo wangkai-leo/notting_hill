@@ -1,0 +1,341 @@
+<style lang="less">
+.common-lab {
+    width: 230rpx;
+}
+
+.server-msg-box {
+    background: #f9f9f9;
+    padding: 35rpx 20rpx;
+    border-radius: 10rpx;
+    font-size: 26rpx;
+    margin: 20rpx 0rpx 0rpx;
+    overflow: hidden;
+}
+
+.server-msg-line {
+    overflow: hidden;
+    margin-bottom: 20rpx;
+    color: #555;
+}
+
+.server-name {
+    font-size: 26rpx;
+    color: #333;
+    padding: 40rpx 0rpx 15rpx;
+    // float: left;
+    // width: 500rpx;
+}
+
+.server-msg-title {
+    font-size: 22rpx;
+}
+
+.meun-change-btn,
+.meun-back-btn {
+    position: relative;
+    display: inline-block;
+    color: #87a6e7;
+    margin-left: 20rpx;
+}
+
+.menu-ch-btns {
+    float: right;
+}
+
+.server-msg-title-del,
+.server-msg-title-del .meun-change-btn {
+    color: #999;
+}
+
+.customer-order-btn {
+    position: relative;
+}
+</style>
+
+<template>
+<view>
+    <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+    <view class="common-top">
+        <view class="common-content">
+        </view>
+    </view>
+    <view class="common-wrapper">
+        <view class="common-title">套餐名称</view>
+        <view class="common-pannel">
+            <view class="common-list">
+                <view class="common-lab">{{page_info.package_name}}</view>
+            </view>
+        </view>
+        <view class="common-title">套餐清单</view>
+        <view class="common-pannel common-pannel-b">
+            <view class="server-name">冷菜</view>
+            <view class="server-msg-box">
+                <block wx:for="{{page_info.cool}}" wx:key="">
+                    <view class="server-msg-line">
+                        <view class="server-msg-title {{item.is_delete==1?'server-msg-title-del':''}}">{{item.product_name}} {{item.change_remark?'('+item.change_remark+')':''}}
+                            <view class="menu-ch-btns">
+                                <view class="meun-change-btn" wx:if="{{item.is_delete==0&&!readonly}}">更换
+                                    <picker class="picker-common" @change="bindCoolChange" data-id="{{item.id}}" value="{{cool_index}}" range="{{cool_arr_rand}}">
+                                        <view class="picker">
+                                            当前选择：{{cool_arr_rand[cool_index]}}
+                                        </view>
+                                    </picker>
+                                </view>
+                                <view @tap="deleteMenu" wx:if="{{item.is_delete==0&&!readonly}}" data-id="{{item.id}}" data-session="cool" data-index="{{index}}" class="meun-change-btn">删除</view>
+                                <view @tap="backMenu" wx:if="{{item.is_delete==1&&!readonly}}" data-id="{{item.id}}" data-session="cool" data-index="{{index}}" class="meun-back-btn">恢复</view>
+                            </view>
+                        </view>
+                    </view>
+                </block>
+            </view>
+            <view class="server-name">热菜</view>
+            <view class="server-msg-box">
+                <block wx:for="{{page_info.hot}}" wx:key="">
+                    <view class="server-msg-line">
+                        <view class="server-msg-title {{item.is_delete==1?'server-msg-title-del':''}}">{{item.product_name}} {{item.change_remark?'('+item.change_remark+')':''}}
+                            <view class="menu-ch-btns">
+                                <view class="meun-change-btn" wx:if="{{item.is_delete==0&&!readonly}}">更换
+                                    <picker class="picker-common" @change="bindHotChange" data-id="{{item.id}}" value="{{hot_index}}" range="{{hot_arr_rand}}">
+                                        <view class="picker">
+                                            当前选择：{{hot_arr_rand[hot_index]}}
+                                        </view>
+                                    </picker>
+                                </view>
+                                <view @tap="deleteMenu" wx:if="{{item.is_delete==0&&!readonly}}" data-id="{{item.id}}" data-session="hot" data-index="{{index}}" class="meun-change-btn">删除</view>
+                                <view @tap="backMenu" wx:if="{{item.is_delete==1&&!readonly}}" data-id="{{item.id}}" data-session="hot" data-index="{{index}}" class="meun-back-btn">恢复</view>
+                            </view>
+                        </view>
+                    </view>
+                </block>
+            </view>
+        </view>
+        <view class="customer-order-btn" @tap="addNew" wx:if="{{!readonly}}">添加内容
+            <picker class="picker-common" mode="multiSelector" @change="bindAddProduct" value="{{multiIndex}}" range="{{multiArrayProduct}}">
+                <view class="picker">
+                    当前选择：{{multiArrayProduct[0][multiIndex[0]]}}，{{multiArrayProduct[1][multiIndex[1]]}}
+                </view>
+            </picker>
+        </view>
+
+    </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import G from '../../../common/global';
+import rq from '../../../common/utils/request';
+import tool from '../../../common/utils/tool';
+import validate from '../../../common/utils/validate';
+import storage from '../../../common/utils/storage';
+import dat from '../../../common/utils/date';
+import file from '../../../common/utils/file';
+import css from '../../../components/css';
+import header from '../../../components/header';
+export default class Index extends wepy.page {
+    components = {
+        css: css, //样式表
+        header: header
+    };
+    data = {
+        isopacity: true,
+        title: '客资信息',
+        isback: true,
+        page_info: null,
+        id: -1,
+
+        hot_arr: [],
+        cool_arr: [],
+
+        hot_arr_rand: [],
+        cool_arr_rand: [],
+        cool_index: 0,
+        hot_index: 0,
+
+        product_arr: [],
+        product_arr_rand: [],
+
+        readonly:false,
+
+        multiArrayProduct: [
+            ['新增', '赠送'],
+            []
+        ]
+    };
+    methods = {
+        bindAddProduct(e) {
+            let values = e.detail.value;
+            let that = this;
+            rq.get('addProduct', {
+                200: result => {
+                    wepy.showToast({
+                        title: '更改成功', //提示的内容,
+                        icon: 'none', //图标,
+                        duration: 2000, //延迟时间,
+                        mask: true, //显示透明蒙层，防止触摸穿透,
+                        success: res => {}
+                    });
+                    that.getWeddingMenuInfo()
+                }
+            }, {
+                order_id: that.id,
+                change_remark: that.multiArrayProduct[0][values[0]], //备注
+                product_str: that.product_arr[values[1]].id //新菜品的id
+            })
+        },
+        bindCoolChange(e) {
+            let value = e.detail.value;
+            let id = e.currentTarget.dataset.id;
+            let that = this;
+            rq.get('editProduct', {
+                200: result => {
+                    wepy.showToast({
+                        title: '更改成功', //提示的内容,
+                        icon: 'none', //图标,
+                        duration: 2000, //延迟时间,
+                        mask: true, //显示透明蒙层，防止触摸穿透,
+                        success: res => {}
+                    });
+                    that.getWeddingMenuInfo()
+                }
+            }, {
+                order_product_id: id, //旧菜品的id
+                supplier_product_id: that.cool_arr[value].id //新菜品的id
+            })
+        },
+        bindHotChange(e) {
+            let value = e.detail.value;
+            let id = e.currentTarget.dataset.id;
+            let that = this;
+            rq.get('editProduct', {
+                200: result => {
+                    wepy.showToast({
+                        title: '更改成功', //提示的内容,
+                        icon: 'none', //图标,
+                        duration: 2000, //延迟时间,
+                        mask: true, //显示透明蒙层，防止触摸穿透,
+                        success: res => {}
+                    });
+                    that.getWeddingMenuInfo()
+                }
+            }, {
+                order_product_id: id, //旧菜品的id
+                supplier_product_id: that.hot_arr[value].id //新菜品的id
+            })
+        },
+        backMenu(e) {
+            let id = e.currentTarget.dataset.id;
+            let index = e.currentTarget.dataset.index;
+            let session = e.currentTarget.dataset.session;
+            let that = this;
+            rq.get('delProduct', {
+                200: result => {
+                    wepy.showToast({
+                        title: '恢复成功', //提示的内容,
+                        icon: 'none', //图标,
+                        duration: 2000, //延迟时间,
+                        mask: true, //显示透明蒙层，防止触摸穿透,
+                        success: res => {}
+                    });
+                    that.getWeddingMenuInfo()
+                    that.$apply();
+                }
+            }, {
+                product_id: id,
+                is_delete: 0,
+            })
+        },
+        deleteMenu(e) {
+            let id = e.currentTarget.dataset.id;
+            let index = e.currentTarget.dataset.index;
+            let session = e.currentTarget.dataset.session;
+            let that = this;
+            rq.get('delProduct', {
+                200: result => {
+                    wepy.showToast({
+                        title: '删除成功', //提示的内容,
+                        icon: 'none', //图标,
+                        duration: 2000, //延迟时间,
+                        mask: true, //显示透明蒙层，防止触摸穿透,
+                        success: res => {}
+                    });
+                    that.getWeddingMenuInfo()
+                    that.$apply();
+                }
+            }, {
+                product_id: id,
+                is_delete: 1
+            })
+        },
+
+        addNew() {
+
+        }
+    };
+
+    getWeddingMenuInfo() {
+        let that = this;
+        rq.get('getWeddingMenuInfo', {
+            200: result => {
+                that.page_info = result.data.data;
+                that.$apply();
+            }
+        }, {
+            order_id: that.id
+        })
+    }
+
+    onLoad(options) {
+        options = tool.decodeQrCodeParam(options);
+        let that = this;
+        that.id = options.order_id;
+        that.readonly = options.readonly=='yes'?true:false;
+        that.getWeddingMenuInfo();
+        
+        
+
+        rq.get('getAddFreePackageProduct', {
+            200: result => {
+                that.hot_arr = result.data.data;
+
+                that.hot_arr.forEach(element => {
+                    that.hot_arr_rand.push(element.product_name);
+                });
+
+                that.$apply();
+            }
+        }, {
+            product_sub_category: '热菜'
+        })
+
+        rq.get('getAddFreePackageProduct', {
+            200: result => {
+                that.cool_arr = result.data.data;
+                that.cool_arr.forEach(element => {
+                    that.cool_arr_rand.push(element.product_name);
+                });
+                that.$apply();
+            }
+        }, {
+            product_sub_category: '冷菜'
+        })
+
+        rq.get('getAddFreePackageProduct', {
+            200: result => {
+                that.product_arr = result.data.data;
+                that.product_arr.forEach(element => {
+                    that.product_arr_rand.push(element.product_name);
+                });
+                that.multiArrayProduct[1] = that.product_arr_rand;
+                that.$apply();
+            }
+        }, {
+
+        })
+
+    }
+    onShow() {
+
+    }
+}
+</script>

@@ -1,0 +1,2 @@
+@import "./../../../components/header.wxss";
+@import "./../../../components/css.wxss";

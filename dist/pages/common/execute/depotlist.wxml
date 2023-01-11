@@ -1,0 +1,49 @@
+
+    <view>
+        
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <block  wx:for="{{gift_list}}" wx:key="">
+                <view class="common-pannel common-pannel-b">
+                    <view>
+                        <view class="server-name">存放申请
+                            <text class="common-lab-btn">{{item.task_status_text}}</text>
+                        </view>
+                        <view class="server-msg-box" bindtap="goToDepotMsg" data-id="{{item.id}}">
+                            <view class="server-msg-line">
+                                <view class="server-msg-title">客户姓名</view>
+                                <view class="common-tip">{{item.client_name}}</view>
+                            </view>
+                            <view class="server-msg-line">
+                                <view class="server-msg-title">客户电话</view>
+                                <view class="common-tip">{{item.client_mobile}}</view>
+                            </view>
+                            <view class="server-msg-line">
+                                <view class="server-msg-title">预计达到时间</view>
+                                <view class="common-tip">{{item.arrive_time}}</view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </block>
+            <view class="customer-order-btn"  wx:if="{{user.is_scheme}}" bindtap="goToDepot">发起申请</view>
+        </view>
+    </view>

@@ -1,0 +1,23 @@
+@import "./../../components/header.wxss";
+@import "./../../components/css.wxss";
+.cus-5-rows {
+  width: 20%;
+  float: left;
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.cl-name {
+  width: 50%;
+  float: left;
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.cl-time {
+  width: 50%;
+  float: left;
+  text-align: center;
+}

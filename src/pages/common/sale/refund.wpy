@@ -1,0 +1,239 @@
+<style lang="less">
+
+</style>
+
+<template>
+    <view>
+        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper" wx:if="{{!page_data.id}}">
+            <view class="common-title">退款类型</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <input class="common-tip-line" disabled @input="bindInputRefundType" value="退款退单" type="text" placeholder="请填写"></input>
+                </view>
+            </view>
+            <view class="common-title">退款金额</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <input class="common-tip-line" @input="bindInputRefundAmount" value="" type="text" placeholder="请填写"></input>
+                </view>
+            </view>
+            <view class="common-title">退款账户</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">账户名称</view>
+                    <input class="common-tip" @input="bindInputRefundAccount" value="" type="text" placeholder="请填写"></input>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">卡号</view>
+                    <input class="common-tip" value="" type="text" @input="bindInputRefundCardNum" placeholder="请填写"></input>
+                </view>
+            </view>
+
+            <view class="common-title">退款凭证 {{show_img_arr.length}}/9</view>
+            <view class="common-pannel">
+                <view class="common-pic-box">
+                    <block wx:for="{{show_img_arr}}" wx:key="">
+                        <view class="common-add-pic">
+                            <image @tap="viewCheck" data-index="{{index}}" class="common-add-pic-img" src="{{item}}" mode="aspectFill" lazy-load="false">
+                            </image>
+                            <image wx:if="{{form_data.deposit_status==3}}" @tap="deleteImg" data-index="{{index}}" class="capi-del" src="../../../images/delete-icon.png" mode="scaleToFill" lazy-load="false">
+                            </image>
+                        </view>
+                    </block>
+                    <image wx:if="{{show_img_arr.length<9}}" @tap="uploadFile" class="common-add-pic" src="../../../images/add-pic.png" mode="aspectFill" lazy-load="false">
+                    </image>
+                </view>
+            </view>
+
+            <view class="common-title">退款原因</view>
+            <view class="common-pannel">
+                <textarea class="common-area" value="" @input="bindInputRefundReason" placeholder="请输入" />
+            </view>
+            <view class="customer-create-btn" @tap="submit">提交申请</view>
+        </view>
+        <!--显示-->
+        <view class="common-wrapper" wx:if="{{page_data.id}}">
+            <view class="common-title">退款状态</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <input class="common-tip-line" disabled value="{{page_data.refund_status_text}}" type="text"></input>
+                </view>
+            </view>
+            <view class="common-title">退款类型</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <input class="common-tip-line" disabled value="{{page_data.refund_order_type_text}}" type="text"></input>
+                </view>
+            </view>
+            <view class="common-title">需退金额</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <input class="common-tip-line" disabled value="{{page_data.refund_money_theory}}" type="text"></input>
+                </view>
+            </view>
+            <view class="common-title">实退金额</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <input class="common-tip-line" disabled value="{{page_data.refund_money_fact}}" type="text"></input>
+                </view>
+            </view>
+            <view class="common-title">退款账户</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">账户名称</view>
+                    <input class="common-tip" disabled value="{{page_data.user_account_name}}" type="text"></input>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">卡号</view>
+                    <input class="common-tip" value="{{page_data.user_account_cardnum}}" type="text" disabled></input>
+                </view>
+            </view>
+            <view class="common-title">退款凭证 {{show_img_arr.length}}/9</view>
+            <view class="common-pannel">
+                <view class="common-pic-box">
+                    <block wx:for="{{show_img_arr}}" wx:key="">
+                        <view class="common-add-pic">
+                            <image @tap="viewCheck" data-index="{{index}}" class="common-add-pic-img" src="{{item}}" mode="aspectFill" lazy-load="false">
+                            </image>
+                        </view>
+                    </block>
+                    <view class="server-name" wx:if="{{show_img_arr.length<=0}}">暂无</view>
+                </view>
+            </view>
+            <view class="common-title">退款原因</view>
+            <view class="common-pannel">
+                <textarea class="common-area" value="{{page_data.refund_reason}}" disabled></textarea>
+            </view>
+            <view class="common-title">审核状态</view>
+            <view class="common-pannel">
+                <block wx:for="{{page_data.order_review}}" wx:key="">
+                    <view class="common-list">
+                        <view class="common-lab">{{item.employee_name}}</view>
+                        <input class="common-tip" disabled value="{{item.review_status_text}}" type="text"></input>
+                    </view>
+                </block>
+            </view>
+            <view class="customer-create-btn" @tap="resubmit" wx:if="{{page_data.refund_status==2}}">重新发起申请</view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import G from '../../../common/global';
+    import C from '../../../common/config';
+    import rq from '../../../common/utils/request';
+    import tool from '../../../common/utils/tool';
+    import validate from '../../../common/utils/validate';
+    import storage from '../../../common/utils/storage';
+    import dat from '../../../common/utils/date';
+    import file from '../../../common/utils/file';
+    import css from '../../../components/css';
+    import header from '../../../components/header';
+    export default class Index extends wepy.page {
+        components = {
+            css: css, //样式表
+            header: header
+        };
+        data = {
+            isopacity: true,
+            title: '退款申请',
+            isback: true,
+            page_data: null,
+            order_id: '',
+            refund_money_theory: 0,
+            user_account_cardnum: '',
+            user_account_name: '',
+            refund_reason: '',
+            show_img_arr: [],
+            is_lock:false
+        };
+        methods = {
+            resubmit(){
+                this.page_data.id=0;
+                this.show_img_arr=[];
+            },
+            deleteImg(e) {
+                let index = e.currentTarget.dataset.index;
+                this.show_img_arr.splice(index, 1);
+            },
+            uploadFile() {
+                let that = this;
+                wx.chooseImage({
+                    count: '9', //最多可以选择的图片张数,
+                    success: res => {
+                        file.upLoadImgs(C.ENV_URL + 'uploadCommProof', res.tempFilePaths, 0, [], [], function(names, urls) {
+                            // that.upload_img_arr = that.upload_img_arr.concat(names);
+                            that.show_img_arr = that.show_img_arr.concat(urls);
+                            console.log(that.show_img_arr);
+                            that.$apply();
+                        });
+                        // that.$apply();
+                    }, //返回图片的本地文件路径列表 tempFilePaths,
+                    fail: () => {},
+                    complete: () => {}
+                });
+            },
+            viewCheck(e) {
+                wepy.previewImage({
+                    current: this.show_img_arr[e.currentTarget.dataset.index],
+                    urls: this.show_img_arr //需要预览的图片链接列表,
+                });
+            },
+            bindInputRefundAmount(e) {
+                this.refund_money_theory = e.detail.value;
+            },
+            bindInputRefundAccount(e) {
+                this.user_account_name = e.detail.value;
+            },
+            bindInputRefundCardNum(e) {
+                this.user_account_cardnum = e.detail.value;
+            },
+            bindInputRefundReason(e) {
+                this.refund_reason = e.detail.value;
+            },
+            submit() {
+                if(this.is_lock){
+                    return false;
+                }
+                this.is_lock=true;
+                let that = this;
+                rq.get('dropOrderApply', {
+                    200: result => {
+                        wepy.navigateBack({
+                            delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                        });
+                    }
+                }, {
+                    refund_money_theory: that.refund_money_theory,
+                    user_account_name: that.user_account_name,
+                    user_account_cardnum: that.user_account_cardnum,
+                    refund_reason: that.refund_reason,
+                    refund_file:that.show_img_arr.join(','),
+                    order_id: that.order_id
+                });
+            }
+        };
+        onLoad(options) {
+            let that = this;
+            that.order_id = options.order_id;
+            rq.get('getDropOrderInfo', {
+                200: result => {
+                    that.page_data = result.data.data;
+                    if(that.page_data.refund_file&&that.page_data.refund_file[0]!=''){
+                        that.show_img_arr=that.page_data.refund_file
+                    }
+                    that.$apply();
+                }
+            }, {
+                order_id: that.order_id
+            })
+        }
+        onShow() {}
+    }
+</script>

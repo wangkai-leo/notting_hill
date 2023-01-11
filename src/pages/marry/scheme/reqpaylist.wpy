@@ -1,0 +1,178 @@
+<style lang="less">
+    .common-lab {
+        width: 230rpx;
+    }
+    .common-tip {
+        width: 300rpx;
+        float: right;
+        text-align: right;
+        color: #999;
+    }
+    .common-tip {
+        color: #222;
+    }
+    .server-msg-box {
+        background: #f9f9f9;
+        padding: 35rpx 20rpx;
+        border-radius: 10rpx;
+        font-size: 26rpx;
+        margin: 20rpx 0rpx 0rpx;
+        overflow: hidden;
+    }
+    .server-msg-line {
+        overflow: hidden;
+        margin-bottom: 20rpx;
+        color: #555;
+    }
+    .server-msg-value {
+        position: relative;
+        float: right;
+        text-align: right;
+    }
+    .server-msg-title {
+        float: left;
+    }
+    .server-msg-blo {
+        font-weight: bold;
+        margin-bottom: 40rpx;
+        font-size: 24rpx;
+        color: #333;
+    }
+    .server-group {
+        border-top: #eaeaea solid 1rpx;
+        padding-top: 20rpx;
+    }
+    .server-name {
+        font-size: 26rpx;
+        color: #333;
+        padding: 40rpx 0rpx 15rpx; // float: left;
+        // width: 500rpx;
+    }
+    .edit-btn {
+        position: relative;
+        float: right;
+        font-size: 28rpx;
+        color: #87a6e7;
+        height: 25rpx;
+        width: 80rpx;
+    }
+    .edit-btn-del {
+        position: relative;
+        float: right;
+        font-size: 28rpx;
+        color: #999;
+        height: 40rpx;
+        width: 80rpx;
+        padding: 20rpx 0rpx 20rpx 20rpx;
+        text-align: right;
+    }
+    .common-stauts-tip {
+        color: #fb7c7c;
+        float: right;
+    }
+    .common-checked {
+        right: 0rpx;
+        left: auto;
+        top: 25rpx;
+    }
+</style>
+
+<template>
+    <view>
+        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <block wx:for="{{request_list}}" wx:key="">
+                <view class="common-pannel common-pannel-b">
+                    <view>
+                        <view class="server-name">申请请款
+                            <text class="common-lab-btn">{{item.review_status_text}}</text>
+                        </view>
+                        <view class="server-msg-box" @tap="goToDetail" data-id="{{item.id}}">
+                            <view class="server-msg-line">
+                                <view class="server-msg-title">请款时间</view>
+                                <view class="common-tip">{{item.request_date}}</view>
+                            </view>
+                            <view class="server-msg-line">
+                                <view class="server-msg-title">请款金额</view>
+                                <view class="common-tip">{{item.request_money}}</view>
+                            </view>
+                            <view class="server-msg-line">
+                                <view class="server-msg-title">请款原因</view>
+                                <view class="common-tip">{{item.request_reason}}</view>
+                            </view>
+                            <view class="server-msg-line">
+                                <view class="server-msg-title">备注</view>
+                                <view class="common-tip">{{item.request_remark}}</view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </block>
+            <view class="customer-order-btn" @tap="goToRequestPay">发起申请</view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import G from '../../../common/global';
+    import rq from '../../../common/utils/request';
+    import tool from '../../../common/utils/tool';
+    import validate from '../../../common/utils/validate';
+    import storage from '../../../common/utils/storage';
+    import dat from '../../../common/utils/date';
+    import file from '../../../common/utils/file';
+    import css from '../../../components/css';
+    import header from '../../../components/header';
+    export default class Index extends wepy.page {
+        components = {
+            css: css, //样式表
+            header: header
+        };
+        data = {
+            isopacity: true,
+            title: '请款申请',
+            isback: true,
+            request_list: null,
+            id: -1,
+            // user_id: -1,
+            // user: null,
+        };
+        methods = {
+            goToDetail(e){
+                let request_id = e.currentTarget.dataset.id;
+                wepy.navigateTo({ url: '/pages/marry/scheme/requestpay?order_id='+this.id+'&is_edit=true'+'&request_id='+request_id });
+            },
+            goToRequestPay(){
+                wepy.navigateTo({ url: '/pages/marry/scheme/requestpay?order_id='+this.id });
+            },
+            goToDepot() {
+                wepy.navigateTo({
+                    url: '/pages/common/scheme/depot?id=' + this.id + '&is_create=yes'
+                });
+            }
+        };
+        onLoad(options) {
+            options = tool.decodeQrCodeParam(options);
+            let that = this;
+            that.id = options.order_id;
+            // that.user_id = options.user_id;
+            // that.user = wepy.getStorageSync('user');
+        }
+        onShow() {
+            let that = this;
+            rq.get('getRequestMoneyList', {
+                200: result => {
+                    that.request_list = result.data.data;
+                    that.$apply();
+                }
+            }, {
+                order_id: that.id
+            })
+        }
+    }
+</script>

@@ -1,0 +1,88 @@
+<style lang="less">
+    .cus-5-rows {
+        width: 20%;
+        float: left;
+        text-align: center;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    .cl-name{
+        width: 50%;
+        float: left;
+        text-align: center;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    .cl-time{
+        width: 50%;
+        float: left;
+        text-align: center;
+    }
+</style>
+
+<template>
+    <view class="container">
+        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="cl-name">员工姓名</view>
+                    <view class="cl-time">漏单次数</view>
+                </view>
+                <block wx:for="{{userList}}" wx:key="">
+                    <view class="common-list">
+                    <view class="cl-name">{{item.employee_name}}</view>
+                    <view class="cl-time">{{item.count}}</view>
+                </view>
+                </block>
+            </view>
+        </view>
+        <!--列表-->
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import G from '../../common/global';
+    import rq from '../../common/utils/request';
+    import tool from '../../common/utils/tool';
+    import validate from '../../common/utils/validate';
+    import storage from '../../common/utils/storage';
+    import dat from '../../common/utils/date';
+    import file from '../../common/utils/file';
+    
+    import css from '../../components/css';
+    import header from '../../components/header';
+    export default class Index extends wepy.page {
+        components = {
+            css: css, //样式表
+            header: header
+        };
+        data = {
+            isback: true,
+            isopacity: true,
+            title: '本月漏客',
+            userList: null
+        };
+        methods = {};
+        onLoad(options) {
+            let that = this;
+            options = tool.decodeQrCodeParam(options);
+            rq.get('countMissingUser', {
+                200: result => {
+                    that.userList = result.data.data;
+                    that.$apply();
+                }
+            }, {
+                map: options.map
+            })
+        }
+        onShow() {}
+    }
+</script>

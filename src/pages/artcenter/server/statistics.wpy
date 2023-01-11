@@ -1,0 +1,46 @@
+<template>
+  <view>
+    <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+    <view class="common-top">
+      <view class="common-content">
+      </view>
+    </view>
+    <view class="common-wrapper">
+      <statistics></statistics>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import rq from '../../../common/utils/request';
+import css from '../../../components/css';
+import header from '../../../components/header';
+import statistics from '../../../components/common/server/statistics';
+
+export default class Index extends wepy.page {
+  components = {
+    css: css, //样式表
+    header: header,
+    statistics: statistics
+  };
+  data = {
+    isopacity: true,
+    title: '数据统计',
+    isback: true,
+    page_data:null
+  };
+  methods = {
+    submit() {
+    }
+  };
+  onLoad(options) {
+  }
+  onShow() { }
+}
+</script>
+
+<style lang="less">
+
+</style>
+

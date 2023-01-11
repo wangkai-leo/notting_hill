@@ -1,0 +1,66 @@
+
+    <view>
+        
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <view class="common-title">策划人员</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">{{gift_info.planner_name}}</view>
+                </view>
+            </view>
+            <view class="common-title">客户信息</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">客户姓名</view>
+                    <input class="common-tip" value="{{gift_info.client_name}}" bindinput="bindInputClientMobile" type="text" placeholder="请输入"/>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">客户电话</view>
+                    <input class="common-tip" value="{{gift_info.client_mobile}}" bindinput="bindInputClientName" type="text" placeholder="请输入"/>
+                </view>
+            </view>
+            <view class="common-title">预计到达时间</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <input class="common-tip" value="{{gift_info.arrive_time}}" bindinput="bindInputArriveTime" type="text" placeholder="请输入"/>
+                </view>
+            </view>
+            <view class="common-title">备注信息</view>
+            <view class="common-pannel">
+                <textarea class="common-area" value="{{gift_info.remark}}" bindinput="bindInputMark" placeholder="请输入客资的备注信息：如预算、风格、喜好等"/>
+            </view>
+            <view class="common-title">执行组别</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    {{teams_rand[teams_index]}}
+                    <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                    </image>
+                    <picker class="picker-common" bindchange="bindTeamChange" value="{{teams_index}}" range="{{teams_rand}}">
+                        <view class="picker-common-v">
+                            当前选择：{{teams_rand[teams_index]}}
+                        </view>
+                    </picker>
+                </view>
+            </view>
+            <view class="customer-order-btn" bindtap="submit"  wx:if="{{is_create}}">提交</view>
+        </view>
+    </view>

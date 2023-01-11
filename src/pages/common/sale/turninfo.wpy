@@ -1,0 +1,102 @@
+<style lang="less">
+</style>
+
+<template>
+<view>
+    <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+    <view class="common-top">
+        <view class="common-content"></view>
+    </view>
+
+    <view class="common-wrapper">
+        <block wx:for="{{customer.transfer_log}}" wx:key="">
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">发起时间</view>
+                    <view class="common-tip">{{item.create_date}}</view>
+                    <view class="common-warning-tip">{{item.transfer_status_text}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">发起人</view>
+                    <view class="common-tip">{{item.transferor}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">转让意向</view>
+                    <view class="common-tip">{{item.intention_name}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">接单团队</view>
+                    <view class="common-tip">{{item.designated_team?item.designated_team:'-'}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">接单人</view>
+                    <view class="common-tip">{{item.accept_name}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">接单状态</view>
+                    <view class="common-tip">{{item.accept_status_text}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">成交金额</view>
+                    <view class="common-tip">{{item.total_amount}}</view>
+                </view>
+            </view>
+        </block>
+        <view class="customer-tip">*客资只可跨业务部转让，不会对现有客资造成影响</view>
+        <view class="customer-create-btn" @tap="goToEditTurn">申请转让</view>
+    </view>
+</view>
+</template>
+
+<script>
+import wepy from "wepy";
+import G from "../../../common/global";
+import rq from "../../../common/utils/request";
+import tool from "../../../common/utils/tool";
+import validate from "../../../common/utils/validate";
+import storage from "../../../common/utils/storage";
+import dat from "../../../common/utils/date";
+import file from "../../../common/utils/file";
+
+
+import css from "../../../components/css";
+import header from "../../../components/header";
+export default class Index extends wepy.page {
+    components = {
+        css: css, //样式表
+        header: header
+    };
+    data = {
+        isopacity: true,
+        title: "转让信息",
+        isback: true,
+        customer: null,
+        id: ""
+    };
+    methods = {
+        goToEditTurn() {
+            wepy.navigateTo({
+                url: "editturn?id=" + this.id
+            });
+        }
+    };
+    onLoad(options) {
+        options = tool.decodeQrCodeParam(options);
+        let that = this;
+        that.id = options.id;
+    }
+    onShow() {
+        let that = this;
+        rq.get(
+            "getTransferLog", {
+                200: result => {
+                    that.customer = result.data.data;
+                    that.$apply();
+                }
+            }, {
+                user_id: that.id
+            }
+        );
+    }
+}
+</script>

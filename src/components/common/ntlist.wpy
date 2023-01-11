@@ -1,0 +1,128 @@
+
+<style lang="less">
+
+</style>
+
+<template>
+  <view class="common-list">
+    <view class="common-lab">{{ label }}
+      <slot></slot>
+    </view>
+    <!--password-->
+    <input class="common-tip" type="password" wx:if="{{nttype=='password'&&readonly}}" value="{{ntvalue[ntkey]}}"
+      placeholder="{{placeholder}}" @input="bindInput" disabled></input>
+    <input class="common-tip" type="password" wx:if="{{nttype=='password'&&!readonly}}" value="{{ntvalue[ntkey]}}"
+      placeholder="{{placeholder}}" @input="bindInput"></input>
+    <!--password-->
+
+    <!--input-->
+    <view class="common-tip" wx:if="{{nttype=='text'&&readonly}}">
+      {{ ntvalue[ntkey] }}
+      <slot name="linear"></slot>
+    </view>
+    <input class="common-tip" wx:if="{{nttype=='text'&&!readonly}}" value="{{ntvalue[ntkey]}}"
+      placeholder="{{placeholder}}" @input="bindInput" type="text"></input>
+    <!--input-->
+
+    <!-- picker-->
+    <block wx:if="{{nttype=='picker'}}">
+      <image class="common-log-arrows" src="../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+      </image>
+      <view class="common-tip" wx:if="{{pickertype!='region'}}">{{ ntvalue[ntkey] }}</view>
+      <picker class="picker-common" wx:if="{{pickertype=='date'}}" mode="date" value="{{ntvalue[ntkey]}}"
+        @change="bindDateChange">
+        <view class="picker-common-v">
+          当前选择：{{ ntvalue[ntkey] }}
+        </view>
+      </picker>
+
+      <view class="common-tip" wx:if="{{pickertype=='region'}}">{{ ntvalue[ntrangeprkey] }} {{ ntvalue[ntrangecikey] }}
+        {{ ntvalue[ntrangearkey] }}</view>
+      <picker class="picker-common" wx:if="{{pickertype=='region'}}" mode="region" value="" @change="bindRegionChange">
+        <view class="picker-common-v">
+          当前选择：{{ ntvalue[ntrangeprkey] }} {{ ntvalue[ntrangecikey] }} {{ ntvalue[ntrangearkey] }}
+        </view>
+      </picker>
+    </block>
+    <!-- picker-->
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class Fnav extends wepy.component {
+  props = {
+    label: {
+      type: String
+    },
+    placeholder: {
+      type: String
+    },
+    ntkey: {
+      type: String
+    },
+    ntrangeprkey: {
+      type: String
+    },
+    ntrangecikey: {
+      type: String
+    },
+    ntrangearkey: {
+      type: String
+    },
+    ntvalue: {
+      type: Object,
+      twoWay: true
+    },
+    nttype: {
+      type: String,
+      default: 'text'
+    },
+    pickertype: {
+      type: String,
+      default: 'text'
+    },
+    readonly: {
+      type: Boolean,
+      default: true,
+      twoWay: true
+    },
+  }
+  watch = {
+    ntvalue() {
+      //如果销售不是当前用户隐藏客资界面手机号前面部分
+      if ((this.user.id!=this.ntvalue.submit_id) && (this.user.id!= this.ntvalue.sales_id)) {
+        if (this.ntkey == 'user_mobile' && this.ntvalue[this.ntkey]) {
+          this.ntvalue[this.ntkey] = this.ntvalue[this.ntkey].substring(0, 3) + '****' + this.ntvalue[this.ntkey].substring(7, 11);
+        } else if (this.ntkey == 'wechat_id' && this.ntvalue[this.ntkey]) {
+          this.ntvalue[this.ntkey] = '****' + this.ntvalue[this.ntkey].substring(4);
+        }
+      }
+    }
+  }
+  components = {};
+  data = {
+    user: null
+  };
+  methods = {
+    bindRegionChange(e) {
+      let values = e.detail.value;
+      this.ntvalue[this.ntrangeprkey] = values[0];
+      this.ntvalue[this.ntrangecikey] = values[1];
+      this.ntvalue[this.ntrangearkey] = values[2];
+    },
+    bindDateChange(e) {
+      this.ntvalue[this.ntkey] = e.detail.value;
+    },
+    bindInput(e) {
+      this.ntvalue[this.ntkey] = e.detail.value;
+    }
+  };
+  onLoad(options) {
+    this.user = wepy.getStorageSync('user');
+  }
+  events = {
+
+  };
+}
+</script>

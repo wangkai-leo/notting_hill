@@ -1,0 +1,5 @@
+@import "./../../../../../components/header.wxss";
+@import "./../../../../../components/css.wxss";
+.common-city {
+  padding: 20rpx;
+}

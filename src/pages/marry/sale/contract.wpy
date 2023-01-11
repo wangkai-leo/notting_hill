@@ -1,0 +1,134 @@
+<style lang="less">
+    .common-tip {
+        width: 100%;
+    }
+    .common-list {
+        border: none;
+        padding: 13rpx 20rpx;
+    }
+
+    .common-pannel {
+        padding: 30rpx 20rpx;
+    }
+    .common-fl {
+        float: right;
+    }
+    .customer-create-btn {
+        position: absolute;
+        bottom: 50rpx;
+    }
+</style>
+
+<template>
+    <view>
+        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <block wx:for="{{contract_list}}" wx:key="">
+                <view class="common-pannel" @tap="goToContractDetail" data-id="{{item.id}}">
+                    <view class="common-list">
+                        <view class="common-tip">合同编号：{{item.contract_id}}
+                            <view class="common-fl" wx:if="{{index==0}}">{{item.contract_status_text}}</view>
+                        </view>
+                    </view>
+                    <view class="common-list">
+                        <view class="common-tip">{{item.contract_name}}</view>
+                    </view>
+                    <view class="common-list">
+                        <view class="common-tip">发起人：{{item.employee_name}}</view>
+                    </view>
+                </view>
+            </block>
+            <view class="customer-create-btn" wx:if="{{display_create_button}}">创建合同
+                <picker class="picker-common" @change="chooseContract" value="{{contract_index}}" range="{{contract_model}}" range-key="contract_name">
+                    <view class="picker-common-v">
+                        当前选择：{{contract_model[contract_index].contract_name}}
+                    </view>
+                </picker>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import G from '../../../common/global';
+    import C from '../../../common/config';
+    import rq from '../../../common/utils/request';
+    import tool from '../../../common/utils/tool';
+    import validate from '../../../common/utils/validate';
+    import storage from '../../../common/utils/storage';
+    import dat from '../../../common/utils/date';
+    import file from '../../../common/utils/file';
+    import css from '../../../components/css';
+    import header from '../../../components/header';
+    export default class Index extends wepy.page {
+        components = {
+            css: css, //样式表
+            header: header
+        };
+        data = {
+            isopacity: true,
+            title: '合同信息',
+            isback: true,
+            user_id: -1,
+            contract_model: [],
+            contract_index: 0,
+            contract_list: null,
+            display_create_button: true
+        };
+        methods = {
+            goToContractDetail(e) {
+                let id=e.currentTarget.dataset.id;
+                wepy.navigateTo({
+                    url: 'contractdetail?id=' + this.user_id+'&contract_id='+id
+                });
+            },
+            chooseContract(e) {
+                this.contract_index = e.detail.value;
+                wepy.navigateTo({
+                    url: 'contractedit?id=' + this.user_id + '&is_create=true' + '&contract_name=' + this.contract_model[this.contract_index].contract_name
+                });
+            },
+            // goToCreateContract() {
+            //     wepy.navigateTo({
+            //         url: 'contractedit?id=' + this.user_id + '&is_create=true'
+            //     });
+            // }
+        };
+        onLoad(options) {
+            options = tool.decodeQrCodeParam(options);
+            let that = this;
+            that.user_id = options.id;
+            rq.get('getContractTypeList', {
+                200: result => {
+                    that.contract_model = result.data.data;
+                    // that.contract_model.forEach(element => {
+                    //     that.contract_model.push(element.contract_name);
+                    // });
+                    that.$apply();
+                }
+            }, {
+                user_id: that.user_id
+            })
+        }
+        onShow() {
+            let that = this;
+            rq.get('getContractList', {
+                200: result => {
+                    that.contract_list = result.data.data;
+                    let user = wepy.getStorageSync('user');
+                    if(user.is_sale&&that.contract_list.length>0){
+                        // that.display_create_button=false;
+                    }
+                    that.$apply();
+                }
+            }, {
+                user_id: that.user_id
+            })
+        }
+    }
+</script>

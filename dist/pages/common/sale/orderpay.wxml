@@ -1,0 +1,162 @@
+
+  <view>
+    
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+    <view class="common-top">
+      <view class="common-content">
+      </view>
+    </view>
+    <view class="common-wrapper">
+      <view class="common-pannel">
+        <view class="common-list">
+          <view class="common-lab">签约形式</view>
+          <input type="number" class="common-tip" disabled value="{{form_data.sign_form}}"/>
+          <image  wx:if="{{!is_deposite}}" class="option-log-arrows-b" src="../../../images/arrows-down.png" mode="widthFix" lazy-load="false">
+          </image>
+          <picker  wx:if="{{!is_deposite}}" class="picker-common" bindchange="bindSignFormChange" value="{{sign_form_index}}" range="{{sign_form_arr}}" range-key="sign_form">
+            <view class="picker-common-v">
+              当前选择：{{ sign_form_arr[sign_form_index].sign_form }}
+            </view>
+          </picker>
+        </view>
+        <view class="common-list">
+          <view class="common-lab">收款公司</view>
+          <input type="text" class="common-tip" disabled value="{{form_data.sub_company_name}}"/>
+          <image wx:if="{{!is_deposite}}" class="option-log-arrows-b" src="../../../images/arrows-down.png" mode="widthFix" lazy-load="false">
+          </image>
+          <picker wx:if="{{!is_deposite}}" class="picker-common" bindchange="bindCompanyChange" data-index="{{index}}" value="{{company_picker_index}}" range="{{company_list}}" range-key="sub_company_name">
+            <view class="picker-common-v">
+              当前选择：{{ company_list[company_picker_index] }}
+            </view>
+          </picker>
+        </view>
+        <view class="common-list">
+          <view class="common-lab">收款部门</view>
+          <input type="text" class="common-tip" disabled value="{{form_data.collention_team}}"/>
+          <image wx:if="{{!is_deposite}}" class="option-log-arrows-b" src="../../../images/arrows-down.png" mode="widthFix" lazy-load="false">
+          </image>
+          <picker wx:if="{{!is_deposite}}" class="picker-common" bindchange="bindDepartmentChange" value="{{collection_team_index}}" range="{{collection_team}}" range-key="label">
+            <view class="picker-common-v">
+              当前选择：{{ company_list[company_picker_index] }}
+            </view>
+          </picker>
+        </view>
+        <view class="common-list">
+          <view class="common-lab">收款时间</view>
+          <input type="text" class="common-tip" disabled value="{{form_data.payment_time}}"/>
+          <picker class="picker-common" wx:if="{{!is_deposite}}" mode="date" value="{{form_data.payment_time}}" bindchange="bindDateChange">
+            <view class="picker-common-v">
+              当前选择：{{ payment_time }}
+            </view>
+          </picker>
+        </view>
+        <view class="common-list">
+          <view class="common-lab">收款方式</view>
+          <input type="text" class="common-tip" disabled value="{{form_data.pay_type_name}}"/>
+          <image wx:if="{{!is_deposite}}" class="option-log-arrows-b" src="../../../images/arrows-down.png" mode="widthFix" lazy-load="false">
+          </image>
+          <picker wx:if="{{!is_deposite}}" class="picker-common" bindchange="bindPayChange" data-index="{{index}}" value="{{pay_index}}" range="{{pay_method_rand}}" range-key="pay_name">
+            <view class="picker-common-v">
+              当前选择：{{ pay_method_rand[pay_index] }}
+            </view>
+          </picker>
+        </view>
+        <view class="common-list">
+          <view class="common-lab">支付宝订单号</view>
+          <input type="text" class="common-tip" disabled wx:if="{{is_deposite}}" value="{{form_data.zhifubao_code?form_data.zhifubao_code:''}}"/>
+          <input type="text" class="common-tip" bindinput="bindInputOrderNumber" wx:if="{{!is_deposite}}" value="{{form_data.zhifubao_code}}" placeholder="请输入"/>
+        </view>
+        <view class="common-list">
+          <view class="common-lab">收款或退款</view>
+          <input type="text" class="common-tip" disabled value="{{receipt_or_refund[receipt_or_refund_index]}}"/>
+          <image wx:if="{{!is_deposite}}" class="option-log-arrows-b" src="../../../images/arrows-down.png" mode="widthFix" lazy-load="false">
+          </image>
+          <picker wx:if="{{!is_deposite}}" class="picker-common" bindchange="bindReceiptOrRefundChange" value="{{receipt_or_refund_index}}" range="{{receipt_or_refund}}">
+            <view class="picker-common-v">
+              当前选择：{{ receipt_or_refund[receipt_or_refund_index] }}
+            </view>
+          </picker>
+        </view>
+        <view class="common-list">
+          <view class="common-lab">金额</view>
+          <input type="text" class="common-tip" disabled wx:if="{{is_deposite}}" value="{{form_data.deposit_amount}}"/>
+          <input type="text" class="common-tip" bindinput="bindInputDeposit" wx:if="{{!is_deposite}}" value="{{form_data.deposit_amount}}" placeholder="请输入"/>
+        </view>
+      </view>
+      <view class="common-title">备注信息</view>
+      <view class="common-pannel">
+        <textarea class="common-area" disabled="{{is_deposite}}" bindinput="inputLog" value="{{form_data.deposit_remark}}" placeholder="请输入备注信息"/>
+      </view>
+      <view class="common-title">支付凭证 {{ show_img_arr.length }}/9</view>
+      <view class="common-pannel">
+        <view class="common-pic-box">
+          <block wx:for="{{show_img_arr}}" wx:key="">
+            <view class="common-add-pic">
+              <image bindtap="viewCheck" data-index="{{index}}" class="common-add-pic-img" src="{{item}}" mode="aspectFill" lazy-load="false">
+              </image>
+              <image wx:if="{{form_data.deposit_status==3}}" bindtap="deleteImg" data-index="{{index}}" class="capi-del" src="../../../images/delete-icon.png" mode="scaleToFill" lazy-load="false">
+              </image>
+            </view>
+          </block>
+          <image wx:if="{{!is_deposite&&show_img_arr.length<9}}" bindtap="uploadFile" class="common-add-pic" src="../../../images/add-pic.png" mode="aspectFill" lazy-load="false">
+          </image>
+        </view>
+      </view>
+      <view class="common-title">收款明细</view>
+      <view class="common-pannel common-pannel-r" wx:if="{{!detail_arr||detail_arr.length<=0}}">
+        <view class="common-list">
+          <view class="server-name">暂无</view>
+        </view>
+      </view>
+      <block wx:for="{{detail_arr}}" wx:key="">
+        <view class="cp-item">
+          <view class="cp-title">明细
+            <view class="cp-delte" bindtap="deleteDetail" data-index="{{index}}" wx:if="{{!is_deposite}}">删除</view>
+          </view>
+          <view class="common-pannel common-pannel-r">
+            <view class="common-list">
+              <view class="common-lab">收款类别</view>
+              <input type="text" class="common-tip" disabled value="{{item.collection_type}}"/>
+              <image wx:if="{{!is_deposite}}" class="option-log-arrows-b" src="../../../images/arrows-down.png" mode="widthFix" lazy-load="false">
+              </image>
+              <picker wx:if="{{!is_deposite}}" class="picker-common" bindchange="bindDetailTypeChange" data-index="{{index}}" value="{{detail_type_index}}" range="{{detail_type_list}}" range-key="collection_type">
+                <view class="picker-common-v">
+                  当前选择：{{ detail_type_list[detail_type_index] }}
+                </view>
+              </picker>
+            </view>
+            <view class="common-list">
+              <view class="common-lab">{{receipt_or_refund_index==0?'收款':'退款'}}金额</view>
+              <input type="number" class="common-tip" disabled wx:if="{{is_deposite}}" value="{{item.collection_money}}"/>
+              <input type="text" class="common-tip" bindinput="bindInputDetailNumber" wx:if="{{!is_deposite}}" data-index="{{index}}" value="{{item.collection_money}}" placeholder="请输入"/>
+            </view>
+            <view class="common-list">
+              <view class="common-lab">收款说明</view>
+              <input type="text" class="common-tip" disabled wx:if="{{is_deposite}}" value="{{item.collection_remark}}"/>
+              <input type="text" class="common-tip" bindinput="bindInputDetailMark" wx:if="{{!is_deposite}}" data-index="{{index}}" value="{{item.collection_remark}}" placeholder="请输入"/>
+            </view>
+          </view>
+        </view>
+      </block>
+      <view class="cp-add" bindtap="addDetail" wx:if="{{!is_deposite}}">+ 添加明细</view>
+      <view class="common-title" wx:if="{{form_data.review_reason}}">驳回原因</view>
+      <view class="common-pannel" wx:if="{{form_data.review_reason}}">
+        <textarea disabled class="common-area" value="{{form_data.review_reason}}"/>
+      </view>
+      <view class="customer-create-btn" wx:if="{{!is_deposite}}" bindtap="submit">提交</view>
+    </view>
+  </view>

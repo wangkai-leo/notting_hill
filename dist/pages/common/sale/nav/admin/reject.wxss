@@ -1,0 +1,11 @@
+@import "./../../../../../components/header.wxss";
+@import "./../../../../../components/css.wxss";
+.common-tip {
+  color: #222;
+}
+.full-tab-item {
+  width: 50%;
+}
+.box-con {
+  margin-top: 50rpx;
+}

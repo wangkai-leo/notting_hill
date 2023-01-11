@@ -1,0 +1,134 @@
+
+    <view>
+        
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper"  wx:if="{{!page_data.id}}">
+            <view class="common-title">退款类型</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <input class="common-tip-line" disabled bindinput="bindInputRefundType" value="退款退单" type="text" placeholder="请填写"/>
+                </view>
+            </view>
+            <view class="common-title">退款金额</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <input class="common-tip-line" bindinput="bindInputRefundAmount" value="" type="text" placeholder="请填写"/>
+                </view>
+            </view>
+            <view class="common-title">退款账户</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">账户名称</view>
+                    <input class="common-tip" bindinput="bindInputRefundAccount" value="" type="text" placeholder="请填写"/>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">卡号</view>
+                    <input class="common-tip" value="" type="text" bindinput="bindInputRefundCardNum" placeholder="请填写"/>
+                </view>
+            </view>
+
+            <view class="common-title">退款凭证 {{show_img_arr.length}}/9</view>
+            <view class="common-pannel">
+                <view class="common-pic-box">
+                    <block wx:for="{{show_img_arr}}" wx:key="">
+                        <view class="common-add-pic">
+                            <image bindtap="viewCheck" data-index="{{index}}" class="common-add-pic-img" src="{{item}}" mode="aspectFill" lazy-load="false">
+                            </image>
+                            <image wx:if="{{form_data.deposit_status==3}}" bindtap="deleteImg" data-index="{{index}}" class="capi-del" src="../../../images/delete-icon.png" mode="scaleToFill" lazy-load="false">
+                            </image>
+                        </view>
+                    </block>
+                    <image wx:if="{{show_img_arr.length<9}}" bindtap="uploadFile" class="common-add-pic" src="../../../images/add-pic.png" mode="aspectFill" lazy-load="false">
+                    </image>
+                </view>
+            </view>
+
+            <view class="common-title">退款原因</view>
+            <view class="common-pannel">
+                <textarea class="common-area" value="" bindinput="bindInputRefundReason" placeholder="请输入"/>
+            </view>
+            <view class="customer-create-btn" bindtap="submit">提交申请</view>
+        </view>
+        <!--显示-->
+        <view class="common-wrapper"  wx:if="{{page_data.id}}">
+            <view class="common-title">退款状态</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <input class="common-tip-line" disabled value="{{page_data.refund_status_text}}" type="text"/>
+                </view>
+            </view>
+            <view class="common-title">退款类型</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <input class="common-tip-line" disabled value="{{page_data.refund_order_type_text}}" type="text"/>
+                </view>
+            </view>
+            <view class="common-title">需退金额</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <input class="common-tip-line" disabled value="{{page_data.refund_money_theory}}" type="text"/>
+                </view>
+            </view>
+            <view class="common-title">实退金额</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <input class="common-tip-line" disabled value="{{page_data.refund_money_fact}}" type="text"/>
+                </view>
+            </view>
+            <view class="common-title">退款账户</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">账户名称</view>
+                    <input class="common-tip" disabled value="{{page_data.user_account_name}}" type="text"/>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">卡号</view>
+                    <input class="common-tip" value="{{page_data.user_account_cardnum}}" type="text" disabled/>
+                </view>
+            </view>
+            <view class="common-title">退款凭证 {{show_img_arr.length}}/9</view>
+            <view class="common-pannel">
+                <view class="common-pic-box">
+                    <block wx:for="{{show_img_arr}}" wx:key="">
+                        <view class="common-add-pic">
+                            <image bindtap="viewCheck" data-index="{{index}}" class="common-add-pic-img" src="{{item}}" mode="aspectFill" lazy-load="false">
+                            </image>
+                        </view>
+                    </block>
+                    <view class="server-name" wx:if="{{show_img_arr.length<=0}}">暂无</view>
+                </view>
+            </view>
+            <view class="common-title">退款原因</view>
+            <view class="common-pannel">
+                <textarea class="common-area" value="{{page_data.refund_reason}}" disabled/>
+            </view>
+            <view class="common-title">审核状态</view>
+            <view class="common-pannel">
+                <block wx:for="{{page_data.order_review}}" wx:key="">
+                    <view class="common-list">
+                        <view class="common-lab">{{item.employee_name}}</view>
+                        <input class="common-tip" disabled value="{{item.review_status_text}}" type="text"/>
+                    </view>
+                </block>
+            </view>
+            <view class="customer-create-btn" bindtap="resubmit" wx:if="{{page_data.refund_status==2}}">重新发起申请</view>
+        </view>
+    </view>

@@ -1,0 +1,101 @@
+
+    <view>
+        
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <view class="common-title">客户来源</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">{{customer.channel_name}}</view>
+                </view>
+            </view>
+            <view class="common-title">客户意向</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">{{customer.intention_name}}</view>
+                </view>
+            </view>
+            <view class="common-title">婚礼信息</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">意向城市</view>
+                    <view class="common-tip">{{customer.intention_city_name}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">结婚城市</view>
+                    <view class="common-tip">{{customer.wedding_city_name}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">婚礼酒店</view>
+                    <view class="common-tip">{{customer.wedding_hotel}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">婚礼时间</view>
+                    <view class="common-tip">{{customer.wedding_date}}</view>
+                </view>
+            </view>
+            <view class="common-title">客户信息</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab">客户姓名</view>
+                    <view class="common-tip">{{customer.user_name}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">手机号</view>
+                    <view class="common-tip">{{customer.user_mobile}}</view>
+                </view>
+                <view class="common-list">
+                    <view class="common-lab">微信号</view>
+                    <view class="common-tip">{{customer.wechat_id}}</view>
+                </view>
+            </view>
+            <view class="common-title">变更凭证 {{show_img_arr.length}}/9</view>
+            <view class="common-pannel">
+                <view class="common-pic-box">
+                    <block  wx:for="{{show_img_arr}}" wx:key="">
+                        <image class="common-add-pic" src="{{item}}" mode="aspectFill" lazy-load="false">
+                        </image>
+                    </block>
+                    <image  wx:if="{{show_img_arr.length<9}}" bindtap="uploadFile" class="common-add-pic" src="../../../images/add-pic.png" mode="aspectFill" lazy-load="false">
+                    </image>
+                </view>
+            </view>
+            <view class="common-title">变更备注</view>
+            <view class="common-pannel">
+                <textarea class="common-area" bindinput="inputLog" value="" placeholder="请输入备注信息"/>
+            </view>
+            <view class="common-title" wx:if="{{customer.user_status!=1}}">状态变更</view>
+            <view class="common-pannel" wx:if="{{customer.user_status!=1}}">
+                <view class="common-list">
+                    <view class="common-lab">{{status_arr[status_arr_index]}}</view>
+                    <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                    </image>
+                    <picker class="picker-common" range="{{status_arr}}" bindchange="bindStatusChange">
+                        <view class="picker-common-v">
+                            当前选择：{{status_arr[status_arr_index]}}
+                        </view>
+                    </picker>
+                </view>
+            </view>
+            <view class="customer-create-btn" wx:if="{{customer.user_status!=1}}" bindtap="submit">提交申请</view>
+            <view class="customer-create-btn" wx:if="{{customer.user_status==1}}" bindtap="recover">恢复客资</view>
+        </view>
+    </view>

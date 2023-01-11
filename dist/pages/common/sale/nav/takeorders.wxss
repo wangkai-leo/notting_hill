@@ -1,0 +1,69 @@
+@import "./../../../../components/header.wxss";
+@import "./../../../../components/css.wxss";
+.loading {
+  width: 750rpx;
+  position: absolute;
+}
+.loading-box {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+}
+.logo {
+  position: absolute;
+  width: 429rpx;
+  z-index: 5;
+  left: 50%;
+  margin-left: -225rpx;
+  top: 300rpx;
+}
+.text-msg-box {
+  width: 100%;
+  position: absolute;
+  z-index: 4;
+  bottom: 130rpx;
+}
+.text-msg {
+  text-align: center;
+  font-size: 32rpx;
+  color: #fff;
+  margin-bottom: 5rpx;
+}
+.text-msg-l {
+  margin-bottom: 45rpx;
+}
+.text-msg-l-dio {
+  animation: text-msg-l-dio 1200ms linear infinite;
+  margin-left: 5rpx;
+}
+.text-msg-l-dio-b {
+  animation-delay: 300ms;
+}
+.text-msg-l-dio-c {
+  animation-delay: 600ms;
+}
+@keyframes text-msg-l-dio {
+  0% {
+    opacity: 0;
+  }
+  49% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.customer-create-btn {
+  position: fixed;
+  bottom: 20rpx;
+  z-index: 999;
+  left: 33rpx;
+}
+.select-content {
+  padding-bottom: 100rpx;
+}

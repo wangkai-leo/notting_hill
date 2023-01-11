@@ -1,0 +1,240 @@
+<style lang="less">
+.loading {
+  width: 750rpx;
+  position: absolute;
+}
+
+.loading-box {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.logo {
+  position: absolute;
+  width: 429rpx;
+  z-index: 5;
+  left: 50%;
+  margin-left: -225rpx;
+  top: 300rpx;
+}
+
+.text-msg-box {
+  width: 100%;
+  position: absolute;
+  z-index: 4;
+  bottom: 130rpx;
+}
+
+.text-msg {
+  text-align: center;
+  font-size: 32rpx;
+  color: #fff;
+  margin-bottom: 5rpx;
+}
+
+.text-msg-l {
+  margin-bottom: 45rpx;
+}
+
+.text-msg-l-dio {
+  animation: text-msg-l-dio 1200ms linear infinite;
+  margin-left: 5rpx;
+}
+
+.text-msg-l-dio-b {
+  animation-delay: 300ms;
+}
+
+.text-msg-l-dio-c {
+  animation-delay: 600ms;
+}
+
+@keyframes text-msg-l-dio {
+  0% {
+    opacity: 0;
+  }
+
+  49% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.customer-create-btn {
+  position: fixed;
+  bottom: 20rpx;
+  z-index: 999;
+  left: 33rpx;
+}
+
+.select-content {
+  padding-bottom: 100rpx;
+}
+
+.select-content {
+  padding-bottom: 100rpx;
+}
+
+.common-wrapper {
+  margin: 375rpx auto 0 auto;
+}
+</style>
+
+<template>
+  <view class="container">
+    <view>
+      <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+      <view class="select-top">
+        <view class="select-box">
+          <image class="select-icon" src="../../../images/select-icon.png" mode="widthFix" lazy-load="false"></image>
+          <input @input="bindInputSearch" class="select-input" value="" type="text" placeholder="请输入订单编号\客户手机\客户姓名"
+            placeholder-class="placeholder"></input>
+        </view>
+      </view>
+      <view class="common-top">
+        <view class="common-content">
+        </view>
+      </view>
+      <view class="common-wrapper">
+        <!--列表-->
+        <block wx:for="{{userList}}" wx:key="">
+          <!--|客服和销售-->
+          <view class="customer-info">
+            <view class="customer-info-header">
+              <view class="customer-num">编号：{{ item.order_id }}</view>
+              <view class="customer-date">{{ item.status_time }}</view>
+            </view>
+            <view class="customer-info-msgs" @tap="goToDetail" data-id="{{item.id}}">
+              <view class="customer-item">新人姓名：<text>{{ item.user_name }}</text></view>
+              <view class="customer-item">客资意向：<text>{{ item.intention_name }}</text></view>
+              <view class="customer-item">渠道来源：<text>{{ item.channel_name }}</text></view>
+              <view class="customer-item">客资状态：<text>{{ item.status_name }}</text></view>
+            </view>
+            <view class="customer-log-btn">
+              <view @tap="toggleDisplay" data-index="{{index}}">
+                跟进日志
+                <image class="option-log-arrows"
+                  src="{{item.is_hide?'../../../images/arrows-right.png':'../../../images/arrows-down.png'}}"
+                  mode="widthFix" lazy-load="false">
+                </image>
+              </view>
+              <view wx:if="{{!item.is_hide}}">
+                <view class="customer-log-detail">
+                  <view class="customer-ld-box">
+                    <block wx:for="{{item.status_log}}" wx:key="">
+                      <view class="customer-ld-list">
+                        <view class="customer-ld-header">
+                          <view class="customer-ld-date">{{ item.log_time }}</view>
+                          <view class="customer-ld-status">{{ item.status_time_name }}</view>
+                        </view>
+                        <view class="customer-ld-content">{{ item.status_remark }}</view>
+                      </view>
+                    </block>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+          <!--客服和销售|-->
+        </block>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import G from '../../../common/global';
+import rq from '../../../common/utils/request';
+import tool from '../../../common/utils/tool';
+import validate from '../../../common/utils/validate';
+import storage from '../../../common/utils/storage';
+import dat from '../../../common/utils/date';
+import file from '../../../common/utils/file';
+import css from '../../../components/css';
+import header from '../../../components/header';
+export default class Index extends wepy.page {
+  components = {
+    css: css, //样式表
+    header: header
+  };
+  data = {
+    isback: true,
+    isopacity: true,
+    title: '已完成订单',
+    is_hide: true,
+    userList: null,
+    sourceList: [],
+    user: null,
+  };
+  methods = {
+    bindInputSearch(e) {
+      let key_word = e.detail.value;
+      let pur = [];
+      if (key_word) {
+        this.sourceList.forEach(element => {
+          if (element.order_id.indexOf(key_word) >= 0 ||
+            element.user_name.indexOf(key_word) >= 0 ||
+            (element.user_mobile && element.user_mobile.indexOf(key_word) >= 0)) {
+            pur.push(element);
+          };
+        });
+        this.userList = pur;
+      } else {
+        this.userList = this.sourceList;
+      }
+    },
+    goToDetail(e) {
+      let id = e.currentTarget.dataset.id;
+      wepy.navigateTo({
+        url: '/pages/common/sale/customer?id=' + id
+      });
+    },
+    toggleDisplay(e) {
+      let index = e.currentTarget.dataset.index;
+      this.userList[index].is_hide = !this.userList[index].is_hide;
+    }
+  };
+  onLoad(options) {
+    let that = this;
+  }
+  onShow() {
+    let that = this;
+    let user = this.user = wepy.getStorageSync('user');
+    rq.get('gotFinishedUserInfo', {
+      200: result => {
+        result.data.userList ? that.userList = result.data.userList : '';
+        result.data.data ? that.userList = result.data.data : '';
+        if (that.userList) {
+          that.userList.forEach(element => {
+            element['is_hide'] = true;
+          });
+        }
+        that.sourceList = that.userList;
+        that.$apply();
+      }
+    })
+
+  }
+  // onShareAppMessage() {
+  //   return {
+  //     title: '诺丁山',
+  //     path: '/pages/index',
+  //     imageUrl: 'none',
+  //     success: res => {},
+  //     fail: () => {},
+  //     complete: () => {}
+  //   };
+  // }
+}
+</script>

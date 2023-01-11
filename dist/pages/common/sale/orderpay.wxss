@@ -1,0 +1,32 @@
+@import "./../../../components/header.wxss";
+@import "./../../../components/css.wxss";
+.common-lab {
+  width: 170rpx;
+  line-height: 45rpx;
+}
+.common-tip {
+  width: 420rpx;
+}
+.cp-title {
+  font-size: 24rpx;
+  color: #777;
+  padding: 20rpx;
+}
+.cp-delte {
+  float: right;
+  font-size: 24rpx;
+  color: #7494d4;
+}
+.cp-item {
+  overflow: hidden;
+}
+.cp-add {
+  font-size: 26rpx;
+  color: #7494d4;
+  padding: 20rpx;
+  text-align: right;
+  margin-bottom: 35rpx;
+}
+.common-pannel-r {
+  margin-bottom: 0rpx;
+}

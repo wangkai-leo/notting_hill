@@ -1,0 +1,145 @@
+<style lang="less">
+    .common-lab {
+        width: 230rpx;
+    }
+    .common-tip {
+        width: 300rpx;
+        float: right;
+        text-align: right;
+        color: #222;
+    }
+    .server-msg-box {
+        background: #f9f9f9;
+        padding: 35rpx 20rpx;
+        border-radius: 10rpx;
+        font-size: 26rpx;
+        margin: 20rpx 0rpx 0rpx;
+        overflow: hidden;
+    }
+    .server-msg-line {
+        overflow: hidden;
+        margin-bottom: 20rpx;
+        color: #555;
+    }
+    .server-msg-value {
+        position: relative;
+        float: right;
+        text-align: right;
+    }
+    .server-msg-title {
+        float: left;
+    }
+    .server-msg-blo {
+        font-weight: bold;
+        margin-bottom: 40rpx;
+        font-size: 24rpx;
+        color: #333;
+    }
+    .server-group {
+        border-top: #eaeaea solid 1rpx;
+        padding-top: 20rpx;
+    }
+    .server-name {
+        font-size: 26rpx;
+        color: #333;
+        padding: 40rpx 0rpx 15rpx; // float: left;
+        // width: 500rpx;
+    }
+    .edit-btn {
+        position: relative;
+        float: right;
+        font-size: 28rpx;
+        color: #87a6e7;
+        // height: 25rpx;
+        // width: 80rpx;
+    }
+    .edit-btn-del {
+        position: relative;
+        float: right;
+        font-size: 28rpx;
+        color: #999;
+        height: 40rpx;
+        width: 80rpx;
+        padding: 20rpx 0rpx 20rpx 20rpx;
+        text-align: right;
+    }
+    .common-stauts-tip {
+        color: #fb7c7c;
+        float: right;
+    }
+    .common-checked {
+        right: 0rpx;
+        left: auto;
+        top: 25rpx;
+    }
+</style>
+
+<template>
+    <view>
+        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+        <view class="common-top">
+            <view class="common-content">
+            </view>
+        </view>
+        <view class="common-wrapper">
+            <view class="common-pannel">
+                <ntlista label="新密码" :ntvalue.sync="form_data" ntkey="first_password" placeholder="请输入" :readonly.sync="readonly" nttype="password"></ntlista>
+                <ntlistb label="再次输入" :ntvalue.sync="form_data" ntkey="second_password" placeholder="请输入" :readonly.sync="readonly" nttype="password"></ntlistb>
+            </view>
+            <view class="customer-order-btn" @tap="save">提交</view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import rq from '../../common/utils/request';
+    import tool from '../../common/utils/tool';
+    import css from '../../components/css';
+    import header from '../../components/header';
+    import ntlist from '../../components/common/ntlist';
+    export default class Index extends wepy.page {
+        components = {
+            css: css, //样式表
+            header: header,
+            ntlista:ntlist,
+            ntlistb:ntlist
+        };
+        data = {
+            isopacity: true,
+            title: '修改密码',
+            isback: true,
+            readonly:false,
+            form_data:{
+              first_password:'',
+              second_password:''
+            }
+        };
+        methods = {
+            save() {
+                let that = this;
+                if (this.form_data.first_password != this.form_data.second_password) {
+                    wepy.showToast({
+                        title: '两次输入密码不一致', //提示的内容,
+                        icon: 'none', //图标,
+                        duration: 2000, //延迟时间,
+                        mask: true, //显示透明蒙层，防止触摸穿透,
+                        success: res => {}
+                    });
+                }
+                rq.get('updatePassword', {
+                    200: result => {
+                        wepy.navigateBack({
+                          delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                        });
+                    }
+                }, this.form_data)
+            }
+        };
+        onLoad(options) {
+            options = tool.decodeQrCodeParam(options);
+            let that = this;
+        }
+        onShow() {}
+    }
+</script>

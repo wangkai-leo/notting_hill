@@ -1,0 +1,147 @@
+<style lang="less">
+    .leo-header-fixed {
+        position: fixed;
+        width: 100%;
+        height: 140rpx;
+        z-index: 888;
+        left: 0rpx;
+        top: 0rpx;
+        background-color: #fff;
+        z-index: 100000;
+    }
+    .leo-header-fixed-x {
+        height: 180rpx;
+    }
+    .leo-header-layout {
+        position: relative;
+        width: 710rpx;
+        height: 140rpx;
+        left: 20rpx;
+        top: 0rpx;
+    }
+    .leo-header-layout-x {
+        margin-top: 100rpx;
+    }
+    .leo-header-tit {
+        position: absolute;
+        width: 300rpx;
+        text-align: center;
+        line-height: 65rpx;
+        height: 65rpx;
+        top: 50rpx;
+        font-weight: bold;
+        left: 50%;
+        margin-left: -150rpx;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color:#fff;
+    }
+    .leo-back-nav {
+        width: 18rpx;
+        height: 31rpx;
+        margin: 18rpx auto 0rpx auto;
+        display: block;
+    }
+    .leo-back-home {
+        width: 56rpx;
+        height: 48rpx;
+        margin: 6rpx auto 0rpx auto;
+        display: block;
+    }
+    .leo-header-back {
+        position: absolute;
+        width: 50%;
+        height: 65rpx;
+        z-index: 333;
+        left: -3rpx;
+    }
+    .leo-header-home {
+        position: absolute;
+        width: 50%;
+        height: 65rpx;
+        z-index: 333;
+        right: 2rpx;
+    }
+    .leo-header-left {
+        position: absolute;
+        width: 175rpx;
+        height: 65rpx;
+        border-radius: 65rpx;
+        top: 50rpx;
+        overflow: hidden;
+        border: #fff solid 1rpx;
+    }
+    .leo-h-line {
+        position: absolute;
+        height: 37rpx;
+        left: 50%;
+        width: 1rpx;
+        background: #fff;
+        top: 15rpx;
+        margin-left: -3rpx;
+    }
+
+    .leo-header-backnone{
+        background: none;
+    }
+</style>
+
+<template>
+    <view class="leo-header-fixed {{iphonex?'leo-header-fixed-x':''}} {{isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{bounding_center_top-16>10?bounding_center_top-16:50}}px;" wx:if="{{isback}}">
+                <view class="leo-header-back" @tap="backHistory">
+                    <image class="leo-back-nav" src="../images/back-btn.png" mode="scaleToFill" lazy-load="false"></image>
+                </view>
+                <view class="leo-h-line"></view>
+                <view class="leo-header-home" @tap="backHome">
+                    <image class="leo-back-home" src="../images/home-btn.png" mode="scaleToFill" lazy-load="false"></image>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{bounding_center_top-16>10?bounding_center_top-16:50}}px;">{{title}}</view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    export default class Header extends wepy.component {
+        props = {
+            title: String,
+            iphonex: Boolean,
+            bounding_center_top: Number,
+            isback: Boolean,
+            isopacity:Boolean
+        }
+        data = {}
+        components = {}
+        methods = {
+            backHistory() {
+                let cps = getCurrentPages()
+                if (cps.length > 1) {
+                    wepy.navigateBack({
+                        delta: 1, //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                        fail: res => {
+                            console.log(res)
+                        }
+                    })
+                } else {
+                    wepy.switchTab({
+                        url: '/pages/index'
+                    })
+                }
+            },
+            backHome() {
+                wepy.switchTab({
+                    url: '/pages/index'
+                })
+            }
+        }
+        events = {}
+        watch = {}
+        computed = {}
+        onLoad() {};
+        onShow() {};
+    }
+</script>

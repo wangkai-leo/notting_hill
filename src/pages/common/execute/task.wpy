@@ -1,0 +1,378 @@
+<style lang="less">
+    .common-lab {
+        width: 230rpx;
+    }
+    .common-tip {
+        width: 300rpx;
+        float: right;
+        text-align: right;
+        color: #999;
+    }
+    
+    .common-tip {
+        color: #222;
+        width: 400rpx;
+    }
+    .server-msg-box {
+        background: #f9f9f9;
+        padding: 35rpx 20rpx;
+        border-radius: 10rpx;
+        font-size: 26rpx;
+        margin: 20rpx 0rpx 0rpx;
+        overflow: hidden;
+    }
+    .server-msg-line {
+        overflow: hidden;
+        margin-bottom: 20rpx;
+        color: #555;
+    }
+    .server-msg-value {
+        position: relative;
+        float: right;
+        text-align: right;
+    }
+    .server-msg-title {
+        float: left;
+    }
+    .server-msg-blo {
+        font-weight: bold;
+        margin-bottom: 40rpx;
+        font-size: 24rpx;
+        color: #333;
+    }
+    .server-group {
+        border-top: #eaeaea solid 1rpx;
+        padding-top: 20rpx;
+    }
+    .server-name {
+        font-size: 26rpx;
+        color: #333;
+        padding: 40rpx 0rpx 15rpx; // float: left;
+        // width: 500rpx;
+    }
+    .edit-btn {
+        position: relative;
+        float: right;
+        font-size: 28rpx;
+        color: #87a6e7;
+        height: 25rpx;
+        width: 80rpx;
+    }
+    .edit-btn-del {
+        position: relative;
+        float: right;
+        font-size: 28rpx;
+        color: #999;
+        height: 40rpx;
+        width: 80rpx;
+        padding: 20rpx 0rpx 20rpx 20rpx;
+        text-align: right;
+    }
+    .contract-oth-title {
+        font-size: 24rpx;
+        font-weight: bold;
+        margin-bottom: 20rpx;
+    }
+    .contract-cou-title {
+        font-size: 24rpx;
+        float: left;
+    }
+    .contract-pri-title {
+        font-size: 24rpx;
+        float: right;
+    }
+    .common-tip-line {
+        color: #000;
+    }
+    .flesh-btn {
+        float: right;
+        color: #87a6e7;
+    }
+</style>
+
+<template>
+    <view>
+        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+        <view class="common-top">
+            <view class="common-content"></view>
+        </view>
+        <view class="common-wrapper">
+            <!--|基本信息-->
+            <view>
+                <view>
+                    <view class="common-title">合同编号</view>
+                    <view class="common-pannel">
+                        <view class="common-list">
+                            <view class="common-tip-line">
+                                {{task_info.main_contract}}
+                            </view>
+                        </view>
+                    </view>
+                    <view class="common-title">活动信息</view>
+                    <view class="common-pannel">
+                        <view class="common-list">
+                            <view class="common-lab">新郎姓名</view>
+                            <input class="common-tip" disabled value="{{task_info.groom_name}}" type="text" placeholder="请输入" />
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">新娘姓名</view>
+                            <input class="common-tip" disabled value="{{task_info.bride_name}}" type="text" placeholder="请输入" />
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">销售</view>
+                            <input class="common-tip" disabled value="{{task_info.sales_name}}" type="text" placeholder="请输入" />
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">策划</view>
+                            <input class="common-tip" disabled value="{{task_info.planner_name}}" type="text" placeholder="请输入" />
+                        </view>
+                    </view>
+                    <view class="common-title">活动时间</view>
+                    <view class="common-pannel">
+                        <view class="common-list">
+                            <view class="common-lab">婚礼日期</view>
+                            <input class="common-tip" disabled value="{{task_info.schedule_session.schedule_date}}" type="text" placeholder="请输入" />
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">宴会厅</view>
+                            <view class="common-tip">{{task_info.schedule_session.area_name}}</view>
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">宴会场次</view>
+                            <input class="common-tip" disabled value="{{task_info.schedule_session.session_name}}" type="text" placeholder="请输入" />
+                        </view>
+                        <!-- <view class="common-list">
+                            <view class="common-lab">餐段</view>
+                            <input class="common-tip" disabled @input="bindInputMealSection" value="{{task_info.wedding_meal_section}}" type="text" />
+                        </view> -->
+                    </view>
+                    <view class="common-title">活动需求</view>
+                    <view class="common-pannel">
+                        <view class="common-list">
+                            <view class="common-lab">台型</view>
+                            <input class="common-tip" disabled @input="bindInputTableType" value="{{task_info.wedding_table_type}}" type="text" />
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">桌数</view>
+                            <input class="common-tip" disabled value="{{task_info.wedding_table_number}}" @input="bindInputTableNumber" type="text" />
+                        </view>
+                        <view class="common-list">
+                            <view class="common-lab">宴会餐标</view>
+                            <view class="common-tip flesh-btn" @tap="goToMenu">{{task_info.wedding_package_name}}</view>
+                        </view>
+                    </view>
+                </view>
+                <view class="common-title">最终菜单</view>
+                <view class="common-pannel common-pannel-b">
+                    <view class="server-name">冷菜</view>
+                    <view class="server-msg-box">
+                        <block wx:for="{{task_info.package_info.cool}}" wx:key="">
+                            <view class="server-msg-line">
+                                <view class="server-msg-title {{item.is_delete==1?'server-msg-title-del':''}}">{{item.product_name}} {{item.change_remark?'('+item.change_remark+')':''}}
+                                </view>
+                            </view>
+                        </block>
+                    </view>
+                    <view class="server-name">热菜</view>
+                    <view class="server-msg-box">
+                        <block wx:for="{{task_info.package_info.hot}}" wx:key="">
+                            <view class="server-msg-line">
+                                <view class="server-msg-title {{item.is_delete==1?'server-msg-title-del':''}}">{{item.product_name}} {{item.change_remark?'('+item.change_remark+')':''}}
+                                </view>
+                            </view>
+                        </block>
+                    </view>
+                </view>
+            </view>
+            <!--基本信息|-->
+            <view class="common-title">运营须知</view>
+            <view class="common-pannel">
+                <textarea disabled class="common-area" value="{{task_info.instruction_operation}}" @input="bindInputOperationMark" placeholder="请输入" />
+            </view>
+            <view class="common-title">宴会厅须知</view>
+            <view class="common-pannel">
+                <textarea disabled class="common-area" value="{{task_info.instruction_room}}" @input="bindInputRoomMark" placeholder="请输入" />
+            </view>
+            <view class="common-title">工程部须知</view>
+            <view class="common-pannel">
+                <textarea disabled class="common-area" value="{{task_info.instruction_engineering}}" @input="bindInputEnginnerMark" placeholder="请输入" />
+            </view>
+            <view class="common-title">厨房须知</view>
+            <view class="common-pannel">
+                <textarea disabled class="common-area" value="{{task_info.instruction_kitchen}}" @input="bindInputKitchenMark" placeholder="请输入" />
+            </view>
+            <view wx:if="{{task_info.is_distribution==0}}">
+                <view class="common-title">指定人员</view>
+                <view class="common-pannel">
+                    <view class="common-list">
+                        {{employee_rand[employee_index]}}
+                        <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+                        </image>
+                        <picker class="picker-common" @change="bindTeamChange" value="{{employee_index}}" range="{{employee_rand}}">
+                            <view class="picker-common-v">
+                                当前选择：{{employee_rand[employee_index]}}
+                            </view>
+                        </picker>
+                    </view>
+                </view>
+                <view class="customer-order-btn" @tap="submit">分配任务</view>
+                <view class="customer-rollback-btn" @tap="rollback">驳回申请</view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from "wepy";
+    import G from "../../../common/global";
+    import C from "../../../common/config";
+    import rq from "../../../common/utils/request";
+    import tool from "../../../common/utils/tool";
+    import validate from "../../../common/utils/validate";
+    import storage from "../../../common/utils/storage";
+    import dat from "../../../common/utils/date";
+    import file from "../../../common/utils/file";
+    import css from "../../../components/css";
+    import header from "../../../components/header";
+    export default class Index extends wepy.page {
+        components = {
+            css: css, //样式表
+            header: header
+        };
+        data = {
+            isopacity: true,
+            title: "婚礼任务单",
+            isback: true,
+            id: -1,
+            order_id_str: -1,
+            edit_base: false,
+            show_img_arr: [],
+            task_info: {},
+            employee_list: {},
+            employee_rand: ['自动分配'],
+            employee_index: 0,
+            is_create: false,
+            display_flesh: true,
+            user: null
+        };
+        methods = {
+            rollback() {
+                rq.get("rollbackApply", {
+                    200: result => {
+                        wepy.navigateBack({
+                            delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                        });
+                    }
+                }, {
+                    wedding_task_id: that.task_info.id
+                });
+            },
+            bindTeamChange(e) {
+                this.employee_index = e.detail.value;
+            },
+            goToMenu() {
+                wepy.navigateTo({
+                    url: '../sale/ordermenu?order_id=' + this.id
+                });
+            },
+            bindInputMark(e) {
+                this.task_info.contract_remark = e.detail.value;
+            },
+            uploadFile() {
+                let that = this;
+                wx.chooseImage({
+                    count: "9", //最多可以选择的图片张数,
+                    success: res => {
+                        file.upLoadImgs(
+                            C.ENV_URL + "uploadCommProof",
+                            res.tempFilePaths,
+                            0, [], [],
+                            function(names, urls) {
+                                that.show_img_arr = that.show_img_arr.concat(urls);
+                                // console.log(that.show_img_arr);
+                                that.$apply();
+                            }
+                        );
+                    }, //返回图片的本地文件路径列表 tempFilePaths,
+                    fail: () => {},
+                    complete: () => {}
+                });
+            },
+            bindInputOperationMark(e) {
+                this.task_info.instruction_operation = e.detail.value;
+            },
+            bindInputRoomMark(e) {
+                this.task_info.instruction_room = e.detail.value;
+            },
+            bindInputEnginnerMark(e) {
+                this.task_info.instruction_engineering = e.detail.value;
+            },
+            bindInputKitchenMark(e) {
+                this.task_info.instruction_kitchen = e.detail.value;
+            },
+            bindInputActType(e) {
+                this.task_info.task_type = e.detail.value;
+            },
+            bindInputTableType(e) {
+                this.task_info.wedding_table_type = e.detail.value;
+            },
+            bindInputTableNumber(e) {
+                this.task_info.wedding_table_number = e.detail.value;
+            },
+            bindInputMealSection(e) {
+                this.task_info.wedding_meal_section = e.detail.value;
+            },
+            submit() {
+                this.confirmWeddingTask();
+            }
+        };
+        confirmWeddingTask() {
+            let that = this;
+            rq.get("distributionTask", {
+                200: result => {
+                    wepy.showToast({
+                        title: '分配成功', //提示的内容,
+                        icon: 'none', //图标,
+                        duration: 2000, //延迟时间,
+                        mask: true, //显示透明蒙层，防止触摸穿透,
+                        success: res => {}
+                    });
+                    wepy.navigateBack({
+                        delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+                    });
+                }
+            }, {
+                wedding_task_id: that.task_info.id,
+                employee_id: that.employee_index ? that.employee_list[that.employee_index - 1].id : ''
+            });
+        }
+        onLoad(options) {
+            options = tool.decodeQrCodeParam(options);
+            let that = this;
+            that.id = options.id;
+            that.order_id_str = options.order_id_str;
+            let user = this.user = wepy.getStorageSync('user');
+            rq.get("getWeddingTask", {
+                200: result => {
+                    that.task_info = result.data.data;
+                    that.$apply();
+                }
+            }, {
+                order_id_str: that.order_id_str,
+                order_id: that.id
+            });
+            rq.get("getLoginerTeamEmployee", {
+                200: result => {
+                    that.employee_list = result.data.employee_list;
+                    that.employee_list.forEach(element => {
+                        that.employee_rand.push(element.employee_name);
+                    });
+                    that.$apply();
+                }
+            }, {
+                team_type: 2
+            });
+        }
+        onShow() {}
+    }
+</script>

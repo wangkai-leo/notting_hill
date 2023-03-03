@@ -26,7 +26,7 @@
       <view class="common-content">
       </view>
     </view>
-    <dashbaord></dashbaord>
+    <approval></approval>
   </view>
 </template>
 
@@ -34,13 +34,13 @@
 import wepy from 'wepy';
 import css from '../components/css';
 import header from '../components/header';
-import dashbaord from '../components/dashbaord';
+import approval from '../components/approval';
 
 export default class Index extends wepy.page {
   components = {
     css: css, //样式表
     header: header,
-    dashbaord:dashbaord
+    approval:approval
   };
   data = {
     isback: false,

@@ -1,6 +1,4 @@
-<style lang="less">
-
-</style>
+<style lang="less"></style>
 
 <template>
   <view>
@@ -11,14 +9,23 @@
     </view>
     <view class="common-wrapper">
       <ntmode>
-        <ntlistn label="新人称呼" :readonly.sync="is_readonly" :ntvalue.sync="customer" ntkey="user_name" placeholder="请输入新人称呼"></ntlistn>
-        <ntlistp label="电话" :readonly.sync="is_readonly" :ntvalue.sync="customer" ntkey="user_mobile" placeholder="请输入电话"></ntlistp>
-        <ntlistd label="婚期" :readonly.sync="is_readonly" :ntvalue.sync="customer" ntkey="wedding_date" nttype="picker" pickertype="date"></ntlistd>
+        <ntlistn label="新人称呼" :readonly.sync="is_readonly" :ntvalue.sync="customer" ntkey="user_name"
+          placeholder="请输入新人称呼"></ntlistn>
+        <ntlistp label="电话" :readonly.sync="is_readonly" :ntvalue.sync="customer" ntkey="user_mobile" placeholder="请输入电话">
+        </ntlistp>
+        <ntlistq label="微信号" :readonly.sync="is_readonly" :ntvalue.sync="customer" ntkey="wechat_id" placeholder="请输入微信号">
+        </ntlistq>
+        <ntlists label="婚期" pickertype="common" :ntindex.sync="wedding_date_schedule"  @pickerValueChange.user="pickerValueChange" :readonly.sync="is_readonly" :ntvalue.sync="wedding_date_status" ntkey="status"
+          nttype="picker"></ntlists>
+        <ntlistd label="婚期时间" wx:if="{{ wedding_date_schedule }}" :readonly.sync="is_readonly" :ntvalue.sync="customer" ntkey="wedding_date" nttype="picker"
+          pickertype="date"></ntlistd>
         <ntlistc label="结婚城市" :readonly.sync="is_readonly" :ntvalue.sync="customer" ntrangeprkey="wedding_province_name"
           ntrangecikey="wedding_city_name" ntrangearkey="wedding_area_name" nttype="picker" pickertype="region">
         </ntlistc>
-        <ntlistt label="酒店桌数" :readonly.sync="is_readonly" :ntvalue.sync="customer" ntkey="hotel_tables_number" placeholder="请输入酒店桌数"></ntlistt>
-        <ntlistw label="预算" :readonly.sync="is_readonly" :ntvalue.sync="customer" ntkey="wedding_budget" placeholder="请输入预算"></ntlistw>
+        <ntlistt label="酒店桌数" :readonly.sync="is_readonly" :ntvalue.sync="customer" ntkey="hotel_tables_number"
+          placeholder="请输入酒店桌数"></ntlistt>
+        <ntlistw label="预算" :readonly.sync="is_readonly" :ntvalue.sync="customer" ntkey="wedding_budget"
+          placeholder="请输入预算"></ntlistw>
       </ntmode>
       <view class="customer-create-btn" @tap="submit">保存</view>
     </view>
@@ -44,10 +51,13 @@ export default class Index extends wepy.page {
     ntlist: ntlist,
     ntlistn: ntlist,
     ntlistp: ntlist,
+    ntlistq: ntlist,
     ntlistt: ntlist,
     ntlistd: ntlist,
+    ntlists: ntlist,
     ntlistw: ntlist,
-    ntlistc: ntlist
+    ntlistc: ntlist,
+
   };
   data = {
     isopacity: true,
@@ -55,15 +65,35 @@ export default class Index extends wepy.page {
     customer: null,
     id: '',
     isback: true,
-    is_readonly:false
+    is_readonly: false,
+    wedding_date_schedule:0,
+    wedding_date_status: [
+      { status: '婚期未定' },
+      { status: '婚期已定' }
+    ]
   };
   methods = {
+    pickerValueChange(index){
+      if(index==0){
+        this.customer.wedding_date="";
+      }else{
+        this.wedding_date_schedule=1
+      }
+    },
     submit() {
       let that = this;
-      if(!valdator.isPhoneNumber(that.customer.user_mobile)){
+      if (!valdator.isPhoneNumber(that.customer.user_mobile)) {
         wepy.showToast({
           title: '请输入正确的手机号',
-          icon:'none',
+          icon: 'none',
+          duration: 2000
+        });
+        return false;
+      }
+      if(this.wedding_date_schedule && !that.customer.wedding_date){
+        wepy.showToast({
+          title: '请选择结婚日期或者选择婚期未定',
+          icon: 'none',
           duration: 2000
         });
         return false;
@@ -80,6 +110,7 @@ export default class Index extends wepy.page {
         user_mobile: that.customer.user_mobile,
         wedding_date: that.customer.wedding_date,
         hotel_tables_number: that.customer.hotel_tables_number,
+        wechat_id:wechat_id,
         wedding_budget: that.customer.wedding_budget,
         wedding_province_name: that.customer.wedding_province_name,
         wedding_city_name: that.customer.wedding_city_name,
@@ -94,6 +125,9 @@ export default class Index extends wepy.page {
     rq.get('followUp', {
       200: result => {
         that.customer = result.data.data;
+        if(that.customer.wedding_date){
+          that.wedding_date_schedule=1;
+        }
         that.$apply();
       }
     }, {

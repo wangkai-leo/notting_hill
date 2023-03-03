@@ -1,189 +1,154 @@
 <style lang="less">
-
+.common-lab-full {
+  width: auto;
+}
 </style>
 
 <template>
-    <view>
-        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
-        <view class="common-top">
-            <view class="common-content">
-            </view>
+  <view>
+    <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+    <topbar></topbar>
+    <view class="common-wrapper">
+      <ntitema label="客户来源" :ntvalue.sync="customer" ntkey="channel_name"></ntitema>
+      <ntitemb label="客资编号" :ntvalue.sync="customer" ntkey="order_id"></ntitemb>
+      <ntitemc label="发布客服" :ntvalue.sync="customer" ntkey="submit_name"></ntitemc>
+      <ntitemd label="发布时间" :ntvalue.sync="customer" ntkey="submit_date"></ntitemd>
+      <maintain label="跟进日志" :ntvalue.sync="maintain_value" ntkey="list"></maintain>
+      <ntmode label="婚礼信息">
+        <ntlista label="意向城市" :ntvalue.sync="customer" ntkey="intention_city_name"></ntlista>
+        <ntlistb label="结婚城市" :ntvalue.sync="customer" ntkey="wedding_city_name"></ntlistb>
+        <ntlistc label="婚礼酒店" :ntvalue.sync="customer" ntkey="wedding_hotel"></ntlistc>
+        <ntlistd label="婚礼时间" :ntvalue.sync="customer" ntkey="wedding_date"></ntlistd>
+      </ntmode>
+      <ntmode label="客户信息">
+        <ntliste label="婚礼时间" :ntvalue.sync="customer" ntkey="user_name"></ntliste>
+        <ntlistf label="手机号" :ntvalue.sync="customer" ntkey="user_mobile"></ntlistf>
+        <ntlistg label="微信号" :ntvalue.sync="customer" ntkey="wechat_id"></ntlistg>
+      </ntmode>
+      <upload label="变更凭证" size="9" :save_obj.sync="uplaoded" ntkey="images" :readonly.sync="readonly"></upload>
+      <ntiteme label="变更备注" nttype="area" :ntvalue.sync="customer" ntkey="drop_remark"></ntiteme>
+
+      <view class="common-title" wx:if="{{customer.user_status!=1}}">状态变更</view>
+      <view class="common-pannel" wx:if="{{customer.user_status!=1}}">
+        <view class="common-list">
+          <view class="common-lab">{{ customer.status_name }}</view>
         </view>
-        <view class="common-wrapper">
-            <view class="common-title">客户来源</view>
-            <view class="common-pannel">
-                <view class="common-list">
-                    <view class="common-lab">{{customer.channel_name}}</view>
-                </view>
-            </view>
-            <view class="common-title">客户意向</view>
-            <view class="common-pannel">
-                <view class="common-list">
-                    <view class="common-lab">{{customer.intention_name}}</view>
-                </view>
-            </view>
-            <view class="common-title">婚礼信息</view>
-            <view class="common-pannel">
-                <view class="common-list">
-                    <view class="common-lab">意向城市</view>
-                    <view class="common-tip">{{customer.intention_city_name}}</view>
-                </view>
-                <view class="common-list">
-                    <view class="common-lab">结婚城市</view>
-                    <view class="common-tip">{{customer.wedding_city_name}}</view>
-                </view>
-                <view class="common-list">
-                    <view class="common-lab">婚礼酒店</view>
-                    <view class="common-tip">{{customer.wedding_hotel}}</view>
-                </view>
-                <view class="common-list">
-                    <view class="common-lab">婚礼时间</view>
-                    <view class="common-tip">{{customer.wedding_date}}</view>
-                </view>
-            </view>
-            <view class="common-title">客户信息</view>
-            <view class="common-pannel">
-                <view class="common-list">
-                    <view class="common-lab">客户姓名</view>
-                    <view class="common-tip">{{customer.user_name}}</view>
-                </view>
-                <view class="common-list">
-                    <view class="common-lab">手机号</view>
-                    <view class="common-tip">{{customer.user_mobile}}</view>
-                </view>
-                <view class="common-list">
-                    <view class="common-lab">微信号</view>
-                    <view class="common-tip">{{customer.wechat_id}}</view>
-                </view>
-            </view>
-            <view class="common-title">变更凭证 {{show_img_arr.length}}/9</view>
-            <view class="common-pannel">
-                <view class="common-pic-box">
-                    <block wx:for="{{show_img_arr}}" wx:key="">
-                        <image class="common-add-pic" src="{{item}}" mode="aspectFill" lazy-load="false">
-                        </image>
-                    </block>
-                </view>
-            </view>
-            <view class="common-title">变更备注</view>
-            <view class="common-pannel">
-                <textarea disabled class="common-area" @input="inputLog" value="{{customer.drop_remark}}" />
-            </view>
-            <view class="common-title" wx:if="{{customer.user_status!=1}}">状态变更</view>
-            <view class="common-pannel" wx:if="{{customer.user_status!=1}}">
-                <view class="common-list">
-                    <view class="common-lab">{{customer.status_name}}</view>
-                </view>
-            </view>
-            <view class="customer-order-btn" @tap="submit" data-pass="1">审核通过</view>
-            <view class="customer-order-btn" @tap="submit" data-pass="0">驳回申请</view>
-        </view>
+      </view>
+      <view class="customer-order-btn" wx:if="{{ drop_status==0 }}" @tap="submit" data-pass="1">审核通过</view>
+      <view class="customer-order-btn" wx:if="{{ drop_status==0 }}" @tap="submit" data-pass="0">驳回申请</view>
+      <view class="customer-order-btn" wx:if="{{ drop_status==1 }}" @tap="recover" data-pass="0">恢复客资</view>
     </view>
+  </view>
 </template>
 
 <script>
-    import wepy from 'wepy';
-    import G from '../../../../../common/global';
-    import C from '../../../../../common/config';
-    import rq from '../../../../../common/utils/request';
-    import tool from '../../../../../common/utils/tool';
-    import validate from '../../../../../common/utils/validate';
-    import storage from '../../../../../common/utils/storage';
-    import dat from '../../../../../common/utils/date';
-    import file from '../../../../../common/utils/file';
-    import css from '../../../../../components/css';
-    import header from '../../../../../components/header';
-    export default class Index extends wepy.page {
-        components = {
-            css: css, //样式表
-            header: header
-        };
-        data = {
-            isopacity: true,
-            title: '状态变更',
-            id: '',
+import wepy from 'wepy';
+import rq from '../../../../../common/utils/request';
+import tool from '../../../../../common/utils/tool';
+import css from '../../../../../components/css';
+import header from '../../../../../components/header';
+import upload from "../../../../../components/common/upload";
+import maintain from "../../../../../components/common/maintain";
+import ntitem from "../../../../../components/common/ntitem";
+import ntlist from "../../../../../components/common/ntlist";
+import ntmode from "../../../../../components/common/ntmode";
+import topbar from "../../../../../components/topbar";
 
-            customer: null,
-            isback: true,
-            status_remark: '',
-            show_img_arr: [],
-            status_arr: ['退客申请', '客资已死'],
-            status_arr_index: 0
-        };
-        methods = {
-            bindStatusChange(e) {
-                this.status_arr_index = e.detail.value;
-            },
-            recover() {
-                let that = this;
-                let user_status = 21; //21 持续跟进  1客资已死
-                rq.get("AddFollowUpLog", {
-                    200: result => {
-                        wepy.navigateBack({
-                            delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
-                        });
-                        that.$apply();
-                    }
-                }, {
-                    user_id: that.id,
-                    user_status: user_status,
-                    status_remark: '恢复客资料',
-                    status_time_name: that.status_name
-                })
-            },
-            uploadFile() {
-                let that = this;
-                wx.chooseImage({
-                    count: '9', //最多可以选择的图片张数,
-                    success: res => {
-                        file.upLoadImgs(C.ENV_URL + 'uploadCommProof', res.tempFilePaths, 0, [], [], function(names, urls) {
-                            // that.upload_img_arr = that.upload_img_arr.concat(names);
-                            that.show_img_arr = that.show_img_arr.concat(urls);
-                            console.log(that.show_img_arr);
-                            that.$apply();
-                        });
-                        // that.$apply();
-                    }, //返回图片的本地文件路径列表 tempFilePaths,
-                    fail: () => {},
-                    complete: () => {}
-                });
-            },
-            inputLog(e) {
-                this.status_remark = e.detail.value;
-            },
-            submit(e) {
-                let that = this;
-                let is_pass = e.currentTarget.dataset.pass;
-                if (that.status_arr_index == 0) {
-                    rq.get('approvedDropCustomer', {
-                        200: result => {
-                            wepy.navigateBack({
-                                delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
-                            });
-                        }
-                    }, {
-                        drop_id: that.id,
-                        user_id: that.customer.user_id,
-                        sales_id:that.customer.sales_id,
-                        is_pass: is_pass
-                    })
-                } else if (that.status_arr_index == 1) {
-                }
-            }
-        };
-        onLoad(options) {
-            options = tool.decodeQrCodeParam(options);
-            let that = this;
-            that.id = options.id;
-            rq.get('dropCustomerDetail', {
-                200: result => {
-                    that.customer = result.data.data;
-                    that.$apply();
-                }
-            }, {
-                drop_id: options.id
-            })
+export default class Index extends wepy.page {
+  components = {
+    css: css, //样式表
+    header: header,
+    topbar:topbar,
+    upload: upload,
+    maintain: maintain,
+
+    ntitema: ntitem,
+    ntitemb: ntitem,
+    ntitemc: ntitem,
+    ntitemd: ntitem,
+    ntiteme: ntitem,
+
+    ntmode: ntmode,
+
+    ntlista: ntlist,
+    ntlistb: ntlist,
+    ntlistc: ntlist,
+    ntlistd: ntlist,
+    ntliste: ntlist,
+    ntlistf: ntlist,
+    ntlistg: ntlist,
+  };
+  data = {
+    isopacity: true,
+    title: '状态变更',
+    id: '',
+    customer: null,
+    isback: true,
+    readonly: true,
+    status_arr: ['退客申请', '客资已死'],
+    status_arr_index: 0,
+    uplaoded: {
+      images: []
+    },
+    maintain_value: {
+      list: []
+    },
+    drop_status: 0
+  };
+  methods = {
+    recover() {
+      let that = this;
+      if (that.submit_lock) {
+        return false;
+      }
+      that.submit_lock = true;
+      rq.get('rollbackDropCustomer', {
+        200: result => {
+          wepy.navigateBack({
+            delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+          });
         }
-        onShow() {}
+      }, {
+        user_id: that.customer.user_id,
+        drop_id: that.id
+      })
+    },
+    submit(e) {
+      let that = this;
+      let is_pass = e.currentTarget.dataset.pass;
+      if (that.status_arr_index == 0) {
+        rq.get('approvedDropCustomer', {
+          200: result => {
+            wepy.navigateBack({
+              delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+            });
+          }
+        }, {
+          drop_id: that.id,
+          user_id: that.customer.user_id,
+          sales_id: that.customer.sales_id,
+          is_pass: is_pass
+        })
+      } else if (that.status_arr_index == 1) {
+      }
     }
+  };
+  onLoad(options) {
+    options = tool.decodeQrCodeParam(options);
+    let that = this;
+    that.id = options.id;
+    that.drop_status = options.drop_status;
+    rq.get('dropCustomerDetail', {
+      200: result => {
+        that.customer = result.data.data;
+        that.maintain_value.list = result.data.status_log;
+        that.uplaoded.images = that.customer.drop_file.split(',')
+        that.$apply();
+      }
+    }, {
+      drop_id: options.id
+    })
+  }
+  onShow() { }
+}
 </script>

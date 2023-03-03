@@ -34,12 +34,10 @@
                         <view class="cus-5-rows">日期</view>
                         <view class="cus-5-rows">编号</view>
                         <view class="cus-5-rows">渠道</view>
-                        <view class="cus-5-rows" wx:if="{{!user.is_server && !user.is_server_offline}}">城市</view>
-                        <view class="cus-5-rows" wx:if="{{user.is_server || user.is_server_offline}}">意向</view>
+                        <view class="cus-5-rows">城市</view>
                         <view class="cus-5-rows">销售</view>
                     </view>
                     <block wx:for="{{userList}}" wx:key="">
-                        <!--|客服和销售-->
                         <view class="common-list" bindtap="goToDetail" data-id="{{item.user_id}}">
                             <view class="cus-5-rows">{{item.create_date}}</view>
                             <view class="cus-5-rows">{{item.order_id}}</view>
@@ -48,7 +46,6 @@
                             <view class="cus-5-rows" wx:if="{{user.is_server || user.is_server_offline}}">{{item.intention_name}}</view>
                             <view class="cus-5-rows">{{item.sales_name}}</view>
                         </view>
-                        <!--客服和销售|-->
                     </block>
                 </view>
                 <view class="common-pannel" wx:if="{{user.is_scheme}}">

@@ -131,7 +131,7 @@ export default class Index extends wepy.component {
         wepy.setStorageSync('channel', channel)
       }
       wepy.navigateTo({
-        url: '/pages/common/statisticscustomer?'+params
+        url: '/pages/common/statisticscustomerlistserver?'+params
       })
     }
   }

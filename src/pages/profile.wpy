@@ -221,8 +221,8 @@ export default class Index extends wepy.page {
 
           wepy.setStorageSync('user_info', uid);
           wepy.setStorageSync('user', that.user);
-          
-          wepy.reLaunch({url:'/pages/common/profile'});
+
+          wepy.reLaunch({url:'/pages/profile'});
         }
         that.$apply();
       }

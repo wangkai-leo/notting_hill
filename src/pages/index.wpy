@@ -102,7 +102,8 @@
       </view>
     </view>
     <scroll-view scroll-y class="common-wrapper" @scrolltolower="loadMore" style="height:{{vi_height}}px">
-      <view class="customer_count" wx:if="{{department=='artcenter' && userList.length>0}}">订单数：{{ userList.length }}</view>
+      <view class="customer_count" wx:if="{{department=='artcenter' && userList.length>0}}">订单数：{{ userList.length }}
+      </view>
       <!--列表-->
       <block wx:for="{{userList}}" wx:key="">
         <!--|客服和销售-->
@@ -117,6 +118,7 @@
             <view class="customer-item">客资意向：<text>{{ item.intention_name }}</text></view>
             <view class="customer-item">渠道来源：<text>{{ item.channel_name }}</text></view>
             <view class="customer-item">客资状态：<text>{{ item.status_name }}</text></view>
+            <view class="customer-item">意向城市：<text>{{ item.intention_city_name }}</text></view>
             <view class="customer-item">订单状态：<text>{{ item.order_status_text }}</text></view>
           </view>
           <view class="customer-log-btn">
@@ -178,8 +180,8 @@
       </block>
     </scroll-view>
     <!--列表-->
-    <view class="customer-create-btn" @tap="navigatorToServicePublish"
-      wx:if="{{user.is_server||user.is_server_offline}}">发布客资</view>
+    <view class="customer-create-btn" @tap="navigatorToServicePublish" wx:if="{{user.is_server||user.is_server_offline}}">
+      发布客资</view>
   </view>
 </template>
 
@@ -262,6 +264,11 @@ export default class Index extends wepy.page {
     let that = this;
     that.loading = false;
     that.department = wepy.getStorageSync('office_line');
+
+    that.have_more = true;
+    that.page = 1;
+    that.sourceList = that.userList = [];
+    that.getUserLIst();
   }
   onReady() {
     let that = this;
@@ -333,10 +340,6 @@ export default class Index extends wepy.page {
   }
   onShow() {
     let that = this;
-    that.have_more = true;
-    that.page = 1;
-    that.sourceList = that.userList = [];
-    that.getUserLIst();
   }
 }
 </script>

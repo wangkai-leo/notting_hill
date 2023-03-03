@@ -27,9 +27,10 @@
     <view class="common-lab">{{ $ntlista$label }}
       
     </view>
+
     <!--password-->
-    <input class="common-tip" type="password"  wx:if="{{$ntlista$nttype=='password'&&$ntlista$readonly}}" value="{{$ntlista$ntvalue[$ntlista$ntkey]}}" placeholder="{{$ntlista$placeholder}}" bindinput="$ntlista$bindInput" disabled/>
-    <input class="common-tip" type="password"  wx:if="{{$ntlista$nttype=='password'&&!$ntlista$readonly}}" value="{{$ntlista$ntvalue[$ntlista$ntkey]}}" placeholder="{{$ntlista$placeholder}}" bindinput="$ntlista$bindInput"/>
+    <input class="common-tip" type="password"  wx:if="{{$ntlista$nttype=='password'&&$ntlista$readonly}}" value="{{$ntlista$ntvalue[$ntlista$ntkey]}}" placeholder="{{$ntlista$placeholder}}" disabled/>
+    <input class="common-tip" type="password"  wx:if="{{$ntlista$nttype=='password'&&!$ntlista$readonly}}" value="{{$ntlista$ntvalue[$ntlista$ntkey]}}" placeholder="{{$ntlista$placeholder}}" bindblur="$ntlista$bindInput"/>
     <!--password-->
 
     <!--input-->
@@ -37,14 +38,22 @@
       {{ $ntlista$ntvalue[$ntlista$ntkey] }}
       
     </view>
-    <input class="common-tip" wx:if="{{$ntlista$nttype=='text'&&!$ntlista$readonly}}" value="{{$ntlista$ntvalue[$ntlista$ntkey]}}" placeholder="{{$ntlista$placeholder}}" bindinput="$ntlista$bindInput" type="text"/>
+    <input class="common-tip" wx:if="{{$ntlista$nttype=='text'&&!$ntlista$readonly}}" value="{{$ntlista$ntvalue[$ntlista$ntkey]}}" placeholder="{{$ntlista$placeholder}}" bindblur="$ntlista$bindInput" type="text"/>
     <!--input-->
 
     <!-- picker-->
     <block wx:if="{{$ntlista$nttype=='picker'}}">
       <image class="common-log-arrows" src="../../images/arrows-right.png" mode="widthFix" lazy-load="false">
       </image>
-      <view class="common-tip" wx:if="{{$ntlista$pickertype!='region'}}">{{ $ntlista$ntvalue[$ntlista$ntkey] }}</view>
+
+      <view class="common-tip" wx:if="{{$ntlista$pickertype=='common'}}">{{ $ntlista$ntvalue[$ntlista$ntindex][$ntlista$ntkey] }}</view>
+      <picker wx:if="{{$ntlista$pickertype=='common'}}" class="picker-common" range="{{$ntlista$ntvalue}}" range-key="{{$ntlista$ntkey}}" bindchange="$ntlista$bindChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntlista$ntvalue[$ntlista$ntkey] }}
+        </view>
+      </picker>
+
+      <view class="common-tip" wx:if="{{$ntlista$pickertype=='date'}}">{{ $ntlista$ntvalue[$ntlista$ntkey] }}</view>
       <picker class="picker-common" wx:if="{{$ntlista$pickertype=='date'}}" mode="date" value="{{$ntlista$ntvalue[$ntlista$ntkey]}}" bindchange="$ntlista$bindDateChange">
         <view class="picker-common-v">
           当前选择：{{ $ntlista$ntvalue[$ntlista$ntkey] }}
@@ -67,9 +76,10 @@
     <view class="common-lab">{{ $ntlistb$label }}
       
     </view>
+
     <!--password-->
-    <input class="common-tip" type="password"  wx:if="{{$ntlistb$nttype=='password'&&$ntlistb$readonly}}" value="{{$ntlistb$ntvalue[$ntlistb$ntkey]}}" placeholder="{{$ntlistb$placeholder}}" bindinput="$ntlistb$bindInput" disabled/>
-    <input class="common-tip" type="password"  wx:if="{{$ntlistb$nttype=='password'&&!$ntlistb$readonly}}" value="{{$ntlistb$ntvalue[$ntlistb$ntkey]}}" placeholder="{{$ntlistb$placeholder}}" bindinput="$ntlistb$bindInput"/>
+    <input class="common-tip" type="password"  wx:if="{{$ntlistb$nttype=='password'&&$ntlistb$readonly}}" value="{{$ntlistb$ntvalue[$ntlistb$ntkey]}}" placeholder="{{$ntlistb$placeholder}}" disabled/>
+    <input class="common-tip" type="password"  wx:if="{{$ntlistb$nttype=='password'&&!$ntlistb$readonly}}" value="{{$ntlistb$ntvalue[$ntlistb$ntkey]}}" placeholder="{{$ntlistb$placeholder}}" bindblur="$ntlistb$bindInput"/>
     <!--password-->
 
     <!--input-->
@@ -77,14 +87,22 @@
       {{ $ntlistb$ntvalue[$ntlistb$ntkey] }}
       
     </view>
-    <input class="common-tip" wx:if="{{$ntlistb$nttype=='text'&&!$ntlistb$readonly}}" value="{{$ntlistb$ntvalue[$ntlistb$ntkey]}}" placeholder="{{$ntlistb$placeholder}}" bindinput="$ntlistb$bindInput" type="text"/>
+    <input class="common-tip" wx:if="{{$ntlistb$nttype=='text'&&!$ntlistb$readonly}}" value="{{$ntlistb$ntvalue[$ntlistb$ntkey]}}" placeholder="{{$ntlistb$placeholder}}" bindblur="$ntlistb$bindInput" type="text"/>
     <!--input-->
 
     <!-- picker-->
     <block wx:if="{{$ntlistb$nttype=='picker'}}">
       <image class="common-log-arrows" src="../../images/arrows-right.png" mode="widthFix" lazy-load="false">
       </image>
-      <view class="common-tip" wx:if="{{$ntlistb$pickertype!='region'}}">{{ $ntlistb$ntvalue[$ntlistb$ntkey] }}</view>
+
+      <view class="common-tip" wx:if="{{$ntlistb$pickertype=='common'}}">{{ $ntlistb$ntvalue[$ntlistb$ntindex][$ntlistb$ntkey] }}</view>
+      <picker wx:if="{{$ntlistb$pickertype=='common'}}" class="picker-common" range="{{$ntlistb$ntvalue}}" range-key="{{$ntlistb$ntkey}}" bindchange="$ntlistb$bindChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntlistb$ntvalue[$ntlistb$ntkey] }}
+        </view>
+      </picker>
+
+      <view class="common-tip" wx:if="{{$ntlistb$pickertype=='date'}}">{{ $ntlistb$ntvalue[$ntlistb$ntkey] }}</view>
       <picker class="picker-common" wx:if="{{$ntlistb$pickertype=='date'}}" mode="date" value="{{$ntlistb$ntvalue[$ntlistb$ntkey]}}" bindchange="$ntlistb$bindDateChange">
         <view class="picker-common-v">
           当前选择：{{ $ntlistb$ntvalue[$ntlistb$ntkey] }}

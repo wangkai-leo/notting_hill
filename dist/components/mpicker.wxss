@@ -14,7 +14,7 @@
   margin-left: -310rpx;
 }
 .s-box {
-  height: 550rpx;
+  height: 480rpx;
   margin: 30rpx auto;
 }
 .item-l-ac {
@@ -39,4 +39,15 @@
 .p-btn-r {
   float: right;
   margin-right: 60rpx;
+}
+.search {
+  width: 500rpx;
+  margin: 0 auto;
+  border: #f0f0f0 solid 1rpx;
+  padding: 10rpx;
+  margin-top: 20rpx;
+}
+.search input {
+  display: block;
+  font-size: 24rpx;
 }

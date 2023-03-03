@@ -1,199 +1,139 @@
-<style lang="less">
-
-</style>
+<style lang="less"></style>
 
 <template>
-    <view>
-        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
-        <view class="common-top">
-            <view class="common-content">
-            </view>
-        </view>
-        <view class="common-wrapper">
-            <view class="common-title">客户来源</view>
-            <view class="common-pannel">
-                <view class="common-list">
-                    <view class="common-lab">{{customer.channel_name}}</view>
-                </view>
-            </view>
-            <view class="common-title">客户意向</view>
-            <view class="common-pannel">
-                <view class="common-list">
-                    <view class="common-lab">{{customer.intention_name}}</view>
-                </view>
-            </view>
-            <view class="common-title">婚礼信息</view>
-            <view class="common-pannel">
-                <view class="common-list">
-                    <view class="common-lab">意向城市</view>
-                    <view class="common-tip">{{customer.intention_city_name}}</view>
-                </view>
-                <view class="common-list">
-                    <view class="common-lab">结婚城市</view>
-                    <view class="common-tip">{{customer.wedding_city_name}}</view>
-                </view>
-                <view class="common-list">
-                    <view class="common-lab">婚礼酒店</view>
-                    <view class="common-tip">{{customer.wedding_hotel}}</view>
-                </view>
-                <view class="common-list">
-                    <view class="common-lab">婚礼时间</view>
-                    <view class="common-tip">{{customer.wedding_date}}</view>
-                </view>
-            </view>
-            <view class="common-title">客户信息</view>
-            <view class="common-pannel">
-                <view class="common-list">
-                    <view class="common-lab">客户姓名</view>
-                    <view class="common-tip">{{customer.user_name}}</view>
-                </view>
-                <view class="common-list">
-                    <view class="common-lab">手机号</view>
-                    <view class="common-tip">{{customer.user_mobile}}</view>
-                </view>
-                <view class="common-list">
-                    <view class="common-lab">微信号</view>
-                    <view class="common-tip">{{customer.wechat_id}}</view>
-                </view>
-            </view>
-            <view class="common-title">变更凭证 {{show_img_arr.length}}/9</view>
-            <view class="common-pannel">
-                <view class="common-pic-box">
-                    <block wx:for="{{show_img_arr}}" wx:key="">
-                        <image class="common-add-pic" src="{{item}}" mode="aspectFill" lazy-load="false">
-                        </image>
-                    </block>
-                    <image wx:if="{{show_img_arr.length<9}}" @tap="uploadFile" class="common-add-pic" src="../../../images/add-pic.png" mode="aspectFill" lazy-load="false">
-                    </image>
-                </view>
-            </view>
-            <view class="common-title">变更备注</view>
-            <view class="common-pannel">
-                <textarea class="common-area" @input="inputLog" value="" placeholder="请输入备注信息" />
-            </view>
-            <view class="common-title" wx:if="{{customer.user_status!=1}}">状态变更</view>
-            <view class="common-pannel" wx:if="{{customer.user_status!=1}}">
-                <view class="common-list">
-                    <view class="common-lab">{{status_arr[status_arr_index]}}</view>
-                    <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
-                    </image>
-                    <picker class="picker-common" range="{{status_arr}}" @change="bindStatusChange">
-                        <view class="picker-common-v">
-                            当前选择：{{status_arr[status_arr_index]}}
-                        </view>
-                    </picker>
-                </view>
-            </view>
-            <view class="customer-create-btn" wx:if="{{customer.user_status!=1}}" @tap="submit">提交申请</view>
-            <view class="customer-create-btn" wx:if="{{customer.user_status==1}}" @tap="recover">恢复客资</view>
-        </view>
+  <view>
+    <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+    <topbar></topbar>
+    <view class="common-wrapper">
+      <ntitemIchannel label="客户来源" :ntvalue.sync="customer" ntkey="channel_name"></ntitemIchannel>
+      <ntitemIintend label="客户意向" :ntvalue.sync="customer" ntkey="intention_name"></ntitemIintend>
+      <ntmodualweidingmsg label="婚礼信息">
+        <ntlista label="意向城市" :ntvalue.sync="customer" ntkey="intention_city_name"></ntlista>
+        <ntlistb label="结婚城市" :ntvalue.sync="customer" ntkey="wedding_city_name"></ntlistb>
+        <ntlistc label="婚礼酒店" :ntvalue.sync="customer" ntkey="wedding_hotel"></ntlistc>
+        <ntlistd label="婚礼时间" :ntvalue.sync="customer" ntkey="wedding_date"></ntlistd>
+      </ntmodualweidingmsg>
+      <ntmodualweidingmsg label="客户信息">
+        <ntliste label="客户姓名" :ntvalue.sync="customer" ntkey="user_name"></ntliste>
+        <ntlistf label="手机号" :ntvalue.sync="customer" ntkey="user_mobile"></ntlistf>
+        <ntlistg label="微信号" :ntvalue.sync="customer" ntkey="wechat_id"></ntlistg>
+      </ntmodualweidingmsg>
+      <upload label="变更凭证" size="9" :save_obj.sync="uplaoded" ntkey="images" :readonly.sync="readonly"></upload>
+
+      <view wx:if="{{!readonly}}">
+        <ntitemIremark label="变更备注" nttype="area" :ntvalue.sync="sbumit_data" ntkey="status_remark"
+          :readonly.sync="readonly" placeholder="请输入备注信息"></ntitemIremark>
+        <ntpickera label="状态变更" :ntrange.sync="status_arr" :checked_index.sync="status_arr_index" ntkey="status">
+        </ntpickera>
+        <view class="customer-create-btn" wx:if="{{customer.user_status!=1}}" @tap="submit">提交申请</view>
+      </view>
     </view>
+  </view>
 </template>
 
 <script>
-    import wepy from 'wepy';
-    import G from '../../../common/global';
-    import C from '../../../common/config';
-    import rq from '../../../common/utils/request';
-    import tool from '../../../common/utils/tool';
-    import validate from '../../../common/utils/validate';
-    import storage from '../../../common/utils/storage';
-    import dat from '../../../common/utils/date';
-    import file from '../../../common/utils/file';
-    import css from '../../../components/css';
-    import header from '../../../components/header';
-    export default class Index extends wepy.page {
-        components = {
-            css: css, //样式表
-            header: header
-        };
-        data = {
-            isopacity: true,
-            title: '状态变更',
-            id: '',
-            customer: null,
-            isback: true,
-            status_remark: '',
-            show_img_arr: [],
-            status_arr: ['无效客资', '客资已死'],
-            status_arr_index: 0
-        };
-        methods = {
-            bindStatusChange(e) {
-                this.status_arr_index = e.detail.value;
-            },
-            recover() {
-                let that = this;
-                let to_status = 21; //持续跟进
-                rq.get('submitDropApply', {
-                    200: result => {
-                        wepy.navigateBack({
-                            delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
-                        });
-                    }
-                }, {
-                    user_id: that.id,
-                    drop_remark: that.status_remark,
-                    to_status: to_status,
-                    drop_file: that.show_img_arr.join(',')
-                })
-            },
-            uploadFile() {
-                let that = this;
-                wx.chooseImage({
-                    count: '9', //最多可以选择的图片张数,
-                    success: res => {
-                        file.upLoadImgs(C.ENV_URL + 'uploadCommProof', res.tempFilePaths, 0, [], [], function(names, urls) {
-                            // that.upload_img_arr = that.upload_img_arr.concat(names);
-                            that.show_img_arr = that.show_img_arr.concat(urls);
-                            console.log(that.show_img_arr);
-                            that.$apply();
-                        });
-                        // that.$apply();
-                    }, //返回图片的本地文件路径列表 tempFilePaths,
-                    fail: () => {},
-                    complete: () => {}
-                });
-            },
-            inputLog(e) {
-                this.status_remark = e.detail.value;
-            },
-            submit() {
-                let that = this;
-                let to_status = 2;
-                if (that.status_arr_index == 0) {
-                    to_status = 2; //退客
-                } else if (that.status_arr_index == 1) {
-                    to_status = 1; //已死
-                }
-                
-                rq.get('submitDropApply', {
-                    200: result => {
-                        wepy.navigateBack({
-                            delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
-                        });
-                    }
-                }, {
-                    user_id: that.id,
-                    drop_remark: that.status_remark,
-                    to_status: to_status,
-                    drop_file: that.show_img_arr.join(',')
-                })
-            }
-        };
-        onLoad(options) {
-            options = tool.decodeQrCodeParam(options);
-            let that = this;
-            that.id = options.id;
-            rq.get('getOneUserInfo', {
-                200: result => {
-                    that.customer = result.data.data;
-                    that.$apply();
-                }
-            }, {
-                user_id: options.id
-            })
+import wepy from 'wepy';
+import rq from '../../../common/utils/request';
+import tool from '../../../common/utils/tool';
+import css from '../../../components/css';
+import header from '../../../components/header';
+import upload from "../../../components/common/upload";
+import ntitem from '../../../components/common/ntitem';
+import ntmode from "../../../components/common/ntmode"
+import ntlist from "../../../components/common/ntlist"
+import ntpicker from "../../../components/common/ntpicker"
+
+import topbar from "../../../components/topbar";
+export default class Index extends wepy.page {
+  components = {
+    css: css, //样式表
+    header: header,
+    upload: upload,
+    topbar: topbar,
+    ntmodualweidingmsg: ntmode,
+    ntitemIchannel: ntitem,
+    ntitemIremark: ntitem,
+    ntitemIintend: ntitem,
+    ntlista: ntlist,
+    ntlistb: ntlist,
+    ntlistc: ntlist,
+    ntlistd: ntlist,
+    ntliste: ntlist,
+    ntlistf: ntlist,
+    ntlistg: ntlist,
+    ntpickera: ntpicker
+  };
+  data = {
+    isopacity: true,
+    title: '状态变更',
+    id: '',
+    customer: null,
+    isback: true,
+    sbumit_data: {
+      status_remark: ''
+    },
+    status_arr: [{
+      status: '无效客资',
+    }, {
+      status: '客资已死',
+    }],
+    status_arr_index: 0,
+    readonly: false,
+    uplaoded: {
+      images: []
+    },
+    submit_lock: false,
+    drop_id:0
+  };
+  methods = {
+    submit() {
+      let that = this;
+      let to_status = 2;
+      if (that.status_arr_index == 0) {
+        to_status = 2; //退客
+      } else if (that.status_arr_index == 1) {
+        to_status = 1; //已死
+      }
+      rq.get('submitDropApply', {
+        200: result => {
+          wepy.navigateBack({
+            delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+          });
         }
-        onShow() {}
+      }, {
+        user_id: that.id,
+        drop_remark: that.sbumit_data.status_remark,
+        to_status: to_status,
+        drop_file: that.uplaoded.images.join(',')
+      })
     }
+  };
+  onLoad(options) {
+    options = tool.decodeQrCodeParam(options);
+    let that = this;
+    that.id = options.id;
+    if (options.drop_id != 0) { //if has drop info 
+      that.drop_id=options.drop_id;
+      that.readonly = true;
+      rq.get('dropCustomerDetail', {
+        200: result => {
+          that.sbumit_data.status_remark = result.data.data.drop_remark;
+          that.uplaoded.images = result.data.data.drop_file.split(',')
+          that.$apply();
+        }
+      }, {
+        drop_id: that.drop_id
+      })
+    }
+    rq.get('getOneUserInfo', {
+      200: result => {
+        that.customer = result.data.data;
+        that.$apply();
+      }
+    }, {
+      user_id: options.id
+    })
+  }
+  onShow() { }
+}
 </script>

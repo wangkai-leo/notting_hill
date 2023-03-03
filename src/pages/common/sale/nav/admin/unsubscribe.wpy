@@ -1,201 +1,187 @@
 <style lang="less">
 .loading {
-    width: 750rpx;
-    position: absolute;
+  width: 750rpx;
+  position: absolute;
 }
 
 .loading-box {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    z-index: 1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
 }
 
 .logo {
-    position: absolute;
-    width: 429rpx;
-    z-index: 5;
-    left: 50%;
-    margin-left: -225rpx;
-    top: 300rpx;
+  position: absolute;
+  width: 429rpx;
+  z-index: 5;
+  left: 50%;
+  margin-left: -225rpx;
+  top: 300rpx;
 }
 
 .text-msg-box {
-    width: 100%;
-    position: absolute;
-    z-index: 4;
-    bottom: 130rpx;
+  width: 100%;
+  position: absolute;
+  z-index: 4;
+  bottom: 130rpx;
 }
 
 .text-msg {
-    text-align: center;
-    font-size: 32rpx;
-    color: #fff;
-    margin-bottom: 5rpx;
+  text-align: center;
+  font-size: 32rpx;
+  color: #fff;
+  margin-bottom: 5rpx;
 }
 
 .text-msg-l {
-    margin-bottom: 45rpx;
+  margin-bottom: 45rpx;
 }
 
 .text-msg-l-dio {
-    animation: text-msg-l-dio 1200ms linear infinite;
-    margin-left: 5rpx;
+  animation: text-msg-l-dio 1200ms linear infinite;
+  margin-left: 5rpx;
 }
 
 .text-msg-l-dio-b {
-    animation-delay: 300ms;
+  animation-delay: 300ms;
 }
 
 .text-msg-l-dio-c {
-    animation-delay: 600ms;
+  animation-delay: 600ms;
 }
 
 @keyframes text-msg-l-dio {
-    0% {
-        opacity: 0;
-    }
+  0% {
+    opacity: 0;
+  }
 
-    49% {
-        opacity: 0;
-    }
+  49% {
+    opacity: 0;
+  }
 
-    50% {
-        opacity: 1;
-    }
+  50% {
+    opacity: 1;
+  }
 
-    100% {
-        opacity: 1;
-    }
+  100% {
+    opacity: 1;
+  }
 }
 
 .customer-create-btn {
-    position: fixed;
-    bottom: 20rpx;
-    z-index: 999;
-    left: 33rpx;
+  position: fixed;
+  bottom: 20rpx;
+  z-index: 999;
+  left: 33rpx;
 }
 
 .select-content {
-    padding-bottom: 100rpx;
+  padding-bottom: 100rpx;
+}
+
+.full-tab-item {
+  width: 50%;
+}
+
+.box-con {
+  margin-top: 50rpx;
 }
 </style>
 
 <template>
-<view class="container">
+  <view class="container">
     <view wx:if="{{!loading}}">
-        <header :title="title" :isback="isback" :isopacity="isopacity"></header>
-        <view class="common-top">
-            <view class="common-content">
+      <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+      <view class="common-top">
+        <view class="common-content">
+        </view>
+      </view>
+      <!--列表-->
+      <view class="common-wrapper">
+        <view class="sale-tab-box-audit">
+          <view class="full-tab-item {{drop_status==0?'sale-tab-item-check':''}}" @tap="toggleTab" data-index="0">待审核</view>
+          <view class="full-tab-item {{drop_status==1?'sale-tab-item-check':''}}" @tap="toggleTab" data-index="1">已审核</view>
+        </view>
+        <view class="box-con">
+          <block wx:for="{{userList}}" wx:key="">
+            <view class="customer-info" wx:if="{{!item.hide}}">
+              <view class="customer-info-header">
+                <view class="customer-num">编号：{{ item.main_contract }}</view>
+                <view class="customer-date">{{ item.status_time }}</view>
+              </view>
+              <view class="customer-info-msgs" @tap="goToDetail" data-id="{{item.id}}" data-user="{{item.user_id}}">
+                <view class="customer-item">客户姓名：<text>{{ item.client_name }}</text></view>
+                <view class="customer-item">婚礼日期：<text>{{ item.wedding_date }}</text></view>
+                <view class="customer-item">销售姓名：<text>{{ item.sales_name }}</text></view>
+                <view class="customer-item">订单状态：<text>{{ item.order_status_text }}</text></view>
+              </view>
             </view>
+          </block>
         </view>
-        <!--列表-->
-        <view class="common-wrapper">
-            <block wx:for="{{userList}}" wx:key="">
-                <view class="customer-info" wx:if="{{!item.hide}}">
-                    <view class="customer-info-header">
-                        <view class="customer-num">编号：{{item.main_contract}}</view>
-                        <view class="customer-date">{{item.status_time}}</view>
-                    </view>
-                    <view class="customer-info-msgs" @tap="goToDetail" data-id="{{item.id}}"  data-user="{{item.user_id}}">
-                        <view class="customer-item">客户姓名：<text>{{item.client_name}}</text></view>
-                        <view class="customer-item">婚礼日期：<text>{{item.wedding_date}}</text></view>
-                        <view class="customer-item">销售姓名：<text>{{item.sales_name}}</text></view>
-                        <view class="customer-item">订单状态：<text>{{item.order_status_text}}</text></view>
-                    </view>
-                </view>
-            </block>
-        </view>
-        <!--列表-->
+      </view>
+      <!--列表-->
     </view>
-</view>
+  </view>
 </template>
 
 <script>
 import wepy from 'wepy';
-import G from '../../../../../common/global';
 import rq from '../../../../../common/utils/request';
-import tool from '../../../../../common/utils/tool';
-import validate from '../../../../../common/utils/validate';
-import storage from '../../../../../common/utils/storage';
-import dat from '../../../../../common/utils/date';
-import file from '../../../../../common/utils/file';
-
-
 import css from '../../../../../components/css';
 import header from '../../../../../components/header';
 export default class Index extends wepy.page {
-    components = {
-        css: css, //样式表
-        header: header
-    };
-    data = {
-        isback: true,
-        isopacity: true,
-        title: '退客审核',
-        loading: true,
-        is_hide: true,
-        userList: null,
+  components = {
+    css: css, //样式表
+    header: header
+  };
+  data = {
+    isback: true,
+    isopacity: true,
+    title: '退客审核',
+    loading: true,
+    is_hide: true,
+    userList: null,
+    user: null,
+    drop_status: 0
+  };
+  methods = {
+    goToDetail(e) {
+      let id = e.currentTarget.dataset.id;
+      wepy.navigateTo({
+        url: 'auditchargeback?id=' + id+'&drop_status='+this.drop_status
+      });
 
-        user:null
-    };
-    methods = {
-        goTo() {
-
-        },
-        takeOrder(e) {
-            let index = e.currentTarget.dataset.index;
-            let that=this;
-            rq.get('receiveOrder', {
-                200: result => {
-                    wepy.showToast({
-                        title: '接单成功', //提示的内容,
-                        icon: 'none', //图标,
-                        duration: 2000, //延迟时间,
-                        mask: true, //显示透明蒙层，防止触摸穿透,
-                        success: res => {}
-                    });
-
-                    that.userList[index]['hide'] = true;
-                    that.$apply();
-                }
-            }, {
-                user_id: this.userList[index].id
-            })
-
-        },
-        goToDetail(e) {
-            let id = e.currentTarget.dataset.id;
-            let user_id = e.currentTarget.dataset.user;
-            wepy.navigateTo({
-                url: 'auditchargeback?id=' + id
-            });
-
-        },
-        toggleDisplay(e) {
-            let index = e.currentTarget.dataset.index;
-            this.userList[index].is_hide = !this.userList[index].is_hide;
-        }
-    };
-    onLoad(options) {
-        let that = this;
-        that.loading = false;
+    },
+    toggleTab(e) {
+      this.drop_status = e.currentTarget.dataset.index;
+      this.dropCustomerList();
     }
-    onShow() {
-        let that = this;
-        that.user=wepy.getStorageSync('user');
-
-        rq.get('dropCustomerList', {
-            200: result => {
-                that.userList = result.data.data;
-                that.is_leader=result.data.is_leader;
-                that.userList.forEach(element => {
-                    element['is_hide'] = true;
-                });
-                that.$apply();
-            }
-        })
-    }
+  };
+  onLoad(options) {
+    let that = this;
+    that.loading = false;
+  }
+  dropCustomerList() {
+    let that = this;
+    rq.get('dropCustomerList', {
+      200: result => {
+        that.userList = result.data.data;
+        that.is_leader = result.data.is_leader;
+        that.userList.forEach(element => {
+          element['is_hide'] = true;
+        });
+        that.$apply();
+      }
+    }, {
+      drop_status: this.drop_status
+    })
+  }
+  onShow() {
+    let that = this;
+    that.user = wepy.getStorageSync('user');
+    that.dropCustomerList();
+  }
 }
 </script>

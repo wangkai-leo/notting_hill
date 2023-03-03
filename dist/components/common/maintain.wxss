@@ -1,0 +1,8 @@
+.shotbox {
+  padding-bottom: 10rpx;
+}
+.shotcut {
+  display: inline-block;
+  width: 100rpx;
+  height: 100rpx;
+}

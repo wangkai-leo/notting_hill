@@ -1,0 +1,8 @@
+@import "./../../components/customerlistfilter.wxss";
+@import "./../../components/statisticscustomerlistsale.wxss";
+@import "./../../components/topbar.wxss";
+@import "./../../components/header.wxss";
+@import "./../../components/css.wxss";
+.common-lab-btn {
+  top: 0rpx;
+}

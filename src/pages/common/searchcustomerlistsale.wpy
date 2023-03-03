@@ -1,0 +1,61 @@
+<style lang="less">
+.common-lab-btn {
+  top: 0rpx;
+}
+</style>
+
+<template>
+  <view class="container">
+    <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+    <topbar></topbar>
+    <statisticscustomerlistsale :is_search.sync="is_search" :is_old.sync="is_old" :list.sync="list" wx:if="{{ !display_filter }}"></statisticscustomerlistsale>
+    <view @tap="editStatus" class="customer-order-btn" wx:if="{{ !display_filter }}">开始查询</view>
+    <customerlistfilter wx:if="{{ display_filter }}" :approval_search.sync="approval_search"  @search.user="search"></customerlistfilter>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import css from '../../components/css';
+import header from '../../components/header';
+import topbar from '../../components/topbar';
+import statisticscustomerlistsale from '../../components/statisticscustomerlistsale';
+import customerlistfilter from '../../components/customerlistfilter';
+export default class Index extends wepy.page {
+  components = {
+    css: css, //样式表
+    header: header,
+    topbar: topbar,
+    statisticscustomerlistsale: statisticscustomerlistsale,
+    customerlistfilter: customerlistfilter
+  };
+  data = {
+    isback: true,
+    isopacity: true,
+    title: '客资搜索',
+    approval_search:true,
+    list: [],
+    display_filter: true,
+    is_old:0,
+
+    is_search:true
+  };
+  methods = {
+    search(list,is_old){
+      if(is_old){
+        this.is_old=is_old;
+      }
+      this.display_filter=false;
+      this.list=list;
+    },
+    editStatus() {
+      this.display_filter = true;
+    }
+  };
+  onLoad(options) {
+  }
+  onShow() {
+
+  }
+}
+</script>

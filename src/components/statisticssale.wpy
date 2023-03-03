@@ -1,0 +1,299 @@
+<template>
+  <view class="common-wrapper" wx:if="{{user_act.is_sale}}">
+    <view class="common-pannel">
+      <view class="dep-lead-sa">
+        <view class="dep-line">
+          时间：
+          <ntinlinepickerc @change.user="handleBeginChange" :checked_name.sync="order_date_start" ntpickertype="date">
+          </ntinlinepickerc>
+          至
+          <ntinlinepickerb @change.user="handleEndChange" :checked_name.sync="order_date_end" ntpickertype="date">
+          </ntinlinepickerb>
+        </view>
+      </view>
+    </view>
+    <view class="common-title">客资统计</view>
+    <view class="common-pannel">
+      <view class="dep-base-box">
+        <view @tap="naviToList" data-map="{{page_data.all_users.map}}" class="dep-3 dep-3-bd">
+          <view class="dep-num">{{ page_data.all_users.count }}</view>
+          <view class="dep-tip">总客资</view>
+        </view>
+        <view @tap="naviToList" data-map="{{page_data.online_users.map}}" class="dep-3 dep-3-bd">
+          <view class="dep-num">{{ page_data.online_users.count }}</view>
+          <view class="dep-tip">线上客资</view>
+        </view>
+        <view @tap="naviToList" data-map="{{page_data.offline_users.map}}" class="dep-3">
+          <view class="dep-num">{{ page_data.offline_users.count }}</view>
+          <view class="dep-tip">线下客资</view>
+        </view>
+        <view @tap="naviToList" data-map="{{page_data.nottinghill_users.map}}" class="dep-3 dep-3-bd">
+          <view class="dep-num">{{ page_data.nottinghill_users.count }}</view>
+          <view class="dep-tip">诺丁山</view>
+        </view>
+        <view @tap="naviToList" data-map="{{page_data.dreampark_users.map}}" class="dep-3 dep-3-bd">
+          <view class="dep-num">{{ page_data.dreampark_users.count }}</view>
+          <view class="dep-tip">DreamPark</view>
+        </view>
+        <view @tap="naviToList" data-map="{{page_data.one_stop_wedding_users.map}}" class="dep-3">
+          <view class="dep-num">{{ page_data.one_stop_wedding_users.count }}</view>
+          <view class="dep-tip">一站式婚宴</view>
+        </view>
+        <view @tap="naviToList" data-map="{{page_data.drop_customer_users.map}}" class="dep-3 dep-3-bd dep-3-bd-n">
+          <view class="dep-num">{{ page_data.drop_customer_users.count }}</view>
+          <view class="dep-tip">退客/无效客资</view>
+        </view>
+        <view @tap="naviToList" data-map="{{page_data.dead_users.map}}" class="dep-3 dep-3-bd dep-3-bd-n">
+          <view class="dep-num">{{ page_data.dead_users.count }}</view>
+          <view class="dep-tip">已死客资</view>
+        </view>
+        <view data-map="{{page_data.missing_users.map}}" class="dep-3 dep-3-bd-n" @tap="naviMissCount">
+          <view class="dep-num">{{ page_data.missing_users.count }}</view>
+          <view class="dep-tip dep-tip-dis">漏客数</view>
+        </view>
+      </view>
+    </view>
+    <view class="common-title">成交统计</view>
+    <view class="common-pannel">
+      <view class="dep-base-box">
+        <view @tap="naviToList" data-map="{{page_data.complate_users.map}}" class="dep-3 dep-3-bd">
+          <view class="dep-num">{{ page_data.complate_users.count }}</view>
+          <view class="dep-tip">成交数</view>
+        </view>
+        <view class="dep-3 dep-3-bd">
+          <view class="dep-num">{{ page_data.complate_percent.count }}</view>
+          <view class="dep-tip dep-tip-dis">总成交率</view>
+        </view>
+        <view class="dep-3">
+          <view class="dep-num">{{ page_data.online_percent.count }}/{{ page_data.offline_percent.count }}</view>
+          <view class="dep-tip dep-tip-dis">线上/线下成交率</view>
+        </view>
+        <view @tap="naviToList" data-map="{{page_data.nottinghill_complate_users.map}}" class="dep-3 dep-3-bd dep-3-bd-n">
+          <view class="dep-num">{{ page_data.nottinghill_complate_users.count }}</view>
+          <view class="dep-tip">诺丁山</view>
+        </view>
+        <view @tap="naviToList" data-map="{{page_data.dreampark_complate_users.map}}" class="dep-3 dep-3-bd dep-3-bd-n">
+          <view class="dep-num">{{ page_data.dreampark_complate_users.count }}</view>
+          <view class="dep-tip">DreamPark</view>
+        </view>
+        <view @tap="naviToList" data-map="{{page_data.one_stop_wedding_complate_users.map}}" class="dep-3 dep-3-bd-n">
+          <view class="dep-num">{{ page_data.one_stop_wedding_complate_users.count }}</view>
+          <view class="dep-tip">一站式婚宴</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from "wepy";
+import rq from '../common/utils/request';
+import dt from '../common/utils/date';
+import ntinlinepicker from './common/ntinlinepicker';
+export default class Index extends wepy.component {
+  props = {
+    order_date_start: {
+      type: String
+    },
+    order_date_end: {
+      type: String
+    },
+    is_request: {
+      type: Boolean,
+      twoWay: true
+    }
+  };
+  data = {
+    page_old_data: null,
+    page_data: null,
+    employee_list: null,
+    department: '',
+    order_date_start: '',
+    order_date_end: '',
+    employee_check_index: 0,
+    page_success_data: null,
+    tab_index: 0,
+    user_act: null
+  }
+  watch = {
+    is_request() {
+      if (this.is_request) {
+        let user_act = this.user_act = wepy.getStorageSync('user');
+        if (user_act.is_sale) {
+          this.getDataStatistics();
+        }
+      }
+    }
+  }
+  components = {
+    ntinlinepickerb: ntinlinepicker,
+    ntinlinepickerc: ntinlinepicker,
+  }
+  methods = {
+    handleBeginChange(date) {
+      this.order_date_start = date;
+      this.getDataStatistics();
+    },
+    handleEndChange(date) {
+      this.order_date_end = date;
+      this.getDataStatistics();
+    },
+    naviChangeDuration(e) {
+      let pay = e.currentTarget.dataset.pay;
+      let start = e.currentTarget.dataset.start;
+      let end = e.currentTarget.dataset.end;
+      wepy.navigateTo({
+        url: '/pages/marry/staduration?start_date=' + start + '&end_date=' + end + '&pay=' + pay
+      });
+    },
+    naviMissCount(e) {
+      let map = JSON.stringify(e.currentTarget.dataset.map);
+      wepy.navigateTo({
+        url: '/pages/marry/misscount?map=' + map
+      });
+    },
+    naviToList(e) {
+      let map = JSON.stringify(e.currentTarget.dataset.map);
+      wepy.navigateTo({
+        url: '/pages/common/statisticscustomerlistsale?map=' + map + '&start_date=' + this.start_date + '&end_date=' + this.order_date_end
+      });
+    },
+  }
+  getDataStatistics() {
+    let that = this;
+    wepy.showLoading({
+      title: 'Loading...', //提示的内容,
+      mask: true, //显示透明蒙层，防止触摸穿透,
+      success: res => { }
+    });
+    rq.get("getDataStatistics", {
+      200: result => {
+        wepy.hideLoading();
+        that.page_data = result.data.data;
+        that.$apply();
+      }
+    }, {
+      start_date: that.order_date_start,
+      end_date: that.order_date_end
+    })
+  }
+  onShow() {
+  }
+  onLoad() {
+    let that = this;
+    let today = new Date();
+    let year = today.getFullYear();
+    let month = today.getMonth();
+    let count_day = new Date(year, month, 0).getDate();
+    this.order_date_start = dt.dateFormat('yyyy-MM-dd', new Date(year, month, 1));
+    this.order_date_end = dt.dateFormat('yyyy-MM-dd', new Date(year, month, count_day - 1));
+    let user_act = this.user_act = wepy.getStorageSync('user');
+    if (user_act.is_sale) {
+      that.getDataStatistics();
+    }
+  }
+}
+</script>
+
+<style lang="less">
+.dep-num-c {
+  font-size: 26rpx;
+  color: #86a5e6;
+  font-weight: bold;
+  text-align: center;
+}
+
+.dep-num-cd {
+  font-size: 26rpx;
+  color: #86a5e6;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10rpx;
+}
+
+.dep-tip-c {
+  font-size: 26rpx;
+  color: #555555;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 15rpx;
+}
+
+.dep-3-c {
+  position: relative;
+  padding: 10rpx 0rpx 20rpx;
+  width: 33.33%;
+  float: left;
+  border-bottom: #eaeaea solid 1rpx;
+  height: 110rpx;
+}
+
+.dep-3-cd {
+  position: relative;
+  padding: 10rpx 0rpx 20rpx;
+  width: 33.33%;
+  float: left;
+  border-bottom: #eaeaea solid 1rpx;
+  height: 170rpx;
+}
+
+.dep-3-c-bd::after {
+  content: '';
+  position: absolute;
+  display: block;
+  width: 2rpx;
+  right: 0rpx;
+  top: 0rpx;
+  height: 100%;
+  background: #ededed;
+}
+
+.common-pannel {
+  padding: 10rpx 35rpx;
+  overflow: hidden;
+  background: #fff;
+}
+
+.dep-3-c-bd-n::after {
+  background: none;
+}
+
+.dep-lead-sa-time-sa {
+  position: relative;
+  line-height: 40rpx;
+  color: #999999;
+  font-size: 24rpx;
+  float: left;
+  margin-right: 10rpx;
+}
+
+.dep-lead-sa {
+  overflow: hidden;
+  font-size: 26rpx;
+  padding: 40rpx 0rpx;
+  border-bottom: #f0f0f0 solid 1rpx;
+}
+
+.dep-line {
+  overflow: hidden;
+  color: #999;
+  margin-bottom: 20rpx;
+  line-height: 20px;
+}
+
+.prec-tab-item {
+  width: 150rpx;
+  position: relative;
+  float: left;
+  padding: 10rpx 0rpx 20rpx 0rpx;
+  border-bottom: #d5d7dd solid 1rpx;
+  text-align: center;
+  font-size: 32rpx;
+  color: #999;
+  transition: 200ms linear all;
+}
+
+.prec-tab-box {
+  margin-bottom: 15px;
+  overflow: hidden;
+}
+</style>

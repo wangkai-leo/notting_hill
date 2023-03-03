@@ -6,6 +6,12 @@
   color: #87a6e7;
   margin-left: 20rpx;
 }
+.order_status_label{
+  float: left;
+  font-size: 24rpx;
+  padding:30rpx 0rpx;
+  width: 140rpx;
+}
 </style>
 
 <template>
@@ -18,23 +24,23 @@
       <ntlistbe label="转让人" wx:if="{{user.is_server||user.is_server_offline}}" :ntvalue.sync="ntvalue" ntkey="transferor"></ntlistbe>
     </ntmodeaa>
     <ntmodeab label="接单状态">
-      <ntlistbf label="已接单" :ntvalue.sync="ntvalue" ntkey="accept_date"></ntlistbf>
+      <view class="order_status_label">{{ ntvalue.user_status_name_label }}</view>
+      <ntlistbf label="" :ntvalue.sync="ntvalue" ntkey="accept_date"></ntlistbf>
     </ntmodeab>
-
     <ntmodeac label="客资状态">
-      <text slot="btn" class="common-lab-btn" wx:if="{{!customer.have_drop}}" @tap="dropCustomer">状态变更</text>
-      <text slot="btn" class="common-lab-btn" wx:if="{{customer.have_drop}}">变更审核中...</text>
+      <text slot="btn" class="common-lab-btn" wx:if="{{!customer.have_drop && !readonly}}" @tap="dropCustomer">状态变更</text>
+      <text slot="btn" class="common-lab-btn" wx:if="{{customer.have_drop && !readonly}}" @tap="dropCustomer">变更审核中...</text>
       <ntlistbg :ntvalue.sync="ntvalue" ntkey="status_name"></ntlistbg>
     </ntmodeac>
-
     <maintain label="跟进备注" :ntvalue.sync="ntvalue" ntkey="change_log">
-      <text class="common-lab-btn" @tap="goToLogEdit">编辑</text>
+      <text class="common-lab-btn" @tap="goToLogEdit" wx:if="{{ !readonly }}">编辑</text>
     </maintain>
-
     <ntmodead label="客资最新信息">
-      <text slot="btn" class="common-lab-btn" @tap="goToEditUserMsg" wx:if="{{user.is_server_offline||user.is_sale}}">编辑</text>
+      <text slot="btn" class="common-lab-btn" @tap="goToEditUserMsg" wx:if="{{ !readonly }}">编辑</text>
       <ntlistbh label="新人称呼" :ntvalue.sync="ntvalue" ntkey="user_name"></ntlistbh>
       <ntlistbi label="电话" :ntvalue.sync="ntvalue" ntkey="user_mobile"></ntlistbi>
+      <ntlistbo label="微信号" :ntvalue.sync="ntvalue" ntkey="wechat_id"></ntlistbo>
+      
       <ntlistbj label="婚期" :ntvalue.sync="ntvalue" ntkey="wedding_date"></ntlistbj>
       <ntlistbk label="结婚城市" :ntvalue.sync="ntvalue" ntkey="wedding_city_name"></ntlistbk>
       <ntlistbl label="酒店桌数" :ntvalue.sync="ntvalue" ntkey="hotel_tables_number"></ntlistbl>
@@ -60,6 +66,11 @@ export default class Index extends wepy.component {
     ntvalue: {
       type: Object,
       twoWay: true
+    },
+    readonly:{
+      type: Boolean,
+      default:false,
+      twoWay:true
     }
   }
   components = {
@@ -82,7 +93,7 @@ export default class Index extends wepy.component {
     ntlistbl: ntlist,
     ntlistbm: ntlist,
     ntlistbn: ntlist,
-
+    ntlistbo: ntlist,
     maintain:maintain
   };
   data = {
@@ -102,7 +113,7 @@ export default class Index extends wepy.component {
     },
     dropCustomer() {
       wepy.navigateTo({
-        url: '/pages/common/sale/chargeback?id=' + this.id
+        url: '/pages/common/sale/chargeback?id=' + this.id+'&drop_id='+this.ntvalue.drop_id
       });
     },
   };

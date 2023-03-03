@@ -41,10 +41,8 @@
       <view class="sale-tab-box">
         <view class="sale-tab-item {{tab_index==0?'sale-tab-item-check':''}}" @tap="toggleTab" data-index="0">客资信息
         </view>
-        <view class="sale-tab-item {{tab_index==1?'sale-tab-item-check':''}}" @tap="toggleTab" data-index="1"
-          wx:if="{{!is_search}}">销售跟进</view>
-        <view class="sale-tab-item {{tab_index==2?'sale-tab-item-check':''}}" @tap="toggleTab" data-index="2"
-          wx:if="{{!is_search}}">订单信息</view>
+        <view class="sale-tab-item {{tab_index==1?'sale-tab-item-check':''}}" @tap="toggleTab" data-index="1" >销售跟进</view>
+        <view class="sale-tab-item {{tab_index==2?'sale-tab-item-check':''}}" @tap="toggleTab" data-index="2" >订单信息</view>
       </view>
       <!--|客户信息-->
       <view wx:if="{{tab_index==0}}">
@@ -56,9 +54,7 @@
               <view class="common-lab common-lab-line">{{ customer.is_union == 1 ? '是' : '否' }}</view>
             </view>
           </view>
-          <view class="customer-order-btn" wx:if="{{customer.is_union==1}}" @tap="checkUnit">联合信息</view>
         </view>
-
         <view class="common-title" wx:if="{{department=='artcenter'}}">接单名单</view>
         <view class="common-title" wx:if="{{department=='marry'}}">接单销售</view>
         <view class="common-pannel">
@@ -68,8 +64,8 @@
           <block wx:for="{{revice_record}}" wx:key="">
             <view class="common-list">
               <view class="common-lab common-lab-rcode">{{ item.employee_name }}</view>
-              <view class="common-tip common-tip-rcode common-tip-{{item.receive_status}}">{{ item.receive_status_text
-              }}
+              <view class="common-tip common-tip-rcode common-tip-{{item.receive_status}}">
+              {{ item.receive_status_text }}
               </view>
             </view>
           </block>
@@ -78,7 +74,7 @@
       <!--客户信息|-->
       <!--|销售跟进-->
       <view wx:if="{{tab_index==1}}">
-        <customerfollow :ntvalue.sync="sale_info" :customer.sync="customer" :id.sync="id"></customerfollow>
+        <customerfollow :readonly.sync="is_search"  :ntvalue.sync="sale_info" :customer.sync="customer" :id.sync="id"></customerfollow>
         <view wx:if="{{department=='marry'}}">
           <view class="common-title" wx:if="{{user.is_bookteam==0}}">转让信息</view>
           <view class="common-pannel" wx:if="{{user.is_bookteam==0}}">
@@ -147,16 +143,10 @@
 
 <script>
 import wepy from 'wepy';
-import G from '../../../common/global';
 import rq from '../../../common/utils/request';
 import tool from '../../../common/utils/tool';
-import validate from '../../../common/utils/validate';
-import storage from '../../../common/utils/storage';
-import dat from '../../../common/utils/date';
-import file from '../../../common/utils/file';
 import css from '../../../components/css';
 import header from '../../../components/header';
-
 import customerinfo from '../../../components/common/customerinfo';
 import customerfollow from '../../../components/common/customerfollow';
 import maintain from '../../../components/common/maintain';
@@ -229,10 +219,11 @@ export default class Index extends wepy.page {
     rq.get('followUp', {
       200: result => {
         that.sale_info = result.data.data;
-        let purpose = [];
-        result.data.user_status.forEach(element => {
-          purpose.push(element.status_name);
-        });
+        that.sale_info['user_status_name_label']=result.data.user_status_name;
+        // let purpose = [];
+        // result.data.user_status.forEach(element => {
+        //   purpose.push(element.status_name);
+        // });
         that.$apply();
       }
     }, {
@@ -279,6 +270,7 @@ export default class Index extends wepy.page {
       })
     }
   }
+
   getTeamEmployee() {
     let that = this;
     rq.get('getTeamEmployee', {

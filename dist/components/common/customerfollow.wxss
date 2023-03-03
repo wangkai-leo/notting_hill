@@ -8,3 +8,9 @@
   color: #87a6e7;
   margin-left: 20rpx;
 }
+.order_status_label {
+  float: left;
+  font-size: 24rpx;
+  padding: 30rpx 0rpx;
+  width: 140rpx;
+}

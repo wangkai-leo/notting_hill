@@ -186,7 +186,7 @@
             let user_id = this.user_id = options.id;
             rq.get('getLoginerTeamEmployee', {
                 200: result => {
-                    that.userList = result.data.employee_list;
+                    that.userList = result.data.auth_team_employee;
                     that.userList.forEach(element => {
                         element.is_confirm = 0;
                     });

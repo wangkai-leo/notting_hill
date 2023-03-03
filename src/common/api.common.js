@@ -495,5 +495,13 @@ export default{
   getServerSuccessDataList:{
     descript: '客服统计成交率',
     url: 'getServerSuccessDataList'
-  }
+  },
+  rollbackDropCustomer:{
+    descript: '恢复客资',
+    url: 'rollbackDropCustomer'
+  },
+  getDataStatistics:{
+    descript: '销售情况统计',
+    url:'getDataStatistics'
+  },
 }

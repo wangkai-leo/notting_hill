@@ -1,0 +1,147 @@
+<style lang="less"></style>
+<template>
+  <view class="common-wrapper">
+    <view class="common-title">日期</view>
+    <view class="common-pannel">
+      <view class="common-list">
+        <view class="common-lab">开始时间</view>
+        <input disabled class="common-tip" value="{{filter_option.start_date}}" start="{{filter_option.start_date}}"
+          end="{{filter_option.end_date}}" placeholder="请选择" />
+        <picker class="picker-common" mode="date" @change="bindStartChange">
+          <view class="picker-common-v">
+            当前选择：{{ start_date }}
+          </view>
+        </picker>
+      </view>
+      <view class="common-list">
+        <view class="common-lab">结束时间</view>
+        <input disabled class="common-tip" value="{{filter_option.end_date}}" start="{{filter_option.start_date}}"
+          end="{{filter_option.end_date}}" placeholder="请选择" />
+        <picker class="picker-common" mode="date" @change="bindEndChange">
+          <view class="picker-common-v">
+            当前选择：{{ end_date }}
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class="common-title" wx:if="{{user.is_sale}}">城市</view>
+    <view class="common-pannel" wx:if="{{user.is_sale}}">
+      <view class="common-list">
+        <input class="common-tip" disabled value="{{filter_option.intention_city_name}}" type="text"
+          placeholder="请选择"></input>
+        <picker class="picker-common" range="{{intention_city_arr}}" @change="bindCityChange">
+          <view class="picker-common-v">
+            当前选择：
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class="common-title">客资编号</view>
+    <view class="common-pannel">
+      <view class="common-list">
+        <input class="common-tip" value="{{filter_option.order_id}}" type="text" @input="bindInputOrderId"
+          placeholder="请输入编号"></input>
+      </view>
+    </view>
+    <view class="common-title">客资渠道</view>
+    <view class="common-pannel">
+      <view class="common-list">
+        <input class="common-tip" disabled value="{{filter_option.channel_name}}" type="text" placeholder="请选择"></input>
+        <picker class="picker-common" range="{{channel_arr}}" @change="bindChannelChange">
+          <view class="picker-common-v">
+            当前选择：
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class="common-title">客资意向</view>
+    <view class="common-pannel">
+      <view class="common-list">
+        <input class="common-tip" disabled value="{{filter_option.intention_name}}" type="text" placeholder="请选择"></input>
+        <picker class="picker-common" range="{{intention_arr}}" @change="bindIntentionChange">
+          <view class="picker-common-v">
+            当前选择：
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class="common-title">销售</view>
+    <view class="common-pannel">
+      <view class="common-list">
+        <input class="common-tip" disabled value="{{filter_option.sales_name}}" type="text" placeholder="请选择"></input>
+        <picker class="picker-common" range="{{sales_arr}}" @change="bindSalesChange">
+          <view class="picker-common-v">
+            当前选择：
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class="customer-order-btn" @tap="localSearch">确认</view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+
+export default class Index extends wepy.component {
+  components = {
+  }
+  props = {
+    channel_arr: {
+      type: Array,
+      twoWay: true
+    },
+    intention_arr: {
+      type: Array,
+      twoWay: true
+    },
+    sales_arr: {
+      type: Array,
+      twoWay: true
+    },
+    intention_city_arr: {
+      type: Array,
+      twoWay: true
+    },
+    filter_option: {
+      type: Object,
+      twoWay: true
+    }
+  }
+  data = {
+  };
+  watch = {
+  }
+
+  methods = {
+    bindCityChange(e) {
+      this.filter_option.intention_city_name = this.intention_city_arr[e.detail.value];
+    },
+    bindStartChange(e) {
+      this.filter_option.start_date = e.detail.value;
+    },
+    bindEndChange(e) {
+      this.filter_option.end_date = e.detail.value;
+    },
+    bindInputOrderId(e) {
+      this.filter_option.order_id = e.detail.value;
+    },
+    bindSalesChange(e) {
+      this.filter_option.sales_name = this.sales_arr[e.detail.value];
+    },
+    bindIntentionChange(e) {
+      this.filter_option.intention_name = this.intention_arr[e.detail.value];
+    },
+    bindChannelChange(e) {
+      this.filter_option.channel_name = this.channel_arr[e.detail.value];
+    },
+    localSearch(e) {
+      this.$emit('search')
+    }
+  };
+  onLoad() {
+
+  }
+  onShow() {
+  }
+}
+</script>

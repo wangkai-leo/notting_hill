@@ -42,13 +42,11 @@
           <view class="cus-5-rows">{{ item.sale_name }}</view>
         </view>
       </block>
-      
     </view>
   </view>
 </template>
 <script>
 import wepy from 'wepy';
-import rq from '../../../common/utils/request';
 export default class Index extends wepy.component {
   props = {
     list: {

@@ -58,12 +58,12 @@ export default {
     descript: '调查表',
     url:'questionTable'
   },
-  getDataStatistics:{
-    descript: '销售情况统计',
-    url:'getDataStatistics'
-  },
   getServerDataStatistics:{
     descript: '获取统计客资列表',
     url:'getServerDataStatistics'
   },
+  unionSuccessOrder:{
+    descript: '联合成交',
+    url:'unionSuccessOrder'
+  }
 }

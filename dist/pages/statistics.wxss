@@ -1,4 +1,6 @@
-@import "./../components/common/server/statistics.wxss";
+@import "./../components/statisticssale.wxss";
+@import "./../components/statisticsserver.wxss";
+@import "./../components/topbar.wxss";
 @import "./../components/header.wxss";
 @import "./../components/css.wxss";
 .dep-lead {

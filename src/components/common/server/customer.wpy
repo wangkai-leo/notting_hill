@@ -53,7 +53,6 @@
           </view>
         </view>
         <view class="customer-order-btn" wx:if="{{customer.is_union==0}}" @tap="beginUnit">联合成交发起</view>
-        <view class="customer-order-btn" wx:if="{{customer.is_union==1}}" @tap="checkUnit">联合信息</view>
       </view>
       <view class="common-title">接单销售</view>
       <view class="common-pannel">
@@ -74,7 +73,8 @@
     <view wx:if="{{tab_index==1}}">
       <customerfollow :ntvalue.sync="sale_info" :customer.sync="customer" :id.sync="id"></customerfollow>
       <view wx:if="{{user.is_server_offline}}">
-        <ntpickera label="接单团队" :ntrange.sync="teams" :checked_index.sync="team_index" ntkey="team_name" @change.user="handleTeamChange"></ntpickera>
+        <ntpickera label="接单团队" :ntrange.sync="teams" :checked_index.sync="team_index" ntkey="team_name"
+          @change.user="handleTeamChange"></ntpickera>
         <ntpickerb label="接单人" :ntrange.sync="team_members" :checked_index.sync="employee_number_index"
           :readonly.sync="{{ team_members.length <= 0 }}" ntkey="employee_name"></ntpickerb>
         <view class="customer-create-btn" @tap="submit">确认并分配</view>
@@ -148,8 +148,8 @@ export default class Index extends wepy.component {
         url: '/pages/common/sale/chargeback?id=' + this.id
       });
     },
-    handleTeamChange(){
-      this.employee_number_index=0;
+    handleTeamChange() {
+      this.employee_number_index = 0;
       this.getDistributionTeams();
     },
     submit() {
@@ -234,9 +234,9 @@ export default class Index extends wepy.component {
         that.customer = result.data.data;
         that.customer.comm_proof = that.customer.comm_proof.split(',');
         that.$apply();
-        if (that.department == 'artcenter') {
+        // if (that.department == 'artcenter') {
           that.getDistributionTeams();
-        }
+        // }
       }
     }, {
       user_id: that.id

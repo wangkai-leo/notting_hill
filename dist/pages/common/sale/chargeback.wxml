@@ -1,6 +1,6 @@
 
-    <view>
-        
+  <view>
+    
     <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
         <view class="leo-header-layout">
             <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
@@ -16,86 +16,474 @@
         </view>
     </view>
 
-        <view class="common-top">
-            <view class="common-content">
-            </view>
-        </view>
-        <view class="common-wrapper">
-            <view class="common-title">客户来源</view>
-            <view class="common-pannel">
-                <view class="common-list">
-                    <view class="common-lab">{{customer.channel_name}}</view>
-                </view>
-            </view>
-            <view class="common-title">客户意向</view>
-            <view class="common-pannel">
-                <view class="common-list">
-                    <view class="common-lab">{{customer.intention_name}}</view>
-                </view>
-            </view>
-            <view class="common-title">婚礼信息</view>
-            <view class="common-pannel">
-                <view class="common-list">
-                    <view class="common-lab">意向城市</view>
-                    <view class="common-tip">{{customer.intention_city_name}}</view>
-                </view>
-                <view class="common-list">
-                    <view class="common-lab">结婚城市</view>
-                    <view class="common-tip">{{customer.wedding_city_name}}</view>
-                </view>
-                <view class="common-list">
-                    <view class="common-lab">婚礼酒店</view>
-                    <view class="common-tip">{{customer.wedding_hotel}}</view>
-                </view>
-                <view class="common-list">
-                    <view class="common-lab">婚礼时间</view>
-                    <view class="common-tip">{{customer.wedding_date}}</view>
-                </view>
-            </view>
-            <view class="common-title">客户信息</view>
-            <view class="common-pannel">
-                <view class="common-list">
-                    <view class="common-lab">客户姓名</view>
-                    <view class="common-tip">{{customer.user_name}}</view>
-                </view>
-                <view class="common-list">
-                    <view class="common-lab">手机号</view>
-                    <view class="common-tip">{{customer.user_mobile}}</view>
-                </view>
-                <view class="common-list">
-                    <view class="common-lab">微信号</view>
-                    <view class="common-tip">{{customer.wechat_id}}</view>
-                </view>
-            </view>
-            <view class="common-title">变更凭证 {{show_img_arr.length}}/9</view>
-            <view class="common-pannel">
-                <view class="common-pic-box">
-                    <block  wx:for="{{show_img_arr}}" wx:key="">
-                        <image class="common-add-pic" src="{{item}}" mode="aspectFill" lazy-load="false">
-                        </image>
-                    </block>
-                    <image  wx:if="{{show_img_arr.length<9}}" bindtap="uploadFile" class="common-add-pic" src="../../../images/add-pic.png" mode="aspectFill" lazy-load="false">
-                    </image>
-                </view>
-            </view>
-            <view class="common-title">变更备注</view>
-            <view class="common-pannel">
-                <textarea class="common-area" bindinput="inputLog" value="" placeholder="请输入备注信息"/>
-            </view>
-            <view class="common-title" wx:if="{{customer.user_status!=1}}">状态变更</view>
-            <view class="common-pannel" wx:if="{{customer.user_status!=1}}">
-                <view class="common-list">
-                    <view class="common-lab">{{status_arr[status_arr_index]}}</view>
-                    <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
-                    </image>
-                    <picker class="picker-common" range="{{status_arr}}" bindchange="bindStatusChange">
-                        <view class="picker-common-v">
-                            当前选择：{{status_arr[status_arr_index]}}
-                        </view>
-                    </picker>
-                </view>
-            </view>
-            <view class="customer-create-btn" wx:if="{{customer.user_status!=1}}" bindtap="submit">提交申请</view>
-            <view class="customer-create-btn" wx:if="{{customer.user_status==1}}" bindtap="recover">恢复客资</view>
-        </view>
+    
+    <view class="common-top">
+      <view class="common-content">
+      </view>
     </view>
+
+    <view class="common-wrapper">
+      
+<view>
+  <view class="common-title">
+    {{$ntitemIchannel$label}}
+    
+  </view>
+    <view class="common-pannel">
+      <!--textarea-->
+      <textarea  wx:if="{{$ntitemIchannel$nttype=='area' && $ntitemIchannel$readonly}}" disabled class="common-area" value="{{$ntitemIchannel$ntvalue[$ntitemIchannel$ntkey]}}"/>
+      <textarea  wx:if="{{$ntitemIchannel$nttype=='area' && !$ntitemIchannel$readonly}}" class="common-area" bindinput="$ntitemIchannel$bindInput" placeholder="{{$ntitemIchannel$placeholder}}" value="{{$ntitemIchannel$ntvalue[$ntitemIchannel$ntkey]}}"/>
+      <!--textarea-->
+
+      <!--input-->
+      <view class="common-list" wx:if="{{$ntitemIchannel$nttype=='text'}}">
+        <view class="common-nt-full">{{$ntitemIchannel$ntvalue[$ntitemIchannel$ntkey]}}</view>
+      </view>
+      <!--input-->
+    </view>
+</view>
+
+      
+<view>
+  <view class="common-title">
+    {{$ntitemIintend$label}}
+    
+  </view>
+    <view class="common-pannel">
+      <!--textarea-->
+      <textarea  wx:if="{{$ntitemIintend$nttype=='area' && $ntitemIintend$readonly}}" disabled class="common-area" value="{{$ntitemIintend$ntvalue[$ntitemIintend$ntkey]}}"/>
+      <textarea  wx:if="{{$ntitemIintend$nttype=='area' && !$ntitemIintend$readonly}}" class="common-area" bindinput="$ntitemIintend$bindInput" placeholder="{{$ntitemIintend$placeholder}}" value="{{$ntitemIintend$ntvalue[$ntitemIintend$ntkey]}}"/>
+      <!--textarea-->
+
+      <!--input-->
+      <view class="common-list" wx:if="{{$ntitemIintend$nttype=='text'}}">
+        <view class="common-nt-full">{{$ntitemIintend$ntvalue[$ntitemIintend$ntkey]}}</view>
+      </view>
+      <!--input-->
+    </view>
+</view>
+
+      
+<view>
+  <view class="common-title"  wx:if="{{$ntmodualweidingmsg$label}}">{{$ntmodualweidingmsg$label}}
+    
+  </view>
+    <view class="common-pannel">
+      
+        
+  <view class="common-list">
+    <view class="common-lab">{{ $ntlista$label }}
+      
+    </view>
+
+    <!--password-->
+    <input class="common-tip" type="password"  wx:if="{{$ntlista$nttype=='password'&&$ntlista$readonly}}" value="{{$ntlista$ntvalue[$ntlista$ntkey]}}" placeholder="{{$ntlista$placeholder}}" disabled/>
+    <input class="common-tip" type="password"  wx:if="{{$ntlista$nttype=='password'&&!$ntlista$readonly}}" value="{{$ntlista$ntvalue[$ntlista$ntkey]}}" placeholder="{{$ntlista$placeholder}}" bindblur="$ntlista$bindInput"/>
+    <!--password-->
+
+    <!--input-->
+    <view class="common-tip" wx:if="{{$ntlista$nttype=='text'&&$ntlista$readonly}}">
+      {{ $ntlista$ntvalue[$ntlista$ntkey] }}
+      
+    </view>
+    <input class="common-tip" wx:if="{{$ntlista$nttype=='text'&&!$ntlista$readonly}}" value="{{$ntlista$ntvalue[$ntlista$ntkey]}}" placeholder="{{$ntlista$placeholder}}" bindblur="$ntlista$bindInput" type="text"/>
+    <!--input-->
+
+    <!-- picker-->
+    <block wx:if="{{$ntlista$nttype=='picker'}}">
+      <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+      </image>
+
+      <view class="common-tip" wx:if="{{$ntlista$pickertype=='common'}}">{{ $ntlista$ntvalue[$ntlista$ntindex][$ntlista$ntkey] }}</view>
+      <picker wx:if="{{$ntlista$pickertype=='common'}}" class="picker-common" range="{{$ntlista$ntvalue}}" range-key="{{$ntlista$ntkey}}" bindchange="$ntlista$bindChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntlista$ntvalue[$ntlista$ntkey] }}
+        </view>
+      </picker>
+
+      <view class="common-tip" wx:if="{{$ntlista$pickertype=='date'}}">{{ $ntlista$ntvalue[$ntlista$ntkey] }}</view>
+      <picker class="picker-common" wx:if="{{$ntlista$pickertype=='date'}}" mode="date" value="{{$ntlista$ntvalue[$ntlista$ntkey]}}" bindchange="$ntlista$bindDateChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntlista$ntvalue[$ntlista$ntkey] }}
+        </view>
+      </picker>
+
+      <view class="common-tip" wx:if="{{$ntlista$pickertype=='region'}}">{{ $ntlista$ntvalue[$ntlista$ntrangeprkey] }} {{ $ntlista$ntvalue[$ntlista$ntrangecikey] }}
+        {{ $ntlista$ntvalue[$ntlista$ntrangearkey] }}</view>
+      <picker class="picker-common" wx:if="{{$ntlista$pickertype=='region'}}" mode="region" value="" bindchange="$ntlista$bindRegionChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntlista$ntvalue[$ntlista$ntrangeprkey] }} {{ $ntlista$ntvalue[$ntlista$ntrangecikey] }} {{ $ntlista$ntvalue[$ntlista$ntrangearkey] }}
+        </view>
+      </picker>
+    </block>
+    <!-- picker-->
+  </view>
+
+        
+  <view class="common-list">
+    <view class="common-lab">{{ $ntlistb$label }}
+      
+    </view>
+
+    <!--password-->
+    <input class="common-tip" type="password"  wx:if="{{$ntlistb$nttype=='password'&&$ntlistb$readonly}}" value="{{$ntlistb$ntvalue[$ntlistb$ntkey]}}" placeholder="{{$ntlistb$placeholder}}" disabled/>
+    <input class="common-tip" type="password"  wx:if="{{$ntlistb$nttype=='password'&&!$ntlistb$readonly}}" value="{{$ntlistb$ntvalue[$ntlistb$ntkey]}}" placeholder="{{$ntlistb$placeholder}}" bindblur="$ntlistb$bindInput"/>
+    <!--password-->
+
+    <!--input-->
+    <view class="common-tip" wx:if="{{$ntlistb$nttype=='text'&&$ntlistb$readonly}}">
+      {{ $ntlistb$ntvalue[$ntlistb$ntkey] }}
+      
+    </view>
+    <input class="common-tip" wx:if="{{$ntlistb$nttype=='text'&&!$ntlistb$readonly}}" value="{{$ntlistb$ntvalue[$ntlistb$ntkey]}}" placeholder="{{$ntlistb$placeholder}}" bindblur="$ntlistb$bindInput" type="text"/>
+    <!--input-->
+
+    <!-- picker-->
+    <block wx:if="{{$ntlistb$nttype=='picker'}}">
+      <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+      </image>
+
+      <view class="common-tip" wx:if="{{$ntlistb$pickertype=='common'}}">{{ $ntlistb$ntvalue[$ntlistb$ntindex][$ntlistb$ntkey] }}</view>
+      <picker wx:if="{{$ntlistb$pickertype=='common'}}" class="picker-common" range="{{$ntlistb$ntvalue}}" range-key="{{$ntlistb$ntkey}}" bindchange="$ntlistb$bindChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntlistb$ntvalue[$ntlistb$ntkey] }}
+        </view>
+      </picker>
+
+      <view class="common-tip" wx:if="{{$ntlistb$pickertype=='date'}}">{{ $ntlistb$ntvalue[$ntlistb$ntkey] }}</view>
+      <picker class="picker-common" wx:if="{{$ntlistb$pickertype=='date'}}" mode="date" value="{{$ntlistb$ntvalue[$ntlistb$ntkey]}}" bindchange="$ntlistb$bindDateChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntlistb$ntvalue[$ntlistb$ntkey] }}
+        </view>
+      </picker>
+
+      <view class="common-tip" wx:if="{{$ntlistb$pickertype=='region'}}">{{ $ntlistb$ntvalue[$ntlistb$ntrangeprkey] }} {{ $ntlistb$ntvalue[$ntlistb$ntrangecikey] }}
+        {{ $ntlistb$ntvalue[$ntlistb$ntrangearkey] }}</view>
+      <picker class="picker-common" wx:if="{{$ntlistb$pickertype=='region'}}" mode="region" value="" bindchange="$ntlistb$bindRegionChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntlistb$ntvalue[$ntlistb$ntrangeprkey] }} {{ $ntlistb$ntvalue[$ntlistb$ntrangecikey] }} {{ $ntlistb$ntvalue[$ntlistb$ntrangearkey] }}
+        </view>
+      </picker>
+    </block>
+    <!-- picker-->
+  </view>
+
+        
+  <view class="common-list">
+    <view class="common-lab">{{ $ntlistc$label }}
+      
+    </view>
+
+    <!--password-->
+    <input class="common-tip" type="password"  wx:if="{{$ntlistc$nttype=='password'&&$ntlistc$readonly}}" value="{{$ntlistc$ntvalue[$ntlistc$ntkey]}}" placeholder="{{$ntlistc$placeholder}}" disabled/>
+    <input class="common-tip" type="password"  wx:if="{{$ntlistc$nttype=='password'&&!$ntlistc$readonly}}" value="{{$ntlistc$ntvalue[$ntlistc$ntkey]}}" placeholder="{{$ntlistc$placeholder}}" bindblur="$ntlistc$bindInput"/>
+    <!--password-->
+
+    <!--input-->
+    <view class="common-tip" wx:if="{{$ntlistc$nttype=='text'&&$ntlistc$readonly}}">
+      {{ $ntlistc$ntvalue[$ntlistc$ntkey] }}
+      
+    </view>
+    <input class="common-tip" wx:if="{{$ntlistc$nttype=='text'&&!$ntlistc$readonly}}" value="{{$ntlistc$ntvalue[$ntlistc$ntkey]}}" placeholder="{{$ntlistc$placeholder}}" bindblur="$ntlistc$bindInput" type="text"/>
+    <!--input-->
+
+    <!-- picker-->
+    <block wx:if="{{$ntlistc$nttype=='picker'}}">
+      <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+      </image>
+
+      <view class="common-tip" wx:if="{{$ntlistc$pickertype=='common'}}">{{ $ntlistc$ntvalue[$ntlistc$ntindex][$ntlistc$ntkey] }}</view>
+      <picker wx:if="{{$ntlistc$pickertype=='common'}}" class="picker-common" range="{{$ntlistc$ntvalue}}" range-key="{{$ntlistc$ntkey}}" bindchange="$ntlistc$bindChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntlistc$ntvalue[$ntlistc$ntkey] }}
+        </view>
+      </picker>
+
+      <view class="common-tip" wx:if="{{$ntlistc$pickertype=='date'}}">{{ $ntlistc$ntvalue[$ntlistc$ntkey] }}</view>
+      <picker class="picker-common" wx:if="{{$ntlistc$pickertype=='date'}}" mode="date" value="{{$ntlistc$ntvalue[$ntlistc$ntkey]}}" bindchange="$ntlistc$bindDateChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntlistc$ntvalue[$ntlistc$ntkey] }}
+        </view>
+      </picker>
+
+      <view class="common-tip" wx:if="{{$ntlistc$pickertype=='region'}}">{{ $ntlistc$ntvalue[$ntlistc$ntrangeprkey] }} {{ $ntlistc$ntvalue[$ntlistc$ntrangecikey] }}
+        {{ $ntlistc$ntvalue[$ntlistc$ntrangearkey] }}</view>
+      <picker class="picker-common" wx:if="{{$ntlistc$pickertype=='region'}}" mode="region" value="" bindchange="$ntlistc$bindRegionChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntlistc$ntvalue[$ntlistc$ntrangeprkey] }} {{ $ntlistc$ntvalue[$ntlistc$ntrangecikey] }} {{ $ntlistc$ntvalue[$ntlistc$ntrangearkey] }}
+        </view>
+      </picker>
+    </block>
+    <!-- picker-->
+  </view>
+
+        
+  <view class="common-list">
+    <view class="common-lab">{{ $ntlistd$label }}
+      
+    </view>
+
+    <!--password-->
+    <input class="common-tip" type="password"  wx:if="{{$ntlistd$nttype=='password'&&$ntlistd$readonly}}" value="{{$ntlistd$ntvalue[$ntlistd$ntkey]}}" placeholder="{{$ntlistd$placeholder}}" disabled/>
+    <input class="common-tip" type="password"  wx:if="{{$ntlistd$nttype=='password'&&!$ntlistd$readonly}}" value="{{$ntlistd$ntvalue[$ntlistd$ntkey]}}" placeholder="{{$ntlistd$placeholder}}" bindblur="$ntlistd$bindInput"/>
+    <!--password-->
+
+    <!--input-->
+    <view class="common-tip" wx:if="{{$ntlistd$nttype=='text'&&$ntlistd$readonly}}">
+      {{ $ntlistd$ntvalue[$ntlistd$ntkey] }}
+      
+    </view>
+    <input class="common-tip" wx:if="{{$ntlistd$nttype=='text'&&!$ntlistd$readonly}}" value="{{$ntlistd$ntvalue[$ntlistd$ntkey]}}" placeholder="{{$ntlistd$placeholder}}" bindblur="$ntlistd$bindInput" type="text"/>
+    <!--input-->
+
+    <!-- picker-->
+    <block wx:if="{{$ntlistd$nttype=='picker'}}">
+      <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+      </image>
+
+      <view class="common-tip" wx:if="{{$ntlistd$pickertype=='common'}}">{{ $ntlistd$ntvalue[$ntlistd$ntindex][$ntlistd$ntkey] }}</view>
+      <picker wx:if="{{$ntlistd$pickertype=='common'}}" class="picker-common" range="{{$ntlistd$ntvalue}}" range-key="{{$ntlistd$ntkey}}" bindchange="$ntlistd$bindChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntlistd$ntvalue[$ntlistd$ntkey] }}
+        </view>
+      </picker>
+
+      <view class="common-tip" wx:if="{{$ntlistd$pickertype=='date'}}">{{ $ntlistd$ntvalue[$ntlistd$ntkey] }}</view>
+      <picker class="picker-common" wx:if="{{$ntlistd$pickertype=='date'}}" mode="date" value="{{$ntlistd$ntvalue[$ntlistd$ntkey]}}" bindchange="$ntlistd$bindDateChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntlistd$ntvalue[$ntlistd$ntkey] }}
+        </view>
+      </picker>
+
+      <view class="common-tip" wx:if="{{$ntlistd$pickertype=='region'}}">{{ $ntlistd$ntvalue[$ntlistd$ntrangeprkey] }} {{ $ntlistd$ntvalue[$ntlistd$ntrangecikey] }}
+        {{ $ntlistd$ntvalue[$ntlistd$ntrangearkey] }}</view>
+      <picker class="picker-common" wx:if="{{$ntlistd$pickertype=='region'}}" mode="region" value="" bindchange="$ntlistd$bindRegionChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntlistd$ntvalue[$ntlistd$ntrangeprkey] }} {{ $ntlistd$ntvalue[$ntlistd$ntrangecikey] }} {{ $ntlistd$ntvalue[$ntlistd$ntrangearkey] }}
+        </view>
+      </picker>
+    </block>
+    <!-- picker-->
+  </view>
+
+      
+    </view>
+</view>
+
+      
+<view>
+  <view class="common-title"  wx:if="{{$ntmodualweidingmsg$label}}">{{$ntmodualweidingmsg$label}}
+    
+  </view>
+    <view class="common-pannel">
+      
+        
+  <view class="common-list">
+    <view class="common-lab">{{ $ntliste$label }}
+      
+    </view>
+
+    <!--password-->
+    <input class="common-tip" type="password"  wx:if="{{$ntliste$nttype=='password'&&$ntliste$readonly}}" value="{{$ntliste$ntvalue[$ntliste$ntkey]}}" placeholder="{{$ntliste$placeholder}}" disabled/>
+    <input class="common-tip" type="password"  wx:if="{{$ntliste$nttype=='password'&&!$ntliste$readonly}}" value="{{$ntliste$ntvalue[$ntliste$ntkey]}}" placeholder="{{$ntliste$placeholder}}" bindblur="$ntliste$bindInput"/>
+    <!--password-->
+
+    <!--input-->
+    <view class="common-tip" wx:if="{{$ntliste$nttype=='text'&&$ntliste$readonly}}">
+      {{ $ntliste$ntvalue[$ntliste$ntkey] }}
+      
+    </view>
+    <input class="common-tip" wx:if="{{$ntliste$nttype=='text'&&!$ntliste$readonly}}" value="{{$ntliste$ntvalue[$ntliste$ntkey]}}" placeholder="{{$ntliste$placeholder}}" bindblur="$ntliste$bindInput" type="text"/>
+    <!--input-->
+
+    <!-- picker-->
+    <block wx:if="{{$ntliste$nttype=='picker'}}">
+      <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+      </image>
+
+      <view class="common-tip" wx:if="{{$ntliste$pickertype=='common'}}">{{ $ntliste$ntvalue[$ntliste$ntindex][$ntliste$ntkey] }}</view>
+      <picker wx:if="{{$ntliste$pickertype=='common'}}" class="picker-common" range="{{$ntliste$ntvalue}}" range-key="{{$ntliste$ntkey}}" bindchange="$ntliste$bindChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntliste$ntvalue[$ntliste$ntkey] }}
+        </view>
+      </picker>
+
+      <view class="common-tip" wx:if="{{$ntliste$pickertype=='date'}}">{{ $ntliste$ntvalue[$ntliste$ntkey] }}</view>
+      <picker class="picker-common" wx:if="{{$ntliste$pickertype=='date'}}" mode="date" value="{{$ntliste$ntvalue[$ntliste$ntkey]}}" bindchange="$ntliste$bindDateChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntliste$ntvalue[$ntliste$ntkey] }}
+        </view>
+      </picker>
+
+      <view class="common-tip" wx:if="{{$ntliste$pickertype=='region'}}">{{ $ntliste$ntvalue[$ntliste$ntrangeprkey] }} {{ $ntliste$ntvalue[$ntliste$ntrangecikey] }}
+        {{ $ntliste$ntvalue[$ntliste$ntrangearkey] }}</view>
+      <picker class="picker-common" wx:if="{{$ntliste$pickertype=='region'}}" mode="region" value="" bindchange="$ntliste$bindRegionChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntliste$ntvalue[$ntliste$ntrangeprkey] }} {{ $ntliste$ntvalue[$ntliste$ntrangecikey] }} {{ $ntliste$ntvalue[$ntliste$ntrangearkey] }}
+        </view>
+      </picker>
+    </block>
+    <!-- picker-->
+  </view>
+
+        
+  <view class="common-list">
+    <view class="common-lab">{{ $ntlistf$label }}
+      
+    </view>
+
+    <!--password-->
+    <input class="common-tip" type="password"  wx:if="{{$ntlistf$nttype=='password'&&$ntlistf$readonly}}" value="{{$ntlistf$ntvalue[$ntlistf$ntkey]}}" placeholder="{{$ntlistf$placeholder}}" disabled/>
+    <input class="common-tip" type="password"  wx:if="{{$ntlistf$nttype=='password'&&!$ntlistf$readonly}}" value="{{$ntlistf$ntvalue[$ntlistf$ntkey]}}" placeholder="{{$ntlistf$placeholder}}" bindblur="$ntlistf$bindInput"/>
+    <!--password-->
+
+    <!--input-->
+    <view class="common-tip" wx:if="{{$ntlistf$nttype=='text'&&$ntlistf$readonly}}">
+      {{ $ntlistf$ntvalue[$ntlistf$ntkey] }}
+      
+    </view>
+    <input class="common-tip" wx:if="{{$ntlistf$nttype=='text'&&!$ntlistf$readonly}}" value="{{$ntlistf$ntvalue[$ntlistf$ntkey]}}" placeholder="{{$ntlistf$placeholder}}" bindblur="$ntlistf$bindInput" type="text"/>
+    <!--input-->
+
+    <!-- picker-->
+    <block wx:if="{{$ntlistf$nttype=='picker'}}">
+      <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+      </image>
+
+      <view class="common-tip" wx:if="{{$ntlistf$pickertype=='common'}}">{{ $ntlistf$ntvalue[$ntlistf$ntindex][$ntlistf$ntkey] }}</view>
+      <picker wx:if="{{$ntlistf$pickertype=='common'}}" class="picker-common" range="{{$ntlistf$ntvalue}}" range-key="{{$ntlistf$ntkey}}" bindchange="$ntlistf$bindChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntlistf$ntvalue[$ntlistf$ntkey] }}
+        </view>
+      </picker>
+
+      <view class="common-tip" wx:if="{{$ntlistf$pickertype=='date'}}">{{ $ntlistf$ntvalue[$ntlistf$ntkey] }}</view>
+      <picker class="picker-common" wx:if="{{$ntlistf$pickertype=='date'}}" mode="date" value="{{$ntlistf$ntvalue[$ntlistf$ntkey]}}" bindchange="$ntlistf$bindDateChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntlistf$ntvalue[$ntlistf$ntkey] }}
+        </view>
+      </picker>
+
+      <view class="common-tip" wx:if="{{$ntlistf$pickertype=='region'}}">{{ $ntlistf$ntvalue[$ntlistf$ntrangeprkey] }} {{ $ntlistf$ntvalue[$ntlistf$ntrangecikey] }}
+        {{ $ntlistf$ntvalue[$ntlistf$ntrangearkey] }}</view>
+      <picker class="picker-common" wx:if="{{$ntlistf$pickertype=='region'}}" mode="region" value="" bindchange="$ntlistf$bindRegionChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntlistf$ntvalue[$ntlistf$ntrangeprkey] }} {{ $ntlistf$ntvalue[$ntlistf$ntrangecikey] }} {{ $ntlistf$ntvalue[$ntlistf$ntrangearkey] }}
+        </view>
+      </picker>
+    </block>
+    <!-- picker-->
+  </view>
+
+        
+  <view class="common-list">
+    <view class="common-lab">{{ $ntlistg$label }}
+      
+    </view>
+
+    <!--password-->
+    <input class="common-tip" type="password"  wx:if="{{$ntlistg$nttype=='password'&&$ntlistg$readonly}}" value="{{$ntlistg$ntvalue[$ntlistg$ntkey]}}" placeholder="{{$ntlistg$placeholder}}" disabled/>
+    <input class="common-tip" type="password"  wx:if="{{$ntlistg$nttype=='password'&&!$ntlistg$readonly}}" value="{{$ntlistg$ntvalue[$ntlistg$ntkey]}}" placeholder="{{$ntlistg$placeholder}}" bindblur="$ntlistg$bindInput"/>
+    <!--password-->
+
+    <!--input-->
+    <view class="common-tip" wx:if="{{$ntlistg$nttype=='text'&&$ntlistg$readonly}}">
+      {{ $ntlistg$ntvalue[$ntlistg$ntkey] }}
+      
+    </view>
+    <input class="common-tip" wx:if="{{$ntlistg$nttype=='text'&&!$ntlistg$readonly}}" value="{{$ntlistg$ntvalue[$ntlistg$ntkey]}}" placeholder="{{$ntlistg$placeholder}}" bindblur="$ntlistg$bindInput" type="text"/>
+    <!--input-->
+
+    <!-- picker-->
+    <block wx:if="{{$ntlistg$nttype=='picker'}}">
+      <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+      </image>
+
+      <view class="common-tip" wx:if="{{$ntlistg$pickertype=='common'}}">{{ $ntlistg$ntvalue[$ntlistg$ntindex][$ntlistg$ntkey] }}</view>
+      <picker wx:if="{{$ntlistg$pickertype=='common'}}" class="picker-common" range="{{$ntlistg$ntvalue}}" range-key="{{$ntlistg$ntkey}}" bindchange="$ntlistg$bindChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntlistg$ntvalue[$ntlistg$ntkey] }}
+        </view>
+      </picker>
+
+      <view class="common-tip" wx:if="{{$ntlistg$pickertype=='date'}}">{{ $ntlistg$ntvalue[$ntlistg$ntkey] }}</view>
+      <picker class="picker-common" wx:if="{{$ntlistg$pickertype=='date'}}" mode="date" value="{{$ntlistg$ntvalue[$ntlistg$ntkey]}}" bindchange="$ntlistg$bindDateChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntlistg$ntvalue[$ntlistg$ntkey] }}
+        </view>
+      </picker>
+
+      <view class="common-tip" wx:if="{{$ntlistg$pickertype=='region'}}">{{ $ntlistg$ntvalue[$ntlistg$ntrangeprkey] }} {{ $ntlistg$ntvalue[$ntlistg$ntrangecikey] }}
+        {{ $ntlistg$ntvalue[$ntlistg$ntrangearkey] }}</view>
+      <picker class="picker-common" wx:if="{{$ntlistg$pickertype=='region'}}" mode="region" value="" bindchange="$ntlistg$bindRegionChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntlistg$ntvalue[$ntlistg$ntrangeprkey] }} {{ $ntlistg$ntvalue[$ntlistg$ntrangecikey] }} {{ $ntlistg$ntvalue[$ntlistg$ntrangearkey] }}
+        </view>
+      </picker>
+    </block>
+    <!-- picker-->
+  </view>
+
+      
+    </view>
+</view>
+
+      
+  <view class="common-title">{{ $upload$label }} <text  wx:if="{{!$upload$readonly}}">{{ $upload$save_obj[$upload$ntkey].length }}/{{ $upload$size }}</text></view>
+  <view class="common-pannel">
+    <view class="common-pic-box">
+      <view class="upload-none"  wx:if="{{$upload$readonly&&(!$upload$save_obj||$upload$save_obj[$upload$ntkey].length==0)}}">暂无</view>
+      <block  wx:for="{{$upload$save_obj[$upload$ntkey]}}" wx:key="index">
+        <view class="common-add-pic">
+          <image bindtap="$upload$viewCheck" data-index="{{index}}" class="common-add-pic-img" src="{{item}}" mode="aspectFill" lazy-load="false">
+          </image>
+          <image wx:if="{{!$upload$readonly}}" bindtap="$upload$deleteImg" data-index="{{index}}" class="capi-del" src="../../../images/delete-icon.png" mode="scaleToFill" lazy-load="false">
+          </image>
+        </view>
+      </block>
+      <image wx:if="{{!$upload$readonly&&$upload$save_obj[$upload$ntkey].length<$upload$size}}" bindtap="$upload$uploadFile" class="common-add-pic" src="../../../images/add-pic.png" mode="aspectFill" lazy-load="false">
+      </image>
+    </view>
+  </view>
+
+
+      <view  wx:if="{{!readonly}}">
+        
+<view>
+  <view class="common-title">
+    {{$ntitemIremark$label}}
+    
+  </view>
+    <view class="common-pannel">
+      <!--textarea-->
+      <textarea  wx:if="{{$ntitemIremark$nttype=='area' && $ntitemIremark$readonly}}" disabled class="common-area" value="{{$ntitemIremark$ntvalue[$ntitemIremark$ntkey]}}"/>
+      <textarea  wx:if="{{$ntitemIremark$nttype=='area' && !$ntitemIremark$readonly}}" class="common-area" bindinput="$ntitemIremark$bindInput" placeholder="{{$ntitemIremark$placeholder}}" value="{{$ntitemIremark$ntvalue[$ntitemIremark$ntkey]}}"/>
+      <!--textarea-->
+
+      <!--input-->
+      <view class="common-list" wx:if="{{$ntitemIremark$nttype=='text'}}">
+        <view class="common-nt-full">{{$ntitemIremark$ntvalue[$ntitemIremark$ntkey]}}</view>
+      </view>
+      <!--input-->
+    </view>
+</view>
+
+        
+  <view class="common-title">{{ $ntpickera$label }}</view>
+  <view class="common-pannel">
+    <view class="common-list">
+      <view class="common-nt-full">{{ $ntpickera$checked_name?$ntpickera$checked_name:$ntpickera$ntrange[$ntpickera$checked_index][$ntpickera$ntkey] }}</view>
+      <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+      </image>
+      <picker  wx:if="{{!$ntpickera$readonly}}" class="picker-common" range="{{$ntpickera$ntrange}}" range-key="{{$ntpickera$ntkey}}" bindchange="$ntpickera$bindChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntpickera$ntrange[$ntpickera$checked_index] }}
+        </view>
+      </picker>
+    </view>
+  </view>
+
+        <view class="customer-create-btn" wx:if="{{customer.user_status!=1}}" bindtap="submit">提交申请</view>
+      </view>
+    </view>
+  </view>

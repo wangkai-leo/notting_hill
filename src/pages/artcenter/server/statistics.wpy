@@ -6,7 +6,7 @@
       </view>
     </view>
     <view class="common-wrapper">
-      <statistics></statistics>
+      <statisticsserver></statisticsserver>
     </view>
   </view>
 </template>
@@ -16,13 +16,13 @@ import wepy from 'wepy';
 import rq from '../../../common/utils/request';
 import css from '../../../components/css';
 import header from '../../../components/header';
-import statistics from '../../../components/common/server/statistics';
+import statisticsserver from '../../../components/statisticsserver';
 
 export default class Index extends wepy.page {
   components = {
     css: css, //样式表
     header: header,
-    statistics: statistics
+    statisticsserver: statisticsserver
   };
   data = {
     isopacity: true,

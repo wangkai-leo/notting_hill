@@ -51,26 +51,26 @@
 <script>
 import wepy from 'wepy';
 import 'wepy-async-function';
-import api from './common/api';
-import G from './common/global';
 import mini from './common/common';
 import C from './common/config';
 import media from './common/utils/media';
 import storage from './common/utils/storage';
-import rq from './common/utils/request';
 export default class extends wepy.app {
   config = {
-    pages: 'is_dev'?[
+    pages:[
       //////////////////////////////////////////////////公共
       'pages/index',
       'pages/login',
       'pages/profile',
-      'pages/statistics', //只有婚庆才有
-      'pages/dashbaord',
+      'pages/statistics',
+      'pages/approval',
 
       'pages/common/changpw',
-      'pages/common/customerlist',
-      'pages/common/statisticscustomer', //统计数据客资
+      // 'pages/common/customerlist',
+      'pages/common/statisticscustomerlistserver', //统计数据-客服客资列表
+      'pages/common/statisticscustomerlistsale', //统计数据-销售客资列表
+      'pages/common/searchcustomerlistsale', //统计数据-销售客资列表
+      
       //客服
       'pages/common/server/publish',
       'pages/common/server/union',
@@ -153,123 +153,98 @@ export default class extends wepy.app {
       'pages/artcenter/scheme/admin/audit', //试菜档期
       'pages/artcenter/scheme/admin/taste', //试菜档期
       'pages/artcenter/scheme/admin/task', //试菜档期
-    ]:[
-      'pages/index',
-      'pages/login',
-      'pages/profile',
-      'pages/statistics', //只有婚庆才有
-      'pages/dashbaord',
     ],
-    subpackages: 'is_dev'?[]:[{
-      "root": "pages/common",
-      "pages": [
-          'changpw',
-          'customerlist',
-          'statisticscustomer', //统计数据客资
-          'server/publish',
-          'server/union',
-          'server/customer',
-          'scheme/task', //婚礼任务单
-          'scheme/taste', //试菜列表 
-          'scheme/tastedetail', //发起试菜申请 
-          'scheme/feedback', //试菜反馈 
-          'scheme/depot', //礼品存放申请 
-          'scheme/depotlist', //礼品存放申请 
-          'scheme/ordermenu', //试菜详情 
-          'scheme/schedule', //试菜档期
-          'execute/trydishlist', //试菜列表
-          'execute/trydetail', //试菜列表
-          'execute/task',//执行任务单
-          'execute/taste',//执行试菜申请列表
-          'execute/depotlist',//礼品存放列表
-          'execute/depot',//礼品存放详情
-          'sale/chargeback', //退客申请
-          'sale/editcurstomerinfo', //编辑客资信息
-          'sale/editlog', //添加客资跟进
-          'sale/turninfo', //客资转让信息
-          'sale/editturn', //新建转让
-          'sale/customer', //客资信息 
-          'sale/nav/takeorders', //接单列表
-          'sale/nav/distribute', //强制分配
-          'sale/ordercomplete', //完成订单
-          'sale/prepay', //意向定金
-          'sale/refund', //申请退单
-          'sale/orderpay', //订单支付证明
-          'sale/nav/admin/audit', //订单审核
-          'sale/nav/admin/reject', //驳回订单支付
-          'sale/nav/admin/auditdetail', //订单审核
-          'sale/nav/admin/team', //团队列表
-          'sale/nav/admin/department', //部门详情
-          'sale/nav/admin/unsubscribe', //退客申请列表
-          'sale/nav/admin/statistics', //数据统计
-          'sale/nav/admin/transdetail', //转让性情
-          'sale/nav/admin/auditchargeback', //退客和已死客资审核
-          'sale/nav/admin/teamorders',
-      ]
-    },{
-      "root": "pages/artcenter",
-      "pages": [
-        //客服
-        'server/statistics',
-        //销售
-        'sale/ordermsg', //订单信息
-        'sale/schedule', //婚礼档期
-        'sale/ordermenu', //菜单信息
-        'sale/contract', //合同列表
-        'sale/contractedit', //创建合同
-        'sale/contractdetail', //创建合同
-        //策划
-        'scheme/customer', //客资信息 
-        'scheme/admin/audit', //试菜档期
-        'scheme/admin/taste', //试菜档期
-        'scheme/admin/task', //试菜档期
-      ]
-    },{
-      "root": "pages/marry",
-      "pages": [
-        'misscount',
-        'staduration',
-        //客服
-        'server/unipublish',
-        //销售
-        'sale/ordermsg', //订单信息
-        'sale/schedule', //婚礼档期
-        'sale/ordermenu', //菜单信息
-        'sale/contract', //合同列表
-        'sale/contractedit', //创建合同
-        'sale/contractdetail', //创建合同
-        'sale/checkfour', //客资信息 
-        //策划
-        'scheme/customer', //客资信息 
-        'scheme/requestpay', //请款申请
-        'scheme/reqpaylist', //请款列表
-        'scheme/reqauditlist', //请款审核列表
-        'scheme/reqaudit', //请款审核
-        'scheme/web', //试菜档期
-      ]
-    }],
+
+    // subpackages:[{
+    //   "root": "pages/common",
+    //   "pages": [
+    //       'changpw',
+    //       'customerlist',
+    //       'statisticscustomer', //统计数据客资
+    //       'server/publish',
+    //       'server/union',
+    //       'server/customer',
+    //       'scheme/task', //婚礼任务单
+    //       'scheme/taste', //试菜列表 
+    //       'scheme/tastedetail', //发起试菜申请 
+    //       'scheme/feedback', //试菜反馈 
+    //       'scheme/depot', //礼品存放申请 
+    //       'scheme/depotlist', //礼品存放申请 
+    //       'scheme/ordermenu', //试菜详情 
+    //       'scheme/schedule', //试菜档期
+    //       'execute/trydishlist', //试菜列表
+    //       'execute/trydetail', //试菜列表
+    //       'execute/task',//执行任务单
+    //       'execute/taste',//执行试菜申请列表
+    //       'execute/depotlist',//礼品存放列表
+    //       'execute/depot',//礼品存放详情
+    //       'sale/chargeback', //退客申请
+    //       'sale/editcurstomerinfo', //编辑客资信息
+    //       'sale/editlog', //添加客资跟进
+    //       'sale/turninfo', //客资转让信息
+    //       'sale/editturn', //新建转让
+    //       'sale/customer', //客资信息 
+    //       'sale/nav/takeorders', //接单列表
+    //       'sale/nav/distribute', //强制分配
+    //       'sale/ordercomplete', //完成订单
+    //       'sale/prepay', //意向定金
+    //       'sale/refund', //申请退单
+    //       'sale/orderpay', //订单支付证明
+    //       'sale/nav/admin/audit', //订单审核
+    //       'sale/nav/admin/reject', //驳回订单支付
+    //       'sale/nav/admin/auditdetail', //订单审核
+    //       'sale/nav/admin/team', //团队列表
+    //       'sale/nav/admin/department', //部门详情
+    //       'sale/nav/admin/unsubscribe', //退客申请列表
+    //       'sale/nav/admin/statistics', //数据统计
+    //       'sale/nav/admin/transdetail', //转让性情
+    //       'sale/nav/admin/auditchargeback', //退客和已死客资审核
+    //       'sale/nav/admin/teamorders',
+    //   ]
+    // },{
+    //   "root": "pages/artcenter",
+    //   "pages": [
+    //     //客服
+    //     'server/statistics',
+    //     //销售
+    //     'sale/ordermsg', //订单信息
+    //     'sale/schedule', //婚礼档期
+    //     'sale/ordermenu', //菜单信息
+    //     'sale/contract', //合同列表
+    //     'sale/contractedit', //创建合同
+    //     'sale/contractdetail', //创建合同
+    //     //策划
+    //     'scheme/customer', //客资信息 
+    //     'scheme/admin/audit', //试菜档期
+    //     'scheme/admin/taste', //试菜档期
+    //     'scheme/admin/task', //试菜档期
+    //   ]
+    // },{
+    //   "root": "pages/marry",
+    //   "pages": [
+    //     'misscount',
+    //     'staduration',
+    //     //客服
+    //     'server/unipublish',
+    //     //销售
+    //     'sale/ordermsg', //订单信息
+    //     'sale/schedule', //婚礼档期
+    //     'sale/ordermenu', //菜单信息
+    //     'sale/contract', //合同列表
+    //     'sale/contractedit', //创建合同
+    //     'sale/contractdetail', //创建合同
+    //     'sale/checkfour', //客资信息 
+    //     //策划
+    //     'scheme/customer', //客资信息 
+    //     'scheme/requestpay', //请款申请
+    //     'scheme/reqpaylist', //请款列表
+    //     'scheme/reqauditlist', //请款审核列表
+    //     'scheme/reqaudit', //请款审核
+    //     'scheme/web', //试菜档期
+    //   ]
+    // }],
     
-    tabBar: 'wxad7c32c969fca3be'?{
-      "color": "#777",
-      "selectedColor": "#000",
-      "backgroundColor": "#fff",
-      "list": [{
-        "selectedIconPath": "./images/tab-a-action.png",
-        "iconPath": "./images/tab-a.png",
-        "pagePath": "pages/index",
-        "text": "客资"
-      }, {
-        "selectedIconPath": "./images/tab-b-action.png",
-        "iconPath": "./images/tab-b.png",
-        "pagePath": "pages/dashbaord",
-        "text": "菜单"
-      }, {
-        "selectedIconPath": "./images/tab-c-action.png",
-        "iconPath": "./images/tab-c.png",
-        "pagePath": "pages/profile",
-        "text": "我的"
-      }]
-    }:{
+    tabBar:{
       "color": "#777",
       "selectedColor": "#000",
       "backgroundColor": "#fff",
@@ -286,7 +261,7 @@ export default class extends wepy.app {
       }, {
         "selectedIconPath": "./images/tab-b-action.png",
         "iconPath": "./images/tab-b.png",
-        "pagePath": "pages/dashbaord",
+        "pagePath": "pages/approval",
         "text": "菜单"
       }, {
         "selectedIconPath": "./images/tab-c-action.png",
@@ -381,10 +356,10 @@ export default class extends wepy.app {
     wepy.setStorageSync('office_line', C.OFFLICE_LINE);
     if (C.OFFLICE_LINE == 'artcenter') {
       wepy.setStorageSync('employee_company', 1);
-      wepy.setStorageSync('appid', 'wxad7c32c969fca3be');
+      wepy.setStorageSync('appid', "wxad7c32c969fca3be");
     } else {
       wepy.setStorageSync('employee_company', 3);
-      wepy.setStorageSync('appid', 'wx7e38e3128978153b');
+      wepy.setStorageSync('appid', "wx7e38e3128978153b");
     }
     //提醒自动更新
     mini.autoUpdate();

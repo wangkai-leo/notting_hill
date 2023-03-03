@@ -1,0 +1,89 @@
+@import "./common/ntinlinepicker.wxss";
+.dep-num-c {
+  font-size: 26rpx;
+  color: #86a5e6;
+  font-weight: bold;
+  text-align: center;
+}
+.dep-num-cd {
+  font-size: 26rpx;
+  color: #86a5e6;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10rpx;
+}
+.dep-tip-c {
+  font-size: 26rpx;
+  color: #555555;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 15rpx;
+}
+.dep-3-c {
+  position: relative;
+  padding: 10rpx 0rpx 20rpx;
+  width: 33.33%;
+  float: left;
+  border-bottom: #eaeaea solid 1rpx;
+  height: 110rpx;
+}
+.dep-3-cd {
+  position: relative;
+  padding: 10rpx 0rpx 20rpx;
+  width: 33.33%;
+  float: left;
+  border-bottom: #eaeaea solid 1rpx;
+  height: 170rpx;
+}
+.dep-3-c-bd::after {
+  content: '';
+  position: absolute;
+  display: block;
+  width: 2rpx;
+  right: 0rpx;
+  top: 0rpx;
+  height: 100%;
+  background: #ededed;
+}
+.common-pannel {
+  padding: 10rpx 35rpx;
+  overflow: hidden;
+  background: #fff;
+}
+.dep-3-c-bd-n::after {
+  background: none;
+}
+.dep-lead-sa-time-sa {
+  position: relative;
+  line-height: 40rpx;
+  color: #999999;
+  font-size: 24rpx;
+  float: left;
+  margin-right: 10rpx;
+}
+.dep-lead-sa {
+  overflow: hidden;
+  font-size: 26rpx;
+  padding: 40rpx 0rpx;
+  border-bottom: #f0f0f0 solid 1rpx;
+}
+.dep-line {
+  overflow: hidden;
+  color: #999;
+  margin-bottom: 20rpx;
+}
+.prec-tab-item {
+  width: 150rpx;
+  position: relative;
+  float: left;
+  padding: 10rpx 0rpx 20rpx 0rpx;
+  border-bottom: #d5d7dd solid 1rpx;
+  text-align: center;
+  font-size: 32rpx;
+  color: #999;
+  transition: 200ms linear all;
+}
+.prec-tab-box {
+  margin-bottom: 15px;
+  overflow: hidden;
+}

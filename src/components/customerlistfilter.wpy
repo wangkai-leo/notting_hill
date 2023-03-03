@@ -1,0 +1,89 @@
+<style lang="less"></style>
+<template>
+  <view class="common-wrapper">
+    <view class="common-title">客资编号</view>
+    <view class="common-pannel">
+      <view class="common-list">
+        <input class="common-tip" value="{{filter_option.order_id_str}}" type="text" @input="bindInputOrderIdStr"
+          placeholder="请输入编号"></input>
+      </view>
+    </view>
+    <view class="common-title">手机</view>
+    <view class="common-pannel">
+      <view class="common-list">
+        <input class="common-tip" value="{{filter_option.user_mobile}}" type="text" @input="bindInputMobile"
+          placeholder="请输入手机号"></input>
+      </view>
+    </view>
+    <view class="common-title">微信号</view>
+    <view class="common-pannel">
+      <view class="common-list">
+        <input class="common-tip" value="{{filter_option.wechat_id}}" type="text" @input="bindInputwechat"
+          placeholder="请输入微信号"></input>
+      </view>
+    </view>
+    <view class="customer-order-btn" @tap="approvalSearch">确定</view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+// import ntitem from "./common/ntitem";
+import rq from '../common/utils/request';
+
+export default class Index extends wepy.component {
+  components = {
+    // ntitema:ntitem
+  }
+  props = {
+  }
+  data = {
+    readonly: false,
+    filter_option: {
+      order_id_str: '', //option for salesman filter
+      user_mobile: '', //option for salesman filter
+      wechat_id: '', //option for salesman filter
+    },
+  };
+  watch = {
+  }
+  methods = {
+    approvalSearch() {
+      let that = this;
+      if (!that.filter_option.order_id_str && !that.filter_option.user_mobile && !that.filter_option.wechat_id) {
+        wepy.showToast({
+          title: '请输入至少一项', //提示的内容,
+          icon: 'none', //图标,
+          duration: 2000, //延迟时间,
+          mask: true, //显示透明蒙层，防止触摸穿透,
+          success: res => { }
+        });
+        return false;
+      }
+      rq.get('searchAllUser', {
+        200: result => {
+          that.$emit('search', result.data.data, result.data.is_old)
+          that.$apply();
+        }
+      }, {
+        order_id_str: that.filter_option.order_id_str,
+        user_mobile: that.filter_option.user_mobile,
+        wechat_id: that.filter_option.wechat_id
+      })
+    },
+    bindInputOrderIdStr(e) {
+      this.filter_option.order_id_str = e.detail.value;
+    },
+    bindInputMobile(e) {
+      this.filter_option.user_mobile = e.detail.value;
+    },
+    bindInputwechat(e) {
+      this.filter_option.wechat_id = e.detail.value;
+    }
+  };
+  onLoad() {
+
+  }
+  onShow() {
+  }
+}
+</script>

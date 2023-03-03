@@ -1,11 +1,20 @@
 <style lang="less">
+.shotbox {
+  padding-bottom: 10rpx;
+}
 
+.shotcut {
+  display: inline-block;
+  width: 100rpx;
+  height: 100rpx;
+}
 </style>
 
 <template>
   <view>
     <view class="common-title">
-      {{ label }} <text wx:if="{{(user.is_server||user.is_sale||user.is_server_offline)}}">（跟进{{ntvalue[ntkey].length}}次）</text>
+      {{ label }} <text
+        wx:if="{{(user.is_server||user.is_sale||user.is_server_offline)}}">（跟进{{ ntvalue[ntkey].length }}次）</text>
       <slot></slot>
     </view>
     <view class="common-pannel">
@@ -25,7 +34,12 @@
                     <view class="customer-ld-status">{{ item.status_time_name }}</view>
                   </view>
                   <view class="customer-ld-content">{{ item.status_remark }}</view>
-                  <view class="remark-create-user" wx:if="{{item.created_name!='-'}}">跟进人：{{item.created_name}}</view>
+                  <view class="shotbox" wx:if="{{ item.status_file }}">
+                    <image class="shotcut" mode="aspectFill" wx:for="{{item.status_file}}" wx:for-item="it" wx:for-index="it_index"
+                      wx:key="" src="{{ it }}" @tap="displayImg" data-parent="{{index}}" data-index="{{it_index}}">
+                    </image>
+                  </view>
+                  <view class="remark-create-user" wx:if="{{item.created_name!='-'}}">跟进人：{{ item.created_name }}</view>
                 </view>
               </block>
             </view>
@@ -52,18 +66,33 @@ export default class Index extends wepy.component {
     },
   }
   watch = {
+    ntvalue() {
+      this.ntvalue[this.ntkey].forEach(element => {
+        if (element.status_file)
+          element.status_file = element.status_file.split(',')
+        console.log(element.status_file)
+      });
+    }
   }
   components = {
   };
   data = {
-    user:null,
-    department:''
+    user: null,
+    department: ''
   };
   methods = {
+    displayImg(e) {
+      let i = e.currentTarget.dataset.parent;
+      let j = e.currentTarget.dataset.index;
+      wepy.previewImage({
+        current: this.ntvalue[this.ntkey][i].status_file[j],
+        urls: this.ntvalue[this.ntkey][i].status_file //需要预览的图片链接列表,
+      });
+    },
   };
-  onLoad(options) {
+  onLoad() {
     this.user = wepy.getStorageSync('user');
-    this.department=wepy.getStorageSync('office_line')
+    this.department = wepy.getStorageSync('office_line')
   }
   onShow() {
   }

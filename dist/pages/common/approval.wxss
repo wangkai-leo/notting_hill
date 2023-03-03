@@ -1,0 +1,19 @@
+@import "./../../components/approval.wxss";
+@import "./../../components/header.wxss";
+@import "./../../components/css.wxss";
+.common-wrapper {
+  width: 640rpx;
+}
+.common-dash-btn {
+  background: #fff;
+  width: 300rpx;
+  height: 300rpx;
+  border-radius: 10rpx;
+  text-align: center;
+  line-height: 300rpx;
+  float: left;
+  margin-bottom: 30rpx;
+}
+.common-dash-btn:nth-child(2n) {
+  float: right;
+}

@@ -1,0 +1,74 @@
+
+  <view class="container">
+    
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+    
+    <view class="common-top">
+      <view class="common-content">
+      </view>
+    </view>
+
+    
+  <view class="common-wrapper" wx:if="{{ !display_filter }}">
+    
+    <view class="common-pannel">
+      <view class="common-list-sa">
+        <view class="cus-rows cus-1-rows">{{ $statisticscustomerlistsale$total }}</view>
+        <view class="cus-rows cus-1-rows">日期</view>
+        <view class="cus-rows cus-3-rows">编号</view>
+        <view class="cus-rows cus-2-rows">渠道</view>
+        <view class="cus-rows cus-1-rows">城市</view>
+        <view class="cus-rows cus-2-rows">销售</view>
+      </view>
+      <block  wx:for="{{$statisticscustomerlistsale$list}}" wx:key="">
+        <view class="common-list-sa" bindtap="$statisticscustomerlistsale$goToDetail" data-id="{{item.user_id}}">
+          <view class="cus-rows cus-1-rows">{{ index + 1 }}</view>
+          <view class="cus-rows cus-1-rows">{{ item.create_date }}</view>
+          <view class="cus-rows cus-3-rows">{{ item.order_id }}</view>
+          <view class="cus-rows cus-2-rows">{{ item.channel_name }}</view>
+          <view class="cus-rows cus-1-rows">{{ item.intention_city_name }}</view>
+          <view class="cus-rows cus-2-rows">{{ item.sales_name }}</view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+    <view bindtap="editStatus" class="customer-order-btn"  wx:if="{{ !display_filter }}">开始查询</view>
+    
+  <view class="common-wrapper" wx:if="{{ display_filter }}">
+    <view class="common-title">客资编号</view>
+    <view class="common-pannel">
+      <view class="common-list">
+        <input class="common-tip" value="{{$customerlistfilter$filter_option.order_id_str}}" type="text" bindinput="$customerlistfilter$bindInputOrderIdStr" placeholder="请输入编号"/>
+      </view>
+    </view>
+    <view class="common-title">手机</view>
+    <view class="common-pannel">
+      <view class="common-list">
+        <input class="common-tip" value="{{$customerlistfilter$filter_option.user_mobile}}" type="text" bindinput="$customerlistfilter$bindInputMobile" placeholder="请输入手机号"/>
+      </view>
+    </view>
+    <view class="common-title">微信号</view>
+    <view class="common-pannel">
+      <view class="common-list">
+        <input class="common-tip" value="{{$customerlistfilter$filter_option.wechat_id}}" type="text" bindinput="$customerlistfilter$bindInputwechat" placeholder="请输入微信号"/>
+      </view>
+    </view>
+    <view class="customer-order-btn" bindtap="$customerlistfilter$approvalSearch">确定</view>
+  </view>
+
+  </view>

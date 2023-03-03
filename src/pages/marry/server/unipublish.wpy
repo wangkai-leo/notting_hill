@@ -342,7 +342,6 @@
                     channel_id: that.customer.channel_id,
                     intention_id: that.page_data.intentionInfo[that.intent_index].id,
                     intention_city: that.page_data.cityInfo[that.attend_city_index].id,
-                    // wedding_city: that.page_data.cityInfo[that.merry_city_index].id,//暂时无用
                     wedding_province_name: that.region[0],
                     wedding_city_name: that.region[1],
                     wedding_area_name: that.region[2],
@@ -356,29 +355,6 @@
                     union_order:that.customer.order_id,
                     is_union:1
                 }
-                // if (this.user.is_server) {
-                //     form_data.auto_distribution = that.auto_allot ? '1' : '0'
-                // }
-                // if(!form_data.channel_index==0){
-                //     wepy.showToast({
-                //         title: '请填写新人手机或微信', //提示的内容,
-                //         icon: 'none', //图标,
-                //         duration: 2000, //延迟时间,
-                //         mask: true, //显示透明蒙层，防止触摸穿透,
-                //         success: res => {}
-                //     });
-                //     return false;
-                // }
-                // if (!form_data.user_name) {
-                //     wepy.showToast({
-                //         title: '请填写新人姓名', //提示的内容,
-                //         icon: 'none', //图标,
-                //         duration: 2000, //延迟时间,
-                //         mask: true, //显示透明蒙层，防止触摸穿透,
-                //         success: res => {}
-                //     });
-                //     return false;
-                // }
                 if (!form_data.user_mobile && !form_data.wechat_id) {
                     wepy.showToast({
                         title: '请填写新人手机或微信', //提示的内容,
@@ -426,11 +402,14 @@
                     form_data['employee_id'] = that.team_members[that.team_members_index].id
                 }
                 that.submit_lock = true;
-                rq.get('insertUserInfo', {
+                rq.get('unionSuccessOrder', {
                     200: result => {
                         wepy.navigateBack({
                             delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
                         });
+                    },
+                    201:result=>{
+                      that.submit_lock = false;
                     }
                 }, form_data);
             }

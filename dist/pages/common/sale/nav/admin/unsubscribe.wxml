@@ -1,7 +1,7 @@
 
-<view class="container">
+  <view class="container">
     <view  wx:if="{{!loading}}">
-        
+      
     <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
         <view class="leo-header-layout">
             <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
@@ -17,27 +17,33 @@
         </view>
     </view>
 
-        <view class="common-top">
-            <view class="common-content">
+      <view class="common-top">
+        <view class="common-content">
+        </view>
+      </view>
+      <!--列表-->
+      <view class="common-wrapper">
+        <view class="sale-tab-box-audit">
+          <view class="full-tab-item {{drop_status==0?'sale-tab-item-check':''}}" bindtap="toggleTab" data-index="0">待审核</view>
+          <view class="full-tab-item {{drop_status==1?'sale-tab-item-check':''}}" bindtap="toggleTab" data-index="1">已审核</view>
+        </view>
+        <view class="box-con">
+          <block wx:for="{{userList}}" wx:key="">
+            <view class="customer-info" wx:if="{{!item.hide}}">
+              <view class="customer-info-header">
+                <view class="customer-num">编号：{{ item.main_contract }}</view>
+                <view class="customer-date">{{ item.status_time }}</view>
+              </view>
+              <view class="customer-info-msgs" bindtap="goToDetail" data-id="{{item.id}}" data-user="{{item.user_id}}">
+                <view class="customer-item">客户姓名：<text>{{ item.client_name }}</text></view>
+                <view class="customer-item">婚礼日期：<text>{{ item.wedding_date }}</text></view>
+                <view class="customer-item">销售姓名：<text>{{ item.sales_name }}</text></view>
+                <view class="customer-item">订单状态：<text>{{ item.order_status_text }}</text></view>
+              </view>
             </view>
+          </block>
         </view>
-        <!--列表-->
-        <view class="common-wrapper">
-            <block wx:for="{{userList}}" wx:key="">
-                <view class="customer-info" wx:if="{{!item.hide}}">
-                    <view class="customer-info-header">
-                        <view class="customer-num">编号：{{item.main_contract}}</view>
-                        <view class="customer-date">{{item.status_time}}</view>
-                    </view>
-                    <view class="customer-info-msgs" bindtap="goToDetail" data-id="{{item.id}}" data-user="{{item.user_id}}">
-                        <view class="customer-item">客户姓名：<text>{{item.client_name}}</text></view>
-                        <view class="customer-item">婚礼日期：<text>{{item.wedding_date}}</text></view>
-                        <view class="customer-item">销售姓名：<text>{{item.sales_name}}</text></view>
-                        <view class="customer-item">订单状态：<text>{{item.order_status_text}}</text></view>
-                    </view>
-                </view>
-            </block>
-        </view>
-        <!--列表-->
+      </view>
+      <!--列表-->
     </view>
-</view>
+  </view>

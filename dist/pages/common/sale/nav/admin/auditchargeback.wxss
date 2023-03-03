@@ -1,2 +1,11 @@
+@import "./../../../../../components/common/ntlist.wxss";
+@import "./../../../../../components/common/ntmode.wxss";
+@import "./../../../../../components/common/ntitem.wxss";
+@import "./../../../../../components/common/maintain.wxss";
+@import "./../../../../../components/common/upload.wxss";
+@import "./../../../../../components/topbar.wxss";
 @import "./../../../../../components/header.wxss";
 @import "./../../../../../components/css.wxss";
+.common-lab-full {
+  width: auto;
+}

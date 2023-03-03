@@ -1,0 +1,300 @@
+<template>
+  <view class="common-wrapper" wx:if="{{user_act.is_scheme}}">
+      <view class="common-title">订单统计</view>
+      <view class="common-pannel">
+        <view class="dep-base-box dep-base-box-np">
+          <view class="dep-3 dep-3-bd" @tap="naviToSchemeList" data-type="now_year_executed">
+            <view class="dep-num">{{ page_data.order_statistics.now_year_executed }}</view>
+            <view class="dep-tip">今年已执行单</view>
+          </view>
+          <view class="dep-3 dep-3-bd" @tap="naviToSchemeList" data-type="now_year_no_execute">
+            <view class="dep-num">{{ page_data.order_statistics.now_year_no_execute }}</view>
+            <view class="dep-tip">今年未执行单</view>
+          </view>
+          <view class="dep-3" @tap="naviToSchemeList" data-type="next_year_execute">
+            <view class="dep-num">{{ page_data.order_statistics.next_year_execute }}</view>
+            <view class="dep-tip">明年执行单</view>
+          </view>
+          <view class="dep-3 dep-3-bd dep-3-bd-n" @tap="naviToSchemeList" data-type="no_true">
+            <view class="dep-num">{{ page_data.order_statistics.no_true }}</view>
+            <view class="dep-tip">未确认订单</view>
+          </view>
+        </view>
+      </view>
+      <view class="common-title">确认订单</view>
+      <view class="common-pannel">
+        <view class="dep-lead-time dep-lead-time-nb">统计时间：{{ order_date_start }}至{{ order_date_end }}<text
+            class="dep-em-edit" @tap="naviChangeDuration" data-start="{{order_date_start}}"
+            data-end="{{order_date_end}}">修改</text></view>
+        <view class="dep-base-box dep-base-box-np">
+          <view class="dep-3 dep-3-bd" @tap="naviToSchemeList" data-type="executed">
+            <view class="dep-num">{{ page_data.order_true.executed }}</view>
+            <view class="dep-tip">已执行单</view>
+          </view>
+          <view class="dep-3 dep-3-bd" @tap="naviToSchemeList" data-type="no_executed">
+            <view class="dep-num">{{ page_data.order_true.no_settle }}</view>
+            <view class="dep-tip">待结算单</view>
+          </view>
+          <view class="dep-3" @tap="naviToSchemeList" data-type="no_settle">
+            <view class="dep-num">{{ page_data.order_true.no_executed }}</view>
+            <view class="dep-tip">未执行单</view>
+          </view>
+          <view class="dep-3 dep-3-bd dep-3-bd-n" @tap="naviToSchemeList" data-type="drop_order">
+            <view class="dep-num">{{ page_data.order_true.drop_order }}</view>
+            <view class="dep-tip">退单</view>
+          </view>
+        </view>
+      </view>
+      <view class="common-title">未确认订单</view>
+      <view class="common-pannel">
+        <view class="dep-base-box dep-base-box-np">
+          <view class="dep-3 dep-3-bd" @tap="naviToSchemeList" data-type="delay">
+            <view class="dep-num">{{ page_data.no_true.delay }}</view>
+            <view class="dep-tip">延期单</view>
+          </view>
+          <view class="dep-3 dep-3-bd" @tap="naviToSchemeList" data-type="corpse">
+            <view class="dep-num">{{ page_data.no_true.corpse }}</view>
+            <view class="dep-tip">僵尸单</view>
+          </view>
+          <view class="dep-3 dep-3-bd" @tap="naviToSchemeList" data-type="wedding_no_true">
+            <view class="dep-num">{{ page_data.no_true.wedding_no_true }}</view>
+            <view class="dep-tip">婚期未定单</view>
+          </view>
+          <view class="dep-3 dep-3-bd-n" @tap="naviToSchemeList" data-type="error_order">
+            <view class="dep-num">{{ page_data.no_true.error_order }}</view>
+            <view class="dep-tip">异常订单</view>
+          </view>
+        </view>
+      </view>
+      <view class="common-title">收款统计</view>
+      <view class="common-pannel">
+        <view class="dep-lead-time dep-lead-time-nb">统计时间：{{ pay_date_start }}至{{ pay_date_end }}<text class="dep-em-edit"
+            @tap="naviChangeDuration" data-pay="yes" data-start="{{pay_date_start}}" data-end="{{pay_date_end}}">修改</text>
+        </view>
+        <view class="dep-get-line">收款总额 <text>{{ page_data.pay_statistics.all_deposit }}</text></view>
+      </view>
+      <view class="common-pannel">
+        <block wx:for="{{page_data.pay_statistics.team_deposit}}" wx:key="">
+          <view class="dep-get-line">
+            {{ item.team_name }} <text>{{ item.deposit_amount }}</text>
+          </view>
+        </block>
+      </view>
+      <view class="common-title">成本/毛利统计</view>
+      <block wx:for="{{page_data.cost_sale_percent}}" wx:key="">
+        <view class="common-pannel">
+          <view class="dep-lead-time dep-lead-time-nb">{{ item.title }}</view>
+          <view class="dep-base-box dep-base-box-np">
+            <view class="dep-3 dep-3-bd dep-3-bd-n">
+              <view class="dep-num">{{ item.sale_price_avg }}</view>
+              <view class="dep-tip">售出均价</view>
+            </view>
+            <view class="dep-3 dep-3-bd dep-3-bd-n">
+              <view class="dep-num">{{ item.cost_price_avg }}</view>
+              <view class="dep-tip">平均成本</view>
+            </view>
+            <view class="dep-3 dep-3-bd-n">
+              <view class="dep-num">{{ item.percent }}</view>
+              <view class="dep-tip">毛利率</view>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+</template>
+<script>
+import wepy from "wepy";
+import rq from '../common/utils/request';
+import dt from '../common/utils/date';
+import ntinlinepicker from './common/ntinlinepicker';
+export default class Index extends wepy.component {
+  props = {
+  };
+  data = {
+    page_old_data: null,
+    page_data: null,
+    employee_list: null,
+    department: '',
+    order_date_start: '',
+    order_date_end: '',
+    employee_check_index: 0,
+    page_success_data: null,
+    tab_index: 0
+  }
+  watch = {
+  }
+  components = {
+    ntinlinepickerb: ntinlinepicker,
+    ntinlinepickerc: ntinlinepicker,
+    ntinlinepickera: ntinlinepicker,
+    ntinlinepickerd: ntinlinepicker,
+  }
+  methods = {
+    naviToSchemeList(e) {
+      let parm = 'order_date_start=' + this.order_date_start +
+        '&order_date_end=' + this.order_date_end +
+        '&pay_date_start=' + this.pay_date_start +
+        '&pay_date_end=' + this.pay_date_end +
+        '&data_type=' + e.currentTarget.dataset.type;
+      wepy.navigateTo({
+        url: '/pages/common/searchcustomerlistsale?' + parm
+      });
+    }
+  }
+  getServerDataList() {
+    let that = this;
+    let params = {
+      start_time: that.order_date_start,
+      end_time: that.order_date_end
+    }
+    if (that.employee_check_index != 0) {
+      params['employee_id'] = this.employee_list[this.employee_check_index].employee_id
+    }
+    rq.get('getServerDataList', {
+      200: result => {
+        that.page_old_data = result.data.data;
+        that.employee_list = result.data.data.employee_list;
+        that.$apply();
+      }
+    }, params);
+    rq.get('getServerSuccessDataList', {
+      200: result => {
+        that.page_data = result.data.data;
+        that.page_data.channel_success_prent_list.forEach(element => {
+          element.channel_name = element.channel_name.replace(/\\n/g, '\n')
+        });
+        that.page_data.channel_success_list.forEach(element => {
+          element.channel_name = element.channel_name.replace(/\\n/g, '\n')
+        });
+        that.employee_list = result.data.data.employee_list;
+        that.$apply();
+      }
+    }, params)
+  }
+  onLoad() {
+    let that=this;
+    
+    let today = new Date();
+    let year = today.getFullYear();
+    let month = today.getMonth();
+    let count_day = new Date(year, month, 0).getDate();
+    this.order_date_start = dt.dateFormat('yyyy-MM-dd', new Date(year, month, 1));
+    this.order_date_end = dt.dateFormat('yyyy-MM-dd', new Date(year, month, count_day - 1));
+    let user_act =this.user_act=wepy.getStorageSync('user');
+    if(user_act.is_scheme){
+      rq.get("getDataStatistics", {
+        200: result => {
+          that.page_data = result.data.data;
+          that.$apply();
+        }
+      }, {
+        start_date: that.order_date_start,
+        end_date: that.order_date_end
+      })
+    }
+  }
+}
+</script>
+
+<style lang="less">
+.dep-num-c {
+  font-size: 26rpx;
+  color: #86a5e6;
+  font-weight: bold;
+  text-align: center;
+}
+
+.dep-num-cd {
+  font-size: 26rpx;
+  color: #86a5e6;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10rpx;
+}
+
+.dep-tip-c {
+  font-size: 26rpx;
+  color: #555555;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 15rpx;
+}
+
+.dep-3-c {
+  position: relative;
+  padding: 10rpx 0rpx 20rpx;
+  width: 33.33%;
+  float: left;
+  border-bottom: #eaeaea solid 1rpx;
+  height: 110rpx;
+}
+
+.dep-3-cd {
+  position: relative;
+  padding: 10rpx 0rpx 20rpx;
+  width: 33.33%;
+  float: left;
+  border-bottom: #eaeaea solid 1rpx;
+  height: 170rpx;
+}
+
+.dep-3-c-bd::after {
+  content: '';
+  position: absolute;
+  display: block;
+  width: 2rpx;
+  right: 0rpx;
+  top: 0rpx;
+  height: 100%;
+  background: #ededed;
+}
+
+.common-pannel {
+  padding: 10rpx 35rpx;
+  overflow: hidden;
+  background: #fff;
+}
+
+.dep-3-c-bd-n::after {
+  background: none;
+}
+
+.dep-lead-sa-time-sa {
+  position: relative;
+  line-height: 40rpx;
+  color: #999999;
+  font-size: 24rpx;
+  float: left;
+  margin-right: 10rpx;
+}
+
+.dep-lead-sa {
+  overflow: hidden;
+  font-size: 26rpx;
+  padding: 40rpx 0rpx;
+  border-bottom: #f0f0f0 solid 1rpx;
+}
+
+.dep-line {
+  overflow: hidden;
+  color: #999;
+  margin-bottom: 20rpx;
+}
+
+.prec-tab-item {
+  width: 150rpx;
+  position: relative;
+  float: left;
+  padding: 10rpx 0rpx 20rpx 0rpx;
+  border-bottom: #d5d7dd solid 1rpx;
+  text-align: center;
+  font-size: 32rpx;
+  color: #999;
+  transition: 200ms linear all;
+}
+
+.prec-tab-box {
+  margin-bottom: 15px;
+  overflow: hidden;
+}
+</style>

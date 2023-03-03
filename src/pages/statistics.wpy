@@ -200,382 +200,51 @@
 <template>
   <view class="container">
     <header :title="title" :isback="isback" :isopacity="isopacity"></header>
-    <view class="common-top">
-      <view class="common-content">
-      </view>
-    </view>
-    <view class="common-wrapper" wx:if="{{user_act.is_server||user_act.is_server_offline}}">
-      <statistics></statistics>
-    </view>
-    <view class="common-wrapper" wx:if="{{user_act.is_sale}}">
-      <view class="common-pannel">
-        <view class="dep-lead">
-          <open-data class="common-user-avr" type="userAvatarUrl"></open-data>
-          <view class="e-name">{{ user.employee_name }}</view>
-          <view class="e-stat {{user.online_status==1?'':'e-stat-off'}}">{{ user.online_status == 1 ? '在线中' : '离线中' }}
-            <image @tap="turn" src="../images/change-line-i.png" class="c-line-ai" mode="scaleToFill"
-              lazy-load="false">
-            </image>
-          </view>
-        </view>
-        <view class="dep-lead-time">统计时间：{{ order_date_start }}至{{ order_date_end }}<text class="dep-em-edit"
-            @tap="naviChangeDuration" data-start="{{order_date_start}}" data-end="{{order_date_end}}">修改</text></view>
-      </view>
-      <view class="common-title">客资统计</view>
-      <view class="common-pannel">
-        <view class="dep-base-box">
-          <view @tap="naviToList" data-map="{{page_data.all_users.map}}" class="dep-3 dep-3-bd">
-            <view class="dep-num">{{ page_data.all_users.count }}</view>
-            <view class="dep-tip">总客资</view>
-          </view>
-          <view @tap="naviToList" data-map="{{page_data.online_users.map}}" class="dep-3 dep-3-bd">
-            <view class="dep-num">{{ page_data.online_users.count }}</view>
-            <view class="dep-tip">线上客资</view>
-          </view>
-          <view @tap="naviToList" data-map="{{page_data.offline_users.map}}" class="dep-3">
-            <view class="dep-num">{{ page_data.offline_users.count }}</view>
-            <view class="dep-tip">线下客资</view>
-          </view>
-          <view @tap="naviToList" data-map="{{page_data.nottinghill_users.map}}" class="dep-3 dep-3-bd">
-            <view class="dep-num">{{ page_data.nottinghill_users.count }}</view>
-            <view class="dep-tip">诺丁山</view>
-          </view>
-          <view @tap="naviToList" data-map="{{page_data.dreampark_users.map}}" class="dep-3 dep-3-bd">
-            <view class="dep-num">{{ page_data.dreampark_users.count }}</view>
-            <view class="dep-tip">DreamPark</view>
-          </view>
-          <view @tap="naviToList" data-map="{{page_data.one_stop_wedding_users.map}}" class="dep-3">
-            <view class="dep-num">{{ page_data.one_stop_wedding_users.count }}</view>
-            <view class="dep-tip">一站式婚宴</view>
-          </view>
-          <view @tap="naviToList" data-map="{{page_data.drop_customer_users.map}}" class="dep-3 dep-3-bd dep-3-bd-n">
-            <view class="dep-num">{{ page_data.drop_customer_users.count }}</view>
-            <view class="dep-tip">退客/无效客资</view>
-          </view>
-          <view @tap="naviToList" data-map="{{page_data.dead_users.map}}" class="dep-3 dep-3-bd dep-3-bd-n">
-            <view class="dep-num">{{ page_data.dead_users.count }}</view>
-            <view class="dep-tip">已死客资</view>
-          </view>
-          <view data-map="{{page_data.missing_users.map}}" class="dep-3 dep-3-bd-n" @tap="naviMissCount">
-            <view class="dep-num">{{ page_data.missing_users.count }}</view>
-            <view class="dep-tip dep-tip-dis">漏客数</view>
-          </view>
-        </view>
-      </view>
-      <view class="common-title">成交统计</view>
-      <view class="common-pannel">
-        <view class="dep-base-box">
-          <view @tap="naviToList" data-map="{{page_data.complate_users.map}}" class="dep-3 dep-3-bd">
-            <view class="dep-num">{{ page_data.complate_users.count }}</view>
-            <view class="dep-tip">成交数</view>
-          </view>
-          <view class="dep-3 dep-3-bd">
-            <view class="dep-num">{{ page_data.complate_percent.count }}</view>
-            <view class="dep-tip dep-tip-dis">总成交率</view>
-          </view>
-          <view class="dep-3">
-            <view class="dep-num">{{ page_data.online_percent.count }}/{{ page_data.offline_percent.count }}</view>
-            <view class="dep-tip dep-tip-dis">线上/线下成交率</view>
-          </view>
-          <view @tap="naviToList" data-map="{{page_data.nottinghill_complate_users.map}}"
-            class="dep-3 dep-3-bd dep-3-bd-n">
-            <view class="dep-num">{{ page_data.nottinghill_complate_users.count }}</view>
-            <view class="dep-tip">诺丁山</view>
-          </view>
-          <view @tap="naviToList" data-map="{{page_data.dreampark_complate_users.map}}"
-            class="dep-3 dep-3-bd dep-3-bd-n">
-            <view class="dep-num">{{ page_data.dreampark_complate_users.count }}</view>
-            <view class="dep-tip">DreamPark</view>
-          </view>
-          <view @tap="naviToList" data-map="{{page_data.one_stop_wedding_complate_users.map}}" class="dep-3 dep-3-bd-n">
-            <view class="dep-num">{{ page_data.one_stop_wedding_complate_users.count }}</view>
-            <view class="dep-tip">一站式婚宴</view>
-          </view>
-        </view>
-      </view>
-    </view>
-    <view class="common-wrapper" wx:if="{{user_act.is_scheme}}">
-      <view class="common-title">订单统计</view>
-      <view class="common-pannel">
-        <view class="dep-base-box dep-base-box-np">
-          <view class="dep-3 dep-3-bd" @tap="naviToSchemeList" data-type="now_year_executed">
-            <view class="dep-num">{{ page_data.order_statistics.now_year_executed }}</view>
-            <view class="dep-tip">今年已执行单</view>
-          </view>
-          <view class="dep-3 dep-3-bd" @tap="naviToSchemeList" data-type="now_year_no_execute">
-            <view class="dep-num">{{ page_data.order_statistics.now_year_no_execute }}</view>
-            <view class="dep-tip">今年未执行单</view>
-          </view>
-          <view class="dep-3" @tap="naviToSchemeList" data-type="next_year_execute">
-            <view class="dep-num">{{ page_data.order_statistics.next_year_execute }}</view>
-            <view class="dep-tip">明年执行单</view>
-          </view>
-          <view class="dep-3 dep-3-bd dep-3-bd-n" @tap="naviToSchemeList" data-type="no_true">
-            <view class="dep-num">{{ page_data.order_statistics.no_true }}</view>
-            <view class="dep-tip">未确认订单</view>
-          </view>
-
-        </view>
-      </view>
-      <view class="common-title">确认订单</view>
-      <view class="common-pannel">
-        <view class="dep-lead-time dep-lead-time-nb">统计时间：{{ order_date_start }}至{{ order_date_end }}<text
-            class="dep-em-edit" @tap="naviChangeDuration" data-start="{{order_date_start}}"
-            data-end="{{order_date_end}}">修改</text></view>
-        <view class="dep-base-box dep-base-box-np">
-          <view class="dep-3 dep-3-bd" @tap="naviToSchemeList" data-type="executed">
-            <view class="dep-num">{{ page_data.order_true.executed }}</view>
-            <view class="dep-tip">已执行单</view>
-          </view>
-          <view class="dep-3 dep-3-bd" @tap="naviToSchemeList" data-type="no_executed">
-            <view class="dep-num">{{ page_data.order_true.no_settle }}</view>
-            <view class="dep-tip">待结算单</view>
-          </view>
-          <view class="dep-3" @tap="naviToSchemeList" data-type="no_settle">
-            <view class="dep-num">{{ page_data.order_true.no_executed }}</view>
-            <view class="dep-tip">未执行单</view>
-          </view>
-          <view class="dep-3 dep-3-bd dep-3-bd-n" @tap="naviToSchemeList" data-type="drop_order">
-            <view class="dep-num">{{ page_data.order_true.drop_order }}</view>
-            <view class="dep-tip">退单</view>
-          </view>
-        </view>
-      </view>
-      <view class="common-title">未确认订单</view>
-      <view class="common-pannel">
-        <view class="dep-base-box dep-base-box-np">
-          <view class="dep-3 dep-3-bd" @tap="naviToSchemeList" data-type="delay">
-            <view class="dep-num">{{ page_data.no_true.delay }}</view>
-            <view class="dep-tip">延期单</view>
-          </view>
-          <view class="dep-3 dep-3-bd" @tap="naviToSchemeList" data-type="corpse">
-            <view class="dep-num">{{ page_data.no_true.corpse }}</view>
-            <view class="dep-tip">僵尸单</view>
-          </view>
-          <view class="dep-3 dep-3-bd" @tap="naviToSchemeList" data-type="wedding_no_true">
-            <view class="dep-num">{{ page_data.no_true.wedding_no_true }}</view>
-            <view class="dep-tip">婚期未定单</view>
-          </view>
-          <view class="dep-3 dep-3-bd-n" @tap="naviToSchemeList" data-type="error_order">
-            <view class="dep-num">{{ page_data.no_true.error_order }}</view>
-            <view class="dep-tip">异常订单</view>
-          </view>
-        </view>
-      </view>
-      <view class="common-title">收款统计</view>
-      <view class="common-pannel">
-        <view class="dep-lead-time dep-lead-time-nb">统计时间：{{ pay_date_start }}至{{ pay_date_end }}<text
-            class="dep-em-edit" @tap="naviChangeDuration" data-pay="yes" data-start="{{pay_date_start}}"
-            data-end="{{pay_date_end}}">修改</text></view>
-        <view class="dep-get-line">收款总额 <text>{{ page_data.pay_statistics.all_deposit }}</text></view>
-      </view>
-      <view class="common-pannel">
-        <block wx:for="{{page_data.pay_statistics.team_deposit}}" wx:key="">
-          <view class="dep-get-line">
-            {{ item.team_name }} <text>{{ item.deposit_amount }}</text>
-          </view>
-        </block>
-      </view>
-      <view class="common-title">成本/毛利统计</view>
-      <block wx:for="{{page_data.cost_sale_percent}}" wx:key="">
-        <view class="common-pannel">
-          <view class="dep-lead-time dep-lead-time-nb">{{ item.title }}</view>
-          <view class="dep-base-box dep-base-box-np">
-            <view class="dep-3 dep-3-bd dep-3-bd-n">
-              <view class="dep-num">{{ item.sale_price_avg }}</view>
-              <view class="dep-tip">售出均价</view>
-            </view>
-            <view class="dep-3 dep-3-bd dep-3-bd-n">
-              <view class="dep-num">{{ item.cost_price_avg }}</view>
-              <view class="dep-tip">平均成本</view>
-            </view>
-            <view class="dep-3 dep-3-bd-n">
-              <view class="dep-num">{{ item.percent }}</view>
-              <view class="dep-tip">毛利率</view>
-            </view>
-          </view>
-        </view>
-      </block>
-    </view>
+    <topbar></topbar>
+    <serverstatistics :is_request.sync="is_request"></serverstatistics>
+    <salestatistics  :is_request.sync="is_request"></salestatistics>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy';
 import rq from '../common/utils/request';
-import tool from '../common/utils/tool';
-import dat from '../common/utils/date';
 import css from '../components/css';
 import header from '../components/header';
-import statistics from '../components/common/server/statistics';
+import serverstatistics from '../components/statisticsserver';
+import salestatistics from '../components/statisticssale';
+import topbar from "../components/topbar";
 
 export default class Index extends wepy.page {
   components = {
     css: css, //样式表
     header: header,
-    statistics: statistics
+    topbar: topbar,
+    serverstatistics: serverstatistics,
+    salestatistics:salestatistics
   };
   data = {
     isback: false,
     isopacity: true,
-    title: '客资',
-    is_hide: true,
-    page_data: null,
-    user: null,
-    user_act: null,
-    start_date: '',
-    end_date: '',
-    order_date_start: '',
-    order_date_end: '',
-    pay_date_start: '',
-    pay_date_end: '',
+    title: '统计',
+    is_request:false
   };
   methods = {
-    naviMissCount(e) {
-      let map = JSON.stringify(e.currentTarget.dataset.map);
-      wepy.navigateTo({
-        url: '/pages/marry/misscount?map=' + map
-      });
-    },
-    naviToTotal(e) {
-      let index = e.currentTarget.dataset.index;
-      let it = this.page_data.users[index];
-      let start_date = this.start_date;
-      let end_date = this.end_date;
-      let employee_ids = it.employee_ids;
-      let user_status = it.user_status;
-      let parm = 'start_date=' + start_date + '&end_date=' + end_date + '&employee_ids=' + employee_ids + '&user_status=' + user_status;
-      wepy.navigateTo({
-        url: '/pages/common/customerlist?' + parm
-      });
-    },
-    naviToSchemeList(e) {
-      let parm = 'order_date_start=' + this.order_date_start +
-        '&order_date_end=' + this.order_date_end +
-        '&pay_date_start=' + this.pay_date_start +
-        '&pay_date_end=' + this.pay_date_end +
-        '&data_type=' + e.currentTarget.dataset.type;
-      wepy.navigateTo({
-        url: '/pages/common/customerlist?' + parm
-      });
-    },
-    naviToList(e) {
-      let map = JSON.stringify(e.currentTarget.dataset.map);
-      wepy.navigateTo({
-        url: '/pages/common/customerlist?map=' + map
-      });
-    },
-    naviCustomerlist(e) {
-      let index = e.currentTarget.dataset.index;
-      let it = this.page_data.statistics_array[index];
-      let start_date = this.start_date;
-      let end_date = this.end_date;
-      let channel_id = it.channel_id;
-      let intention_id = it.intention_id;
-      let intention_city = it.intention_city;
-      let is_achievement = it.is_achievement;
-      let employee_ids = it.employee_ids;
-      let parm = 'start_date=' + start_date + '&end_date=' + end_date + '&channel_id=' + channel_id + '&intention_id=' + intention_id + '&intention_city=' + intention_city + '&is_achievement=' + is_achievement + '&employee_ids=' + employee_ids;
-      wepy.navigateTo({
-        url: '/pages/common/customerlist?' + parm
-      });
-    },
-    turn() {
-      let that = this;
-      that.is_lock = true;
-      rq.get('changeOnlineStatus', {
-        200: result => {
-          that.is_lock = false;
-          if (that.user.online_status == 1) {
-            that.user.online_status = 0;
-          } else {
-            that.user.online_status = 1;
-          }
-          that.$apply();
-        }
-      }, {})
-    },
-    naviChangeDuration(e) {
-      let pay = e.currentTarget.dataset.pay;
-      let start = e.currentTarget.dataset.start;
-      let end = e.currentTarget.dataset.end;
-      wepy.navigateTo({
-        url: '/pages/marry/staduration?start_date=' + start + '&end_date=' + end + '&pay=' + pay
-      });
-    }
   };
-  onLoad(options) {
+  onLoad() {
     let that = this;
-    wepy.setStorageSync('pick_date', false);
     rq.get('getMyInfo', {
       200: result => {
         that.user = result.data.data;
         that.$apply();
       }
     });
-
-    let now = new Date();
-    let month = now.getMonth();
-    let year = now.getFullYear()
-    that.order_date_start = that.pay_date_start = that.start_date = dat.dateFormat('yyyy-MM-dd', new Date(year, month, 1));
-    that.order_date_end = that.pay_date_end = that.end_date = dat.dateFormat('yyyy-MM-dd', new Date());
   }
   onShow() {
-    let that = this;
-    let user = that.user_act = wepy.getStorageSync('user');
-    let pick_time = wepy.getStorageSync('pick_date');
-    if (pick_time) {
-      if (!user.is_scheme) {
-        that.order_date_start = that.start_date = pick_time.start_date;
-        that.order_date_end = that.end_date = pick_time.end_date;
-      } else {
-        if (pick_time.is_pay == 'yes') {
-          that.pay_date_start = pick_time.start_date;
-          that.pay_date_end = pick_time.end_date;
-        } else {
-          that.order_date_start = pick_time.start_date;
-          that.order_date_end = pick_time.end_date;
-        }
-      }
-    } else {
-      let now = new Date();
-      let month = now.getMonth();
-      let year = now.getFullYear()
-      that.start_date = that.end_date = dat.dateFormat('yyyy-MM-dd', new Date());
-    }
-    if (!that.user_act) {
-      wepy.redirectTo({
-        url: '/pages/login'
-      });
-    } else {
-      let api_name = '';
-      that.user_act.is_sale ? api_name = 'getDataStatistics' : '';
-      that.user_act.is_scheme ? api_name = 'getImplementOrderStatistics' : '';
-      that.user_act.is_excute ? api_name = 'getDataStatistics' : '';
-
-      let data = {};
-      if (that.user_act.is_scheme) {
-        data = {
-          pay_date_start: that.pay_date_start,
-          pay_date_end: that.pay_date_end,
-          order_date_start: that.order_date_start,
-          order_date_end: that.order_date_end,
-        }
-      } else {
-        data = {
-          start_date: that.start_date,
-          end_date: that.end_date
-        }
-      }
-      if (api_name) {
-        rq.get(api_name, {
-          200: result => {
-            that.page_data = result.data.data;
-            that.$apply();
-          }
-        }, data)
-      }
-    }
+    this.is_request=true;
+  }
+  onHide(){
+    this.is_request=false
   }
 }
 </script>

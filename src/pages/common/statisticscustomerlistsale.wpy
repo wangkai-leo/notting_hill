@@ -1,0 +1,160 @@
+<style lang="less">
+.common-lab-btn {
+  top: 0rpx;
+}
+</style>
+
+<template>
+  <view class="container">
+    <header :title="title" :isback="isback" :isopacity="isopacity"></header>
+    <topbar></topbar>
+    <statisticscustomerlistsale :total.sync="total" :list.sync="list" wx:if="{{user.is_sale && !display_filter}}">
+      <view class="common-pannel">
+        <view class="common-list">
+          <view class="common-lab">总客资</view>
+          <text class="common-lab-btn" @tap="editStatus">筛选</text>
+        </view>
+      </view>
+    </statisticscustomerlistsale>
+    <statisticscustomerlistfilter wx:if="{{ display_filter }}" :filter_option.sync="filter_option" :channel_arr.sync="channel_arr" :intention_arr.sync="intention_arr" :sales_arr.sync="sales_arr" :intention_city_arr.sync="intention_city_arr" @search.user="search">
+    </statisticscustomerlistfilter>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import rq from '../../common/utils/request';
+import tool from '../../common/utils/tool';
+import css from '../../components/css';
+import header from '../../components/header';
+import topbar from '../../components/topbar';
+import statisticscustomerlistsale from '../../components/statisticscustomerlistsale';
+import statisticscustomerlistfilter from '../../components/statisticscustomerlistfilter';
+export default class Index extends wepy.page {
+  components = {
+    css: css, //样式表
+    header: header,
+    topbar: topbar,
+    statisticscustomerlistsale: statisticscustomerlistsale,
+    statisticscustomerlistfilter: statisticscustomerlistfilter
+  };
+  data = {
+    isback: true,
+    isopacity: true,
+    title: '客资',
+    user: null,
+
+    list: [],
+    origin_list: [],
+
+    list_success: [],
+    params: null,
+    display_filter: false,
+    total: 0,
+
+    filter_option: {
+      start_date: '',
+      end_date: '',
+      order_id: '',
+      channel_name: '',
+      intention_name: '',
+      sales_name: '',
+      intention_city_name: ''
+    },
+
+    channel_arr: [],
+    intention_arr: [],
+    sales_arr: [],
+    intention_city_arr: [],
+
+    list_size:1000,
+  };
+  methods = {
+    editStatus() {
+      this.display_filter = true;
+    },
+    search() {
+      let pur = [];
+      this.origin_list.forEach(element => {
+        let is_add = true;
+        let s_order_id = this.filter_option.order_id;
+        {
+          if (!element.create_time || element.create_time < new Date(this.filter_option.start_date).getTime() / 1000 || element.create_time > new Date(this.filter_option.end_date).getTime() / 1000) {
+            is_add = false;
+          };
+        }
+        if (s_order_id && element.order_id.indexOf(s_order_id) < 0) {
+          is_add = false;
+        }
+        if (this.filter_option.channel_name && element.channel_name != this.filter_option.channel_name) {
+          is_add = false;
+        }
+        if (this.filter_option.intention_name && element.intention_name != this.filter_option.intention_name) {
+          is_add = false;
+        }
+        if (this.filter_option.sales_name && element.sales_name != this.filter_option.sales_name) {
+          is_add = false;
+        }
+        if (this.filter_option.intention_city_name && element.intention_city_name != this.filter_option.intention_city_name) {
+          is_add = false;
+        }
+        if (is_add) {
+          pur.push(element);
+        }
+      });
+      this.display_filter = false;
+      this.total = pur.length;
+      this.list=pur.slice(0, this.list_size);
+    },
+  };
+  arrayHaveItem(list, it) {
+    let has = false;
+    list.forEach(el => {
+      if (el == it) {
+        has = true;
+      }
+    });
+    if (!it) {
+      has = true;
+    }
+    return has;
+  }
+  prepareFilterCondition() {
+    this.origin_list.forEach(element => {
+      if (!this.arrayHaveItem(this.channel_arr, element.channel_name)) {
+        this.channel_arr.push(element.channel_name);
+      }
+      if (!this.arrayHaveItem(this.intention_arr, element.intention_name)) {
+        this.intention_arr.push(element.intention_name);
+      }
+      if (!this.arrayHaveItem(this.sales_arr, element.sales_name)) {
+        this.sales_arr.push(element.sales_name);
+      }
+      if (!this.arrayHaveItem(this.intention_city_arr, element.intention_city_name)) {
+        this.intention_city_arr.push(element.intention_city_name);
+      }
+    });
+  }
+  onLoad(options) {
+    let that = this;
+    that.params = tool.decodeQrCodeParam(options);
+    that.user = wepy.getStorageSync('user');
+    if (that.user.is_sale) {
+      rq.get('getDataStatisticsDetail', {
+        200: result => {
+          that.list = that.origin_list = result.data.data;
+          that.prepareFilterCondition()
+          that.total = that.origin_list.length;
+          that.list = that.origin_list.slice(0, this.list_size);
+          that.$apply();
+        }
+      }, {
+        map: that.params.map
+      })
+    }
+  }
+  onShow() {
+
+  }
+}
+</script>

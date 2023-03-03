@@ -1,0 +1,305 @@
+<template>
+  <view class="common-wrapper"  wx:if="{{user_act.is_server||user_act.is_server_offline}}">
+    <view class="common-pannel">
+      <view class="dep-lead-sa">
+        <view class="dep-line">
+          时间：
+          <ntinlinepickerc @change.user="handleBeginChange" :checked_name.sync="order_date_start" ntpickertype="date">
+          </ntinlinepickerc>
+          至
+          <ntinlinepickerb @change.user="handleEndChange" :checked_name.sync="order_date_end" ntpickertype="date">
+          </ntinlinepickerb>
+        </view>
+        <view class="dep-line">
+          人员：<ntinlinepickera @change.user="handleChange" :ntrange.sync="employee_list" ntkey="employee_name"
+            :checked_index.sync="employee_check_index"></ntinlinepickera>
+        </view>
+      </view>
+    </view>
+    <view class="common-pannel">
+      <view class="dep-base-box">
+        <view class="dep-3-c dep-3-c-bd" @tap="naviToList" data-view="drop">
+          <view class="dep-num-c">{{ page_old_data.drop_user_count }}</view>
+          <view class="dep-tip-c">退客资</view>
+        </view>
+        <view class="dep-3-c dep-3-c-bd" @tap="naviToList" data-view="all">
+          <view class="dep-num-c">{{ page_old_data.all_user_count }}</view>
+          <view class="dep-tip-c">总客资</view>
+        </view>
+        <view class="dep-3-c" @tap="naviToList" data-view="review">
+          <view class="dep-num-c">{{ page_old_data.noreview_user_count }}</view>
+          <view class="dep-tip-c">待审核</view>
+        </view>
+      </view>
+    </view>
+    <view class="prec-tab-box">
+      <view class="prec-tab-item {{tab_index==0?'sale-tab-item-check':''}}" @tap="toggleTab" data-index="0">客资数
+      </view>
+      <view class="prec-tab-item {{tab_index==1?'sale-tab-item-check':''}}" @tap="toggleTab" data-index="1">成交率
+      </view>
+    </view>
+    <view class="common-pannel" wx:if="{{ tab_index==0 }}">
+      <block wx:for="{{page_old_data.channel_count_list}}">
+        <view @tap="naviToList" data-channel="{{item.where_map}}" data-count="{{item.count}}"
+          class="dep-3-c dep-3-c-bd {{(index+1)%3==0?'dep-3-c-bd-n':''}}">
+          <view class="dep-num-c">{{ item.count }}</view>
+          <view class="dep-tip-c">{{ item.channel_name }}</view>
+        </view>
+      </block>
+    </view>
+    <view class="common-pannel" wx:if="{{ tab_index==1 }}">
+      <block wx:for="{{page_data.channel_success_list}}">
+        <view @tap="naviToList" data-channel="{{item.where_map}}" data-count="{{item.count}}"
+          class="dep-3-cd dep-3-c-bd {{(index+1)%3==0?'dep-3-c-bd-n':''}}">
+          <view class="dep-num-cd">{{ item.count }}</view>
+          <view class="dep-num-cd">{{ item.prent }}</view>
+          <view class="dep-tip-c"><text>{{ item.channel_name }}</text></view>
+        </view>
+      </block>
+      <block wx:for="{{page_data.channel_success_prent_list}}">
+        <view @tap="naviToList" data-channel="{{item.where_map}}" data-count="{{item.count}}"
+          class="dep-3-cd dep-3-c-bd {{(index+1)%3==0?'dep-3-c-bd-n':''}}">
+          <view class="dep-num-cd">{{ item.count }}</view>
+          <view class="dep-num-cd">{{ item.prent }}</view>
+          <view class="dep-tip-c"><text>{{ item.channel_name }}</text></view>
+        </view>
+      </block>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from "wepy";
+import rq from '../common/utils/request';
+import dt from '../common/utils/date';
+import ntinlinepicker from './common/ntinlinepicker';
+export default class Index extends wepy.component {
+  props = {
+    is_request:{
+      type:Boolean,
+      twoWay:true
+    }
+  };
+  data = {
+    page_old_data: null,
+    page_data: null,
+    employee_list: null,
+    department: '',
+    order_date_start: '',
+    order_date_end: '',
+    employee_check_index: 0,
+    page_success_data: null,
+    tab_index: 0,
+    user_act:null
+  }
+  watch = {
+    is_request() {
+      if(this.is_request){
+        let user_act =this.user_act= wepy.getStorageSync('user');
+        if (user_act.is_server||user_act.is_server_offline) {
+          this.getServerDataList();
+        }
+      }
+    }
+  }
+  components = {
+    ntinlinepickerb: ntinlinepicker,
+    ntinlinepickerc: ntinlinepicker,
+    ntinlinepickera: ntinlinepicker,
+  }
+  methods = {
+    toggleTab(e) {
+      this.tab_index = e.currentTarget.dataset.index;
+    },
+    handleBeginChange(date) {
+      this.order_date_start = date;
+      this.getServerDataList();
+    },
+    handleEndChange(date) {
+      this.order_date_end = date;
+      this.getServerDataList();
+    },
+    handleChange(index) {
+      this.employee_check_index = index;
+      this.getServerDataList();
+    },
+
+    naviToList(e) {
+      let view_type = e.currentTarget.dataset.view;
+      let channel = e.currentTarget.dataset.channel;
+      let count = e.currentTarget.dataset.count;
+      if (count == 0) {
+        return false;
+      }
+      let params = 'start_time=' + this.order_date_start + '&end_time=' + this.order_date_end;
+      if (this.employee_check_index != 0) {
+        params += '&employee_id=' + this.employee_list[this.employee_check_index].employee_id
+      }
+      if (view_type) {
+        params += '&view_type=' + view_type;
+      } else {
+        wepy.setStorageSync('channel', channel)
+      }
+      wepy.navigateTo({
+        url: '/pages/common/statisticscustomerlistserver?' + params
+      })
+    }
+  }
+  getServerDataList() {
+    let that = this;
+    let params = {
+      start_time: that.order_date_start,
+      end_time: that.order_date_end
+    }
+    if (that.employee_check_index != 0) {
+      params['employee_id'] = this.employee_list[this.employee_check_index].employee_id
+    }
+    wepy.showLoading({
+      title: 'Loading...', //提示的内容,
+      mask: true, //显示透明蒙层，防止触摸穿透,
+      success: res => { }
+    });
+    rq.get('getServerDataList', {
+      200: result => {
+        wepy.hideLoading();
+        that.page_old_data = result.data.data;
+        that.employee_list = result.data.data.employee_list;
+        that.$apply();
+      }
+    }, params);
+    rq.get('getServerSuccessDataList', {
+      200: result => {
+        that.page_data = result.data.data;
+
+        that.page_data.channel_success_prent_list.forEach(element => {
+          element.channel_name = element.channel_name.replace(/\\n/g, '\n')
+        });
+
+        that.page_data.channel_success_list.forEach(element => {
+          element.channel_name = element.channel_name.replace(/\\n/g, '\n')
+        });
+
+        that.employee_list = result.data.data.employee_list;
+        that.$apply();
+      }
+    }, params)
+  }
+  onLoad() {
+    let that = this;
+    let today = new Date();
+    let year = today.getFullYear();
+    let month = today.getMonth();
+    let count_day = new Date(year, month, 0).getDate();
+    this.order_date_start = dt.dateFormat('yyyy-MM-dd', new Date(year, month, 1));
+    this.order_date_end = dt.dateFormat('yyyy-MM-dd', new Date(year, month, count_day - 1));
+
+    let user_act =this.user_act= wepy.getStorageSync('user');
+    if (user_act.is_server||user_act.is_server_offline) {
+      this.getServerDataList();
+    }
+  }
+}
+</script>
+
+<style lang="less">
+.dep-num-c {
+  font-size: 26rpx;
+  color: #86a5e6;
+  font-weight: bold;
+  text-align: center;
+}
+
+.dep-num-cd {
+  font-size: 26rpx;
+  color: #86a5e6;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10rpx;
+}
+
+.dep-tip-c {
+  font-size: 26rpx;
+  color: #555555;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 15rpx;
+}
+
+.dep-3-c {
+  position: relative;
+  padding: 10rpx 0rpx 20rpx;
+  width: 33.33%;
+  float: left;
+  border-bottom: #eaeaea solid 1rpx;
+  height: 110rpx;
+}
+
+.dep-3-cd {
+  position: relative;
+  padding: 10rpx 0rpx 20rpx;
+  width: 33.33%;
+  float: left;
+  border-bottom: #eaeaea solid 1rpx;
+  height: 170rpx;
+}
+
+.dep-3-c-bd::after {
+  content: '';
+  position: absolute;
+  display: block;
+  width: 2rpx;
+  right: 0rpx;
+  top: 0rpx;
+  height: 100%;
+  background: #ededed;
+}
+
+.common-pannel {
+  padding: 10rpx 35rpx;
+  overflow: hidden;
+  background: #fff;
+}
+
+.dep-3-c-bd-n::after {
+  background: none;
+}
+
+.dep-lead-sa-time-sa {
+  position: relative;
+  line-height: 40rpx;
+  color: #999999;
+  font-size: 24rpx;
+  float: left;
+  margin-right: 10rpx;
+}
+
+.dep-lead-sa {
+  overflow: hidden;
+  font-size: 26rpx;
+  padding: 40rpx 0rpx;
+  border-bottom: #f0f0f0 solid 1rpx;
+}
+
+.dep-line {
+  overflow: hidden;
+  color: #999;
+  margin-bottom: 20rpx;
+  line-height: 20px;
+}
+
+.prec-tab-item {
+  width: 150rpx;
+  position: relative;
+  float: left;
+  padding: 10rpx 0rpx 20rpx 0rpx;
+  border-bottom: #d5d7dd solid 1rpx;
+  text-align: center;
+  font-size: 32rpx;
+  color: #999;
+  transition: 200ms linear all;
+}
+
+.prec-tab-box {
+  margin-bottom: 15px;
+  overflow: hidden;
+}
+</style>

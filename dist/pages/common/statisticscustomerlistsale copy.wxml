@@ -1,0 +1,152 @@
+
+  <view class="container">
+    
+    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+        <view class="leo-header-layout">
+            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+                <view class="leo-header-back" bindtap="$header$backHistory">
+                    <image class="leo-back-nav" src="../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+                <view class="leo-h-line"/>
+                <view class="leo-header-home" bindtap="$header$backHome">
+                    <image class="leo-back-home" src="../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+                </view>
+            </view>
+            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+        </view>
+    </view>
+
+    
+    <view class="common-top">
+      <view class="common-content">
+      </view>
+    </view>
+
+    
+  <view class="common-wrapper" wx:if="{{user.is_sale && !display_filter}}">
+    
+      <view class="common-pannel">
+        <view class="common-list">
+          <view class="common-lab">总客资</view>
+          <text class="common-lab-btn" bindtap="editStatus">筛选</text>
+        </view>
+      </view>
+    
+    <view class="common-pannel">
+      <view class="common-list-sa">
+        <view class="cus-5-rows">日期</view>
+        <view class="cus-5-rows">编号</view>
+        <view class="cus-5-rows">渠道</view>
+        <view class="cus-5-rows">城市</view>
+        <view class="cus-5-rows">销售</view>
+      </view>
+      <block  wx:for="{{$statisticscustomerlistsale$list}}" wx:key="">
+        <view class="common-list-sa" bindtap="$statisticscustomerlistsale$goToDetail" data-id="{{item.user_id}}">
+          <view class="cus-5-rows">{{ item.create_date }}</view>
+          <view class="cus-5-rows">{{ item.order_id }}</view>
+          <view class="cus-5-rows">{{ item.channel_name }}</view>
+          <view class="cus-5-rows">{{ item.intention_city_name }}</view>
+          <view class="cus-5-rows">{{ item.sales_name }}</view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+    
+  <view class="common-wrapper"  wx:if="{{ display_filter }}">
+    <view class="common-title">日期</view>
+    <view class="common-pannel">
+      <view class="common-list">
+        <view class="common-lab">开始时间</view>
+        <input disabled class="common-tip" value="{{$statisticscustomerlistfilter$filter_option.start_date}}" start="{{$statisticscustomerlistfilter$filter_option.start_date}}" end="{{$statisticscustomerlistfilter$filter_option.end_date}}" placeholder="请选择"/>
+        <picker class="picker-common" mode="date" bindchange="$statisticscustomerlistfilter$bindStartChange">
+          <view class="picker-common-v">
+            当前选择：{{ $statisticscustomerlistfilter$start_date }}
+          </view>
+        </picker>
+      </view>
+      <view class="common-list">
+        <view class="common-lab">结束时间</view>
+        <input disabled class="common-tip" value="{{$statisticscustomerlistfilter$filter_option.end_date}}" start="{{$statisticscustomerlistfilter$filter_option.start_date}}" end="{{$statisticscustomerlistfilter$filter_option.end_date}}" placeholder="请选择"/>
+        <picker class="picker-common" mode="date" bindchange="$statisticscustomerlistfilter$bindEndChange">
+          <view class="picker-common-v">
+            当前选择：{{ $statisticscustomerlistfilter$end_date }}
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class="common-title" wx:if="{{$statisticscustomerlistfilter$user.is_sale}}">城市</view>
+    <view class="common-pannel" wx:if="{{$statisticscustomerlistfilter$user.is_sale}}">
+      <view class="common-list">
+        <input class="common-tip" disabled value="{{$statisticscustomerlistfilter$filter_option.intention_city_name}}" type="text" placeholder="请选择"/>
+        <picker class="picker-common" range="{{$statisticscustomerlistfilter$intention_city_arr}}" bindchange="$statisticscustomerlistfilter$bindCityChange">
+          <view class="picker-common-v">
+            当前选择：
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class="common-title">客资编号</view>
+    <view class="common-pannel">
+      <view class="common-list">
+        <input class="common-tip" value="{{$statisticscustomerlistfilter$filter_option.order_id}}" type="text" bindinput="$statisticscustomerlistfilter$bindInputOrderId" placeholder="请输入编号"/>
+      </view>
+    </view>
+    <view class="common-title">客资渠道</view>
+    <view class="common-pannel">
+      <view class="common-list">
+        <input class="common-tip" disabled value="{{$statisticscustomerlistfilter$filter_option.channel_name}}" type="text" placeholder="请选择"/>
+        <picker class="picker-common" range="{{$statisticscustomerlistfilter$channel_arr}}" bindchange="$statisticscustomerlistfilter$bindChannelChange">
+          <view class="picker-common-v">
+            当前选择：
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class="common-title">客资意向</view>
+    <view class="common-pannel">
+      <view class="common-list">
+        <input class="common-tip" disabled value="{{$statisticscustomerlistfilter$filter_option.intention_name}}" type="text" placeholder="请选择"/>
+        <picker class="picker-common" range="{{$statisticscustomerlistfilter$intention_arr}}" bindchange="$statisticscustomerlistfilter$bindIntentionChange">
+          <view class="picker-common-v">
+            当前选择：
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class="common-title">销售</view>
+    <view class="common-pannel">
+      <view class="common-list">
+        <input class="common-tip" disabled value="{{$statisticscustomerlistfilter$filter_option.sales_name}}" type="text" placeholder="请选择"/>
+        <picker class="picker-common" range="{{$statisticscustomerlistfilter$sales_arr}}" bindchange="$statisticscustomerlistfilter$bindSalesChange">
+          <view class="picker-common-v">
+            当前选择：
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class="customer-order-btn" bindtap="$statisticscustomerlistfilter$localSearch">确认</view>
+  </view>
+  <view class="common-wrapper"  wx:if="{{ $statisticscustomerlistfilter$approval_search }}">
+    <view class="common-title">客资编号</view>
+    <view class="common-pannel">
+      <view class="common-list">
+        <input class="common-tip" value="{{$statisticscustomerlistfilter$filter_option.order_id_str}}" type="text" bindinput="$statisticscustomerlistfilter$bindInputOrderIdStr" placeholder="请输入编号"/>
+      </view>
+    </view>
+    <view class="common-title">手机</view>
+    <view class="common-pannel">
+      <view class="common-list">
+        <input class="common-tip" value="{{$statisticscustomerlistfilter$filter_option.user_mobile}}" type="text" bindinput="$statisticscustomerlistfilter$bindInputMobile" placeholder="请输入手机号"/>
+      </view>
+    </view>
+    <view class="common-title">微信号</view>
+    <view class="common-pannel">
+      <view class="common-list">
+        <input class="common-tip" value="{{$statisticscustomerlistfilter$filter_option.wechat_id}}" type="text" bindinput="$statisticscustomerlistfilter$bindInputwechat" placeholder="请输入微信号"/>
+      </view>
+    </view>
+    <view class="customer-order-btn" bindtap="$statisticscustomerlistfilter$searchNow">确定</view>
+  </view>
+
+  </view>

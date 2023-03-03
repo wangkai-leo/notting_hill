@@ -109,7 +109,7 @@ export default class Index extends wepy.page {
           }
           if (element == 'search_user') {
             that.module_item.push({
-              url: '/pages/common/customerlist?is_search=true',
+              url: '/pages/common/searchcustomerlistsale',
               label: '信息检索',
             });
           }

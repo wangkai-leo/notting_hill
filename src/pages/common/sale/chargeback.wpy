@@ -5,6 +5,7 @@
     <header :title="title" :isback="isback" :isopacity="isopacity"></header>
     <topbar></topbar>
     <view class="common-wrapper">
+      <ntitemtime wx:if="{{ drop_id!=0 }}" label="创建时间" :ntvalue.sync="customer" ntkey="create_date"></ntitemtime>
       <ntitemIchannel label="客户来源" :ntvalue.sync="customer" ntkey="channel_name"></ntitemIchannel>
       <ntitemIintend label="客户意向" :ntvalue.sync="customer" ntkey="intention_name"></ntitemIintend>
       <ntmodualweidingmsg label="婚礼信息">
@@ -52,6 +53,7 @@ export default class Index extends wepy.page {
     topbar: topbar,
     ntmodualweidingmsg: ntmode,
     ntitemIchannel: ntitem,
+    ntitemtime: ntitem,
     ntitemIremark: ntitem,
     ntitemIintend: ntitem,
     ntlista: ntlist,

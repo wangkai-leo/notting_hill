@@ -34,5 +34,5 @@ export default {
   // ENV_URL: 'https://nottinghill-group.incker.com/ndsWxapp/',
   ENV_URL: 'https://dev-crm.nottinghillwedding.com/ndsWxapp/',
   // ENV_URL: 'https://crm.nottinghillwedding.com/ndsWxapp/',
-  OFFLICE_LINE: 'wxad7c32c969fca3be' ? 'artcenter' : 'marry'
+  OFFLICE_LINE: !'wxad7c32c969fca3be' ? 'artcenter' : 'marry'
 }

@@ -264,11 +264,6 @@ export default class Index extends wepy.page {
     let that = this;
     that.loading = false;
     that.department = wepy.getStorageSync('office_line');
-
-    that.have_more = true;
-    that.page = 1;
-    that.sourceList = that.userList = [];
-    that.getUserLIst();
   }
   onReady() {
     let that = this;
@@ -340,6 +335,14 @@ export default class Index extends wepy.page {
   }
   onShow() {
     let that = this;
+    const is_resresh=wepy.getStorageSync('index_refresh');
+    if(is_resresh){
+      that.have_more = true;
+      that.page = 1;
+      that.sourceList = that.userList = [];
+      that.getUserLIst();
+    }
+    wepy.setStorageSync('index_refresh',true);
   }
 }
 </script>

@@ -183,6 +183,7 @@ export default class Index extends wepy.component {
     rq.get('followUp', {
       200: result => {
         that.sale_info = result.data.data;
+        that.sale_info['user_status_name_label']=result.data.user_status_name;
         let purpose = [];
         result.data.user_status.forEach(element => {
           purpose.push(element.status_name);

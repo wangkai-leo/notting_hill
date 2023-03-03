@@ -1,20 +1,21 @@
 
   <view>
     
-    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
-        <view class="leo-header-layout">
-            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
-                <view class="leo-header-back" bindtap="$header$backHistory">
-                    <image class="leo-back-nav" src="../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
-                </view>
-                <view class="leo-h-line"/>
-                <view class="leo-header-home" bindtap="$header$backHome">
-                    <image class="leo-back-home" src="../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
-                </view>
-            </view>
-            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+  <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+    <view class="leo-header-layout">
+      <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+        <view class="leo-header-back" bindtap="$header$backHistory">
+          <image class="leo-back-nav" src="../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
         </view>
+        <view class="leo-h-line"/>
+        <view class="leo-header-home" bindtap="$header$backHome">
+          <image class="leo-back-home" src="../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+        </view>
+      </view>
+      <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{ $header$title }}
+      </view>
     </view>
+  </view>
 
     
     <view class="common-top">
@@ -23,6 +24,26 @@
     </view>
 
     <view class="common-wrapper">
+      
+<view wx:if="{{ drop_id!=0 }}">
+  <view class="common-title">
+    {{$ntitemtime$label}}
+    
+  </view>
+    <view class="common-pannel">
+      <!--textarea-->
+      <textarea  wx:if="{{$ntitemtime$nttype=='area' && $ntitemtime$readonly}}" disabled class="common-area" value="{{$ntitemtime$ntvalue[$ntitemtime$ntkey]}}"/>
+      <textarea  wx:if="{{$ntitemtime$nttype=='area' && !$ntitemtime$readonly}}" class="common-area" bindinput="$ntitemtime$bindInput" placeholder="{{$ntitemtime$placeholder}}" value="{{$ntitemtime$ntvalue[$ntitemtime$ntkey]}}"/>
+      <!--textarea-->
+
+      <!--input-->
+      <view class="common-list" wx:if="{{$ntitemtime$nttype=='text'}}">
+        <view class="common-nt-full">{{$ntitemtime$ntvalue[$ntitemtime$ntkey]}}</view>
+      </view>
+      <!--input-->
+    </view>
+</view>
+
       
 <view>
   <view class="common-title">
@@ -447,7 +468,7 @@
   </view>
 
 
-      <view  wx:if="{{!readonly}}">
+      <view wx:if="{{!readonly}}">
         
 <view>
   <view class="common-title">
@@ -483,7 +504,7 @@
     </view>
   </view>
 
-        <view class="customer-create-btn" wx:if="{{customer.user_status!=1}}" bindtap="submit">提交申请</view>
+        <view class="customer-create-btn"  wx:if="{{customer.user_status!=1}}" bindtap="submit">提交申请</view>
       </view>
     </view>
   </view>

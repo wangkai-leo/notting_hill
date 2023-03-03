@@ -1,20 +1,21 @@
 
   <view class="container">
     
-    <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
-        <view class="leo-header-layout">
-            <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
-                <view class="leo-header-back" bindtap="$header$backHistory">
-                    <image class="leo-back-nav" src="../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
-                </view>
-                <view class="leo-h-line"/>
-                <view class="leo-header-home" bindtap="$header$backHome">
-                    <image class="leo-back-home" src="../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
-                </view>
-            </view>
-            <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{$header$title}}</view>
+  <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+    <view class="leo-header-layout">
+      <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+        <view class="leo-header-back" bindtap="$header$backHistory">
+          <image class="leo-back-nav" src="../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
         </view>
+        <view class="leo-h-line"/>
+        <view class="leo-header-home" bindtap="$header$backHome">
+          <image class="leo-back-home" src="../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+        </view>
+      </view>
+      <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{ $header$title }}
+      </view>
     </view>
+  </view>
 
     <view class="select-top" id="top_header">
       <view class="select-box">

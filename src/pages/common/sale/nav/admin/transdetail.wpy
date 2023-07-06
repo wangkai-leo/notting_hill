@@ -14,6 +14,12 @@
             </view>
         </view>
         <view class="common-wrapper">
+          <view class="common-title">创建时间</view>
+            <view class="common-pannel">
+                <view class="common-list">
+                    <view class="common-lab common-lab-line">{{customer.create_date}}</view>
+                </view>
+            </view>
             <view class="common-title">客户意向</view>
             <view class="common-pannel">
                 <view class="common-list">

@@ -906,10 +906,13 @@
     
 <view>
   <view class="common-title"  wx:if="{{$customer$customerfollow$ntmodeac$label}}">{{$customer$customerfollow$ntmodeac$label}}
-    <text class="common-lab-btn"  wx:if="{{!$customer$customerfollow$customer.have_drop && !$customer$customerfollow$readonly}}" bindtap="$customer$customerfollow$dropCustomer">状态变更</text><text class="common-lab-btn" wx:if="{{$customer$customerfollow$customer.have_drop && !$customer$customerfollow$readonly}}" bindtap="$customer$customerfollow$dropCustomer">变更审核中...</text>
+    <text class="common-lab-btn"  wx:if="{{ !$customer$customerfollow$readonly }}" bindtap="$customer$customerfollow$dropCustomer">
+        <block wx:if="{{ $customer$customerfollow$customer.user_status == 2 }}">查看理由</block>
+        <block wx:if="{{ $customer$customerfollow$customer.user_status != 2 && !$customer$customerfollow$customer.have_drop }}">状态变更</block>
+        <block wx:if="{{ $customer$customerfollow$customer.user_status != 2 && $customer$customerfollow$customer.have_drop }}">变更审核中...</block>
+      </text>
   </view>
     <view class="common-pannel">
-      
       
       
       

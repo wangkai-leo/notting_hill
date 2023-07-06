@@ -28,10 +28,10 @@
       <ntliste label="客户姓名" :ntvalue.sync="ntcusinfo" ntkey="user_name">
         <text slot="linear" class="common-linear-btn" wx:if="{{ntcusinfo.user_name}}" @tap="copyText({{ ntcusinfo.user_name }})">复制</text>
       </ntliste>
-      <ntlistf label="手机号" :ntvalue.sync="ntcusinfo" ntkey="user_mobile">
+      <ntlistf label="手机号" :is_search.sync="is_search" :ntvalue.sync="ntcusinfo" ntkey="user_mobile">
         <text slot="linear" class="common-linear-btn" wx:if="{{ntcusinfo.user_mobile}}" @tap="copyText({{ ntcusinfo.user_mobile }})">复制</text>
       </ntlistf>
-      <ntlistg label="微信号" :ntvalue.sync="ntcusinfo" ntkey="wechat_id">
+      <ntlistg label="微信号" :is_search.sync="is_search" :ntvalue.sync="ntcusinfo" ntkey="wechat_id">
         <text slot="linear" class="common-linear-btn" wx:if="{{ntcusinfo.wechat_id}}" @tap="copyText({{ ntcusinfo.wechat_id }})">复制</text>
       </ntlistg>
     </ntmodeb>
@@ -52,6 +52,11 @@ export default class Index extends wepy.component {
       type: Object,
       twoWay: true
     },
+    is_search:{
+      type: Boolean,
+      default:false,
+      twoWay:true
+    }
   }
   components = {
     ntmodea: ntmode,

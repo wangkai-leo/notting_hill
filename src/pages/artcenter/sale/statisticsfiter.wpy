@@ -1,0 +1,140 @@
+<template>
+  <view>
+    <header :title="title" :isback="isback" :isopacity.sync="isopacity"></header>
+    <topbar></topbar>
+    <view class="common-wrapper">
+      <ntpicker label="筛选" :ntrange.sync="fitler_options" :checked_index.sync="fitler_index" ntkey="name"></ntpicker>
+      <view class="common-pannel">
+        <block wx:for="{{list}}" wx:for-index="m" wx:key="">
+          <view class="list-date-type" @tap="naviToList" data-channel="{{item.map}}" wx:if="{{ fitler_index==0 }}">
+            <text class="dy-label">{{ item.city_name }}</text> <text class="dy-value">{{ item.count }}</text>
+          </view>
+          <view class="list-date-type" @tap="naviToList" data-channel="{{item.map}}" wx:if="{{ fitler_index==1 }}">
+            <text class="dy-label">{{ item.employee_name }}</text> <text class="dy-value">{{ item.count }}</text>
+          </view>
+          <view class="list-date-type" @tap="naviToList" data-channel="{{item.map}}" wx:if="{{ fitler_index==2 }}">
+            <text class="dy-label">{{ item.create_date }}</text> <text class="dy-value">{{ item.count }}</text>
+          </view>
+          <view class="list-date-type" @tap="naviToList" data-channel="{{item.map}}" wx:if="{{ fitler_index==3 }}">
+            <text class="dy-label-half">{{ item.team_name }}</text> <text class="dy-value-half">{{ item.count }}</text>
+          </view>
+        </block>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from "wepy";
+import rq from '../../../common/utils/request';
+import tool from '../../../common/utils/tool';
+import topbar from '../../../components/topbar';
+import ntpicker from '../../../components/common/ntpicker';
+
+import css from "../../../components/css";
+import header from "../../../components/header";
+export default class Index extends wepy.page {
+  components = {
+    css: css, //样式表
+    header: header,
+    topbar: topbar,
+    ntpicker: ntpicker
+  };
+  props = {
+  };
+  data = {
+    isopacity: true,
+    title: '销售客资数据',
+    isback: true,
+    fitler_index: 0,
+    fitler_options: [
+      {
+        value: 'intention_city',
+        name: '按城市'
+      }, {
+        value: 'sales_id',
+        name: '按人员'
+      }, {
+        value: 'create_date',
+        name: '按日期'
+      }, {
+        value: 'employee_team',
+        name: '按团队分组'
+      }
+    ],
+    params: {},
+    list: []
+  }
+  watch = {
+    fitler_index() {
+      this.getSalesUserDataGroup();
+    }
+  }
+  methods = {
+    naviToList(e) {
+      let channel = e.currentTarget.dataset.channel;
+      wepy.navigateTo({
+        url: '/pages/artcenter/sale/statisticfilterslist?where_map=' + channel + '&start_date=' + this.params.start_date + '&end_date=' + this.params.end_date
+      })
+    }
+  }
+  getSalesUserDataGroup() {
+    let that = this;
+    this.params['group_type'] = this.fitler_options[this.fitler_index].value
+    rq.get('getSalesUserDataGroup', {
+      200: result => {
+        that.list = result.data.data;
+        that.$apply();
+      }
+    }, this.params)
+  }
+  onLoad(options) {
+    options = tool.decodeQrCodeParam(options);
+    this.params = {
+      start_date: options.start_time,
+      end_date: options.end_time,
+      data_type: options.datatype,
+      employee_id: options.employee_id,
+      intention_city: options.intention_city
+    }
+    this.getSalesUserDataGroup();
+    console.log(this.params)
+  }
+}
+</script>
+
+<style lang="less">
+.list-date-type {
+  padding: 15rpx 0px;
+  font-size: 28rpx;
+  color: #777;
+  border-bottom: #f0f0f0 solid 1rpx;
+}
+
+.list-date-type:last-child {
+  border-bottom: none;
+}
+
+.dy-label {
+  display: inline-block;
+  width: 200rpx;
+}
+
+.dy-label-half{
+  display: inline-block;
+  width: 500rpx;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dy-value {
+  display: inline-block;
+  width: 200rpx;
+  color: #87a6e7
+}
+
+.dy-value-half{
+  display: inline-block;
+  width: 100rpx;
+  color: #87a6e7
+}
+</style>

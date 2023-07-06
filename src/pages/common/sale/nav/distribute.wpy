@@ -87,7 +87,7 @@
                     <radio-group @change="checkedChange">
                         <block wx:for="{{userList}}" wx:key="">
                             <view class="common-list">
-                                <view class="common-tip-a">{{item.employee_name}} {{item.employee_now_clients}}/{{item.employee_max_clients}}</view>
+                                <view class="common-tip-a">{{item.employee_name}} <block wx:if="{{ item.employee_now_clients }}">{{item.employee_now_clients}}/</block>{{item.employee_now_clients}}/{{item.employee_max_clients}}</view>
                                 <radio class="common-checked" value="{{item.id}}" />
                             </view>
                         </block>

@@ -1,0 +1,22 @@
+@import "./../../../components/common/ntpicker.wxss";
+@import "./../../../components/topbar.wxss";
+@import "./../../../components/header.wxss";
+@import "./../../../components/css.wxss";
+.list-date-type {
+  padding: 15rpx 0px;
+  font-size: 28rpx;
+  color: #777;
+  border-bottom: #f0f0f0 solid 1rpx;
+}
+.list-date-type:last-child {
+  border-bottom: none;
+}
+.dy-label {
+  display: inline-block;
+  width: 200rpx;
+}
+.dy-value {
+  display: inline-block;
+  width: 200rpx;
+  color: #87a6e7;
+}

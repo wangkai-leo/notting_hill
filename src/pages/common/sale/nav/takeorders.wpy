@@ -93,7 +93,7 @@
                         <view class="customer-log-btn">
                             <view>
                                 <view class="customer-get-btn" @tap="takeOrder" data-index="{{index}}">接单</view>
-                                <view class="customer-get-btn" @tap="goToDistribute" data-index="{{index}}" wx:if="{{user.is_sale_leader}}">强制分配</view>
+                                <view class="customer-get-btn" @tap="goToDistribute" data-index="{{index}}" wx:if="{{user.is_sale_leader && item.is_distribution ==1 }}">强制分配</view>
                             </view>
                         </view>
                     </view>
@@ -127,7 +127,8 @@
             loading: true,
             is_hide: true,
             userList: null,
-            user: null
+            user: null,
+            receive_lock:false
         };
         methods = {
             goToDistribute(e) {
@@ -140,6 +141,10 @@
             takeOrder(e) {
                 let index = e.currentTarget.dataset.index;
                 let that = this;
+                if(that.receive_lock){
+                  return false;
+                }
+                that.receive_lock=true;
                 rq.get('receiveOrder', {
                     200: result => {
                         wepy.showToast({
@@ -149,6 +154,7 @@
                             mask: true, //显示透明蒙层，防止触摸穿透,
                             success: res => {}
                         });
+                        that.receive_lock=false;
                         that.userList[index]['hide'] = true;
                         that.$apply();
                     }
@@ -158,6 +164,9 @@
             },
             goToDetail(e) {
                 let id = e.currentTarget.dataset.id;
+                if(wepy.getStorageSync('office_line')=='marry'){
+                  return false;
+                }
                 wepy.navigateTo({
                     url: '/pages/common/sale/customer?id=' + id
                 });

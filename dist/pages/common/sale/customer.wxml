@@ -574,7 +574,7 @@
             <view class="common-list">
               <view class="common-lab common-lab-rcode">{{ item.employee_name }}</view>
               <view class="common-tip common-tip-rcode common-tip-{{item.receive_status}}">
-              {{ item.receive_status_text }}
+                {{ item.receive_status_text }}
               </view>
             </view>
           </block>
@@ -905,10 +905,13 @@
     
 <view>
   <view class="common-title"  wx:if="{{$customerfollow$ntmodeac$label}}">{{$customerfollow$ntmodeac$label}}
-    <text class="common-lab-btn"  wx:if="{{!$customerfollow$customer.have_drop && !$customerfollow$readonly}}" bindtap="$customerfollow$dropCustomer">状态变更</text><text class="common-lab-btn" wx:if="{{$customerfollow$customer.have_drop && !$customerfollow$readonly}}" bindtap="$customerfollow$dropCustomer">变更审核中...</text>
+    <text class="common-lab-btn"  wx:if="{{ !$customerfollow$readonly }}" bindtap="$customerfollow$dropCustomer">
+        <block wx:if="{{ $customerfollow$customer.user_status == 2 }}">查看理由</block>
+        <block wx:if="{{ $customerfollow$customer.user_status != 2 && !$customerfollow$customer.have_drop }}">状态变更</block>
+        <block wx:if="{{ $customerfollow$customer.user_status != 2 && $customerfollow$customer.have_drop }}">变更审核中...</block>
+      </text>
   </view>
     <view class="common-pannel">
-      
       
       
       
@@ -1361,16 +1364,18 @@
 
   </view>
 
-        <view wx:if="{{department=='marry'}}">
-          <view class="common-title" wx:if="{{user.is_bookteam==0}}">转让信息</view>
-          <view class="common-pannel" wx:if="{{user.is_bookteam==0}}">
+        <view>
+          <!--转让-->
+          <view class="common-title" wx:if="{{user.is_sale||user.is_server_offline}}">转让信息</view>
+          <view class="common-pannel" wx:if="{{user.is_sale||user.is_server_offline}}">
             <view class="common-list" bindtap="goToTurn">
               <view class="common-lab">转让信息</view>
               <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
               </image>
             </view>
           </view>
-          <view wx:if="{{user.is_bookteam==1}}">
+          <!--转让-->
+          <view wx:if="{{is_bookteam==1}}">
             <view class="common-title">接单团队</view>
             <view class="common-pannel">
               <view class="common-list">

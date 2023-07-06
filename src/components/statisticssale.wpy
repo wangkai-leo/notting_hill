@@ -1,5 +1,5 @@
 <template>
-  <view class="common-wrapper" wx:if="{{user_act.is_sale}}">
+  <view class="common-wrapper" wx:if="{{user_act.is_sale && office_line == 'marry'}}">
     <view class="common-pannel">
       <view class="dep-lead-sa">
         <view class="dep-line">
@@ -112,13 +112,15 @@ export default class Index extends wepy.component {
     employee_check_index: 0,
     page_success_data: null,
     tab_index: 0,
-    user_act: null
+    user_act: null,
+    office_line:{}
   }
   watch = {
     is_request() {
       if (this.is_request) {
         let user_act = this.user_act = wepy.getStorageSync('user');
-        if (user_act.is_sale) {
+        let office_line = this.office_line = wepy.getStorageSync('office_line');
+        if (user_act.is_sale && office_line == 'marry') {
           this.getDataStatistics();
         }
       }

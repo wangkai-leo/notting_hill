@@ -7,41 +7,92 @@
   overflow: hidden;
   white-space: nowrap;
   height: 28rpx;
-  line-height:28rpx;
-  font-size:22rpx;
+  line-height: 28rpx;
+  font-size: 22rpx;
 }
+
 .common-lab-btn {
   top: 5rpx;
 }
+
 .common-list-sa {
-    position: relative;
-    font-size: 26rpx;
-    color: #333333;
-    padding: 30rpx 0rpx;
-    border-bottom: #dad8d8 solid 1rpx;
-    overflow: hidden;
+  position: relative;
+  font-size: 26rpx;
+  color: #333333;
+  padding: 30rpx 0rpx;
+  border-bottom: #dad8d8 solid 1rpx;
+  overflow: hidden;
+}
+
+.cus-rows {
+  float: left;
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  height: 28rpx;
+  line-height: 28rpx;
+  font-size: 22rpx;
+}
+
+.cus-0-rows {
+  width: 8%;
+}
+
+.cus-1-rows {
+  width: 10%;
+}
+
+.cus-2-rows {
+  width: 20%;
+}
+
+.cus-3-rows {
+  width: 30%;
+  float: left;
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  height: 28rpx;
+  line-height: 28rpx;
+  font-size: 22rpx;
+}
+
+.common-scroll-x {
+  position: relative;
+  overflow-x: scroll;
+}
+.common-s-cont{
+  width: 880rpx;
 }
 </style>
 
 <template>
   <view class="common-wrapper">
     <view class="common-pannel">
-      <view class="common-list-sa">
-        <view class="cus-5-rows">编号</view>
-        <view class="cus-5-rows">渠道</view>
-        <view class="cus-5-rows">城市</view>
-        <view class="cus-5-rows">发布人</view>
-        <view class="cus-5-rows">销售</view>
-      </view>
-      <block wx:for="{{list}}" wx:key="">
-        <view class="common-list-sa" @tap="goToDetail" data-id="{{item.user_id}}">
-          <view class="cus-5-rows">{{ item.order_id }}</view>
-          <view class="cus-5-rows">{{ item.channel_name }}</view>
-          <view class="cus-5-rows">{{ item.city_name }}</view>
-          <view class="cus-5-rows">{{ item.submit_name }}</view>
-          <view class="cus-5-rows">{{ item.sale_name }}</view>
+      <view class="common-scroll-x">
+        <view class="common-s-cont">
+          <view class="common-list-sa">
+            <view class="cus-rows cus-2-rows">编号</view>
+            <view class="cus-rows cus-1-rows">日期</view>
+            <view class="cus-rows cus-2-rows">渠道</view>
+            <view class="cus-rows cus-2-rows">城市</view>
+            <view class="cus-rows cus-1-rows">发布人</view>
+            <view class="cus-rows cus-2-rows">销售</view>
+          </view>
+          <block wx:for="{{list}}" wx:key="">
+            <view class="common-list-sa" @tap="goToDetail" data-id="{{item.user_id}}">
+              <view class="cus-rows cus-2-rows">{{ item.order_id }}</view>
+              <view class="cus-rows cus-1-rows">{{ item.create_date }}</view>
+              <view class="cus-rows cus-2-rows">{{ item.channel_name }}</view>
+              <view class="cus-rows cus-2-rows">{{ item.city_name }}</view>
+              <view class="cus-rows cus-1-rows">{{ item.submit_name }}</view>
+              <view class="cus-rows cus-2-rows">{{ item.sale_name }}</view>
+            </view>
+          </block>
         </view>
-      </block>
+      </view>
     </view>
   </view>
 </template>
@@ -59,13 +110,13 @@ export default class Index extends wepy.component {
   watch = {
   }
   methods = {
-    goToDetail(e){
-      let id=e.currentTarget.dataset.id;
-      wepy.navigateTo({url:'/pages/common/server/customer?id='+id});
+    goToDetail(e) {
+      let id = e.currentTarget.dataset.id;
+      wepy.navigateTo({ url: '/pages/common/server/customer?id=' + id });
     }
   };
   onLoad() {
-    
+
   }
   onShow() {
 

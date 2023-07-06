@@ -39,3 +39,10 @@
   border-bottom: #dad8d8 solid 1rpx;
   overflow: hidden;
 }
+.common-scroll-x {
+  position: relative;
+  overflow-x: scroll;
+}
+.common-s-cont {
+  width: 880rpx;
+}

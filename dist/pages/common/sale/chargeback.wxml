@@ -467,9 +467,7 @@
     </view>
   </view>
 
-
-      <view wx:if="{{!readonly}}">
-        
+      
 <view>
   <view class="common-title">
     {{$ntitemIremark$label}}
@@ -489,6 +487,7 @@
     </view>
 </view>
 
+      <view wx:if="{{!readonly}}">
         
   <view class="common-title">{{ $ntpickera$label }}</view>
   <view class="common-pannel">

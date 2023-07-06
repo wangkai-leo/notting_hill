@@ -84,9 +84,8 @@
 .full-tab-item {
   width: 50%;
 }
-
-.box-con {
-  margin-top: 50rpx;
+.customer-info{
+  margin:40rpx auto 0rpx;
 }
 </style>
 
@@ -94,7 +93,7 @@
   <view class="container">
     <view wx:if="{{!loading}}">
       <header :title="title" :isback="isback" :isopacity="isopacity"></header>
-      <view class="common-top">
+      <view class="common-top" id="top_header">
         <view class="common-content">
         </view>
       </view>
@@ -105,10 +104,11 @@
           <view class="full-tab-item {{drop_status==1?'sale-tab-item-check':''}}" @tap="toggleTab" data-index="1">已审核</view>
         </view>
         <view class="box-con">
+          <scroll-view scroll-y @scrolltolower="loadMore" style="height:{{vi_height}}px">
           <block wx:for="{{userList}}" wx:key="">
             <view class="customer-info" wx:if="{{!item.hide}}">
               <view class="customer-info-header">
-                <view class="customer-num">编号：{{ item.main_contract }}</view>
+                <view class="customer-num">编号：{{ item.order_id }}</view>
                 <view class="customer-date">{{ item.status_time }}</view>
               </view>
               <view class="customer-info-msgs" @tap="goToDetail" data-id="{{item.id}}" data-user="{{item.user_id}}">
@@ -119,6 +119,7 @@
               </view>
             </view>
           </block>
+          </scroll-view>
         </view>
       </view>
       <!--列表-->
@@ -144,9 +145,15 @@ export default class Index extends wepy.page {
     is_hide: true,
     userList: null,
     user: null,
-    drop_status: 0
+    drop_status: 0,
+    page:1,
+    is_load:false,
+    vi_height:500
   };
   methods = {
+    loadMore() {
+      this.dropCustomerList();
+    },
     goToDetail(e) {
       let id = e.currentTarget.dataset.id;
       wepy.navigateTo({
@@ -156,26 +163,52 @@ export default class Index extends wepy.page {
     },
     toggleTab(e) {
       this.drop_status = e.currentTarget.dataset.index;
+      this.page=0;
+      this.userList=[];
       this.dropCustomerList();
     }
   };
   onLoad(options) {
     let that = this;
     that.loading = false;
+    that.page=0;
+    that.userList=[];
   }
   dropCustomerList() {
     let that = this;
+    if(that.is_load){
+      return 
+    }
+    that.page++;
+    that.is_load=true;
     rq.get('dropCustomerList', {
       200: result => {
-        that.userList = result.data.data;
+        // that.userList = result.data.data;
         that.is_leader = result.data.is_leader;
-        that.userList.forEach(element => {
+        result.data.data.forEach(element => {
           element['is_hide'] = true;
         });
+        that.userList=that.userList.concat(result.data.data);
+        that.is_load=false;
         that.$apply();
       }
     }, {
-      drop_status: this.drop_status
+      drop_status: this.drop_status,
+      page:this.page
+    })
+  }
+  onReady() {
+    let that = this;
+    wx.getSystemInfo({
+      success(res) {
+        let w_height = res.windowHeight;
+        var query = wx.createSelectorQuery();
+        query.select('#top_header').boundingClientRect(function (result) {
+          let vi_height = w_height - result.height - 73;
+          that.vi_height = vi_height;
+          that.$apply();
+        }).exec();
+      }
     })
   }
   onShow() {

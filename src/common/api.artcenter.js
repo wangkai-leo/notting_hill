@@ -30,4 +30,18 @@ export default {
     url:'reviewTaskInfo'
   },
 
+  getSalesUserData:{
+    descript: '销售统计数据',
+    url:'getSalesUserData'
+  },
+
+  getSalesUserDataGroup:{
+    descript: '销售数据分组',
+    url:'getSalesUserDataGroup'
+  },
+
+  getSalesUserDataGroupDetail:{
+    descript: '销售数据分组数据列表',
+    url:'getSalesUserDataGroupDetail'
+  }
 }

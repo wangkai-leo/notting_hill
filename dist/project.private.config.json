@@ -1,9 +1,10 @@
 {
   "projectname": "%E8%AF%BA%E4%B8%81%E5%B1%B1",
   "setting": {
-    "compileHotReLoad": true,
+    "compileHotReLoad": false,
     "preloadBackgroundData": false,
-    "useIsolateContext": true
+    "useIsolateContext": false,
+    "urlCheck": true
   },
   "description": "Project configuration file, more information: https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html",
   "condition": {
@@ -11,19 +12,13 @@
       "list": [
         {
           "name": "",
-          "pathName": "pages/common/sale/chargeback",
-          "query": "id=37149&approving=true",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "",
-          "pathName": "pages/statistics",
+          "pathName": "pages/common/sale/nav/distribute",
           "query": "",
           "launchMode": "default",
           "scene": null
         }
       ]
     }
-  }
+  },
+  "libVersion": "2.32.2"
 }

@@ -1,0 +1,31 @@
+
+  <view class="common-wrapper">
+    <view class="common-pannel">
+      <view class="dep-lead-sa">
+        <view class="dep-line">
+          城市：
+  <view class="inline-tis"  wx:if="{{$ntinlinepicker$ntpickertype!='date'}}">
+    {{ $ntinlinepicker$ntrange[$ntinlinepicker$checked_index][$ntinlinepicker$ntkey] }}
+    <image class="common-log-arrows-c" src="../../images/arrows-down.png" mode="widthFix" lazy-load="false">
+    </image>
+    <picker wx:if="{{!$ntinlinepicker$readonly}}" class="picker-common" range="{{$ntinlinepicker$ntrange}}" range-key="{{$ntinlinepicker$ntkey}}" bindchange="$ntinlinepicker$bindChange">
+      <view class="picker-common-v">
+        当前选择：{{ $ntinlinepicker$ntrange[$ntinlinepicker$checked_index][$ntinlinepicker$ntkey] }}
+      </view>
+    </picker>
+  </view>
+  <view class="inline-tis"  wx:if="{{$ntinlinepicker$ntpickertype=='date'}}">
+    {{ $ntinlinepicker$checked_name }}
+    <image class="common-log-arrows-c" src="../../images/arrows-down.png" mode="widthFix" lazy-load="false">
+    </image>
+    <picker wx:if="{{!$ntinlinepicker$readonly}}" class="picker-common" mode="date" bindchange="$ntinlinepicker$bindDateChange">
+      <view class="picker-common-v">
+        当前选择：{{ $ntinlinepicker$checked_name }}
+      </view>
+    </picker>
+  </view>
+
+        </view>
+      </view>
+    </view>
+  </view>

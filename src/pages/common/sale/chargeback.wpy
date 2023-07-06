@@ -5,7 +5,7 @@
     <header :title="title" :isback="isback" :isopacity="isopacity"></header>
     <topbar></topbar>
     <view class="common-wrapper">
-      <ntitemtime wx:if="{{ drop_id!=0 }}" label="创建时间" :ntvalue.sync="customer" ntkey="create_date"></ntitemtime>
+      <ntitemtime wx:if="{{ drop_id!=0 }}" label="创建时间" :ntvalue.sync="sbumit_data" ntkey="create_date"></ntitemtime>
       <ntitemIchannel label="客户来源" :ntvalue.sync="customer" ntkey="channel_name"></ntitemIchannel>
       <ntitemIintend label="客户意向" :ntvalue.sync="customer" ntkey="intention_name"></ntitemIintend>
       <ntmodualweidingmsg label="婚礼信息">
@@ -20,10 +20,9 @@
         <ntlistg label="微信号" :ntvalue.sync="customer" ntkey="wechat_id"></ntlistg>
       </ntmodualweidingmsg>
       <upload label="变更凭证" size="9" :save_obj.sync="uplaoded" ntkey="images" :readonly.sync="readonly"></upload>
-
+      <ntitemIremark label="变更备注" nttype="area" :ntvalue.sync="sbumit_data" ntkey="status_remark"
+        :readonly.sync="readonly" placeholder="请输入备注信息"></ntitemIremark>
       <view wx:if="{{!readonly}}">
-        <ntitemIremark label="变更备注" nttype="area" :ntvalue.sync="sbumit_data" ntkey="status_remark"
-          :readonly.sync="readonly" placeholder="请输入备注信息"></ntitemIremark>
         <ntpickera label="状态变更" :ntrange.sync="status_arr" :checked_index.sync="status_arr_index" ntkey="status">
         </ntpickera>
         <view class="customer-create-btn" wx:if="{{customer.user_status!=1}}" @tap="submit">提交申请</view>
@@ -85,7 +84,7 @@ export default class Index extends wepy.page {
       images: []
     },
     submit_lock: false,
-    drop_id:0
+    drop_id: 0
   };
   methods = {
     submit() {
@@ -115,11 +114,12 @@ export default class Index extends wepy.page {
     let that = this;
     that.id = options.id;
     if (options.drop_id != 0) { //if has drop info 
-      that.drop_id=options.drop_id;
+      that.drop_id = options.drop_id;
       that.readonly = true;
       rq.get('dropCustomerDetail', {
         200: result => {
           that.sbumit_data.status_remark = result.data.data.drop_remark;
+          that.sbumit_data.create_date=result.data.data.create_date;
           that.uplaoded.images = result.data.data.drop_file.split(',')
           that.$apply();
         }

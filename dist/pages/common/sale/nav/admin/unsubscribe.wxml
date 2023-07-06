@@ -18,7 +18,7 @@
     </view>
   </view>
 
-      <view class="common-top">
+      <view class="common-top" id="top_header">
         <view class="common-content">
         </view>
       </view>
@@ -29,10 +29,11 @@
           <view class="full-tab-item {{drop_status==1?'sale-tab-item-check':''}}" bindtap="toggleTab" data-index="1">已审核</view>
         </view>
         <view class="box-con">
+          <scroll-view scroll-y bindscrolltolower="loadMore" style="height:{{vi_height}}px">
           <block wx:for="{{userList}}" wx:key="">
             <view class="customer-info" wx:if="{{!item.hide}}">
               <view class="customer-info-header">
-                <view class="customer-num">编号：{{ item.main_contract }}</view>
+                <view class="customer-num">编号：{{ item.order_id }}</view>
                 <view class="customer-date">{{ item.status_time }}</view>
               </view>
               <view class="customer-info-msgs" bindtap="goToDetail" data-id="{{item.id}}" data-user="{{item.user_id}}">
@@ -43,6 +44,7 @@
               </view>
             </view>
           </block>
+          </scroll-view>
         </view>
       </view>
       <!--列表-->

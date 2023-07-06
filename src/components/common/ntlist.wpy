@@ -9,7 +9,7 @@
 
     <!--password-->
     <input class="common-tip" type="password" wx:if="{{nttype=='password'&&readonly}}" value="{{ntvalue[ntkey]}}"
-      placeholder="{{placeholder}}" disabled></input>
+      placeholder="{{placeholder}}" disabled /></input>
     <input class="common-tip" type="password" wx:if="{{nttype=='password'&&!readonly}}" value="{{ntvalue[ntkey]}}"
       placeholder="{{placeholder}}" @blur="bindInput"></input>
     <!--password-->
@@ -99,11 +99,22 @@ export default class Fnav extends wepy.component {
       default: true,
       twoWay: true
     },
+    is_search: {
+      type: Boolean,
+      default: false,
+      twoWay: true
+    }
   }
   watch = {
-    ntkey() {
+    ntvalue() {
+      // console.log('***************')
+      // console.log(this.readonly)
+      // console.log(this.ntvalue.sales_id)
+      // console.log(this.user.id)
       // 如果销售不是当前用户,隐藏客资界面手机号前面部分
-      if ((this.user.id != this.ntvalue.submit_id) && (this.user.id != this.ntvalue.sales_id) && this.readonly) {
+      if (((this.user.id != this.ntvalue.submit_id) 
+      && (this.user.id != this.ntvalue.sales_id) 
+      && this.readonly)||this.is_search) {
         if (this.ntkey == 'user_mobile') {
           this.ntvalue[this.ntkey] = this.ntvalue[this.ntkey].substring(0, 3) + '****' + this.ntvalue[this.ntkey].substring(7, 11);
         } else if (this.ntkey == 'wechat_id') {
@@ -117,8 +128,8 @@ export default class Fnav extends wepy.component {
     user: null
   };
   methods = {
-    bindChange(e){
-      this.$emit('pickerValueChange',e.detail.value);
+    bindChange(e) {
+      this.$emit('pickerValueChange', e.detail.value);
     },
     bindRegionChange(e) {
       let values = e.detail.value;
@@ -133,7 +144,7 @@ export default class Fnav extends wepy.component {
       this.ntvalue[this.ntkey] = e.detail.value;
     }
   };
-  onLoad(options) {
+  onLoad() {
     this.user = wepy.getStorageSync('user');
   }
   events = {

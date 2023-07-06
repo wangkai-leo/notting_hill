@@ -1,14 +1,18 @@
 <template>
-  <view class="common-wrapper"  wx:if="{{user_act.is_server||user_act.is_server_offline}}">
+  <view class="common-wrapper" wx:if="{{user_act.is_server||user_act.is_server_offline}}">
     <view class="common-pannel">
       <view class="dep-lead-sa">
         <view class="dep-line">
-          时间：
-          <ntinlinepickerc @change.user="handleBeginChange" :checked_name.sync="order_date_start" ntpickertype="date">
-          </ntinlinepickerc>
-          至
-          <ntinlinepickerb @change.user="handleEndChange" :checked_name.sync="order_date_end" ntpickertype="date">
-          </ntinlinepickerb>
+          <view class="dep-date-item">
+            <view class="dep-label">时间：</view>
+            <ntinlinepickerc @change.user="handleBeginChange" :checked_name.sync="order_date_start" ntpickertype="date">
+            </ntinlinepickerc>
+          </view>
+          <view class="dep-date-item">
+            <view class="dep-label">至</view>
+            <ntinlinepickerb @change.user="handleEndChange" :checked_name.sync="order_date_end" ntpickertype="date">
+            </ntinlinepickerb>
+          </view>
         </view>
         <view class="dep-line">
           人员：<ntinlinepickera @change.user="handleChange" :ntrange.sync="employee_list" ntkey="employee_name"
@@ -74,9 +78,9 @@ import dt from '../common/utils/date';
 import ntinlinepicker from './common/ntinlinepicker';
 export default class Index extends wepy.component {
   props = {
-    is_request:{
-      type:Boolean,
-      twoWay:true
+    is_request: {
+      type: Boolean,
+      twoWay: true
     }
   };
   data = {
@@ -89,13 +93,13 @@ export default class Index extends wepy.component {
     employee_check_index: 0,
     page_success_data: null,
     tab_index: 0,
-    user_act:null
+    user_act: null
   }
   watch = {
     is_request() {
-      if(this.is_request){
-        let user_act =this.user_act= wepy.getStorageSync('user');
-        if (user_act.is_server||user_act.is_server_offline) {
+      if (this.is_request) {
+        let user_act = this.user_act = wepy.getStorageSync('user');
+        if (user_act.is_server || user_act.is_server_offline) {
           this.getServerDataList();
         }
       }
@@ -192,8 +196,8 @@ export default class Index extends wepy.component {
     this.order_date_start = dt.dateFormat('yyyy-MM-dd', new Date(year, month, 1));
     this.order_date_end = dt.dateFormat('yyyy-MM-dd', new Date(year, month, count_day - 1));
 
-    let user_act =this.user_act= wepy.getStorageSync('user');
-    if (user_act.is_server||user_act.is_server_offline) {
+    let user_act = this.user_act = wepy.getStorageSync('user');
+    if (user_act.is_server || user_act.is_server_offline) {
       this.getServerDataList();
     }
   }
@@ -301,5 +305,12 @@ export default class Index extends wepy.component {
 .prec-tab-box {
   margin-bottom: 15px;
   overflow: hidden;
+}
+.dep-date-item{
+  float: left;
+  width: 300rpx;
+}
+.dep-label {
+  float: left;
 }
 </style>

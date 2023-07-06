@@ -28,8 +28,9 @@
     <view class="common-pannel">
       <view class="dep-lead-sa">
         <view class="dep-line">
-          时间：
-          
+          <view class="dep-date-item">
+            <view class="dep-label">时间：</view>
+            
   <view class="inline-tis"  wx:if="{{$serverstatistics$ntinlinepickerc$ntpickertype!='date'}}">
     {{ $serverstatistics$ntinlinepickerc$ntrange[$serverstatistics$ntinlinepickerc$checked_index][$serverstatistics$ntinlinepickerc$ntkey] }}
     <image class="common-log-arrows-c" src="../images/arrows-down.png" mode="widthFix" lazy-load="false">
@@ -51,8 +52,10 @@
     </picker>
   </view>
 
-          至
-          
+          </view>
+          <view class="dep-date-item">
+            <view class="dep-label">至</view>
+            
   <view class="inline-tis"  wx:if="{{$serverstatistics$ntinlinepickerb$ntpickertype!='date'}}">
     {{ $serverstatistics$ntinlinepickerb$ntrange[$serverstatistics$ntinlinepickerb$checked_index][$serverstatistics$ntinlinepickerb$ntkey] }}
     <image class="common-log-arrows-c" src="../images/arrows-down.png" mode="widthFix" lazy-load="false">
@@ -74,6 +77,7 @@
     </picker>
   </view>
 
+          </view>
         </view>
         <view class="dep-line">
           人员：
@@ -150,52 +154,52 @@
   </view>
 
     
-  <view class="common-wrapper"  wx:if="{{$salestatistics$user_act.is_sale}}">
+  <view class="common-wrapper"  wx:if="{{$weddingsalestatistics$user_act.is_sale && $weddingsalestatistics$office_line == 'marry'}}">
     <view class="common-pannel">
       <view class="dep-lead-sa">
         <view class="dep-line">
           时间：
           
-  <view class="inline-tis"  wx:if="{{$salestatistics$ntinlinepickerc$ntpickertype!='date'}}">
-    {{ $salestatistics$ntinlinepickerc$ntrange[$salestatistics$ntinlinepickerc$checked_index][$salestatistics$ntinlinepickerc$ntkey] }}
+  <view class="inline-tis"  wx:if="{{$weddingsalestatistics$ntinlinepickerc$ntpickertype!='date'}}">
+    {{ $weddingsalestatistics$ntinlinepickerc$ntrange[$weddingsalestatistics$ntinlinepickerc$checked_index][$weddingsalestatistics$ntinlinepickerc$ntkey] }}
     <image class="common-log-arrows-c" src="../images/arrows-down.png" mode="widthFix" lazy-load="false">
     </image>
-    <picker wx:if="{{!$salestatistics$ntinlinepickerc$readonly}}" class="picker-common" range="{{$salestatistics$ntinlinepickerc$ntrange}}" range-key="{{$salestatistics$ntinlinepickerc$ntkey}}" bindchange="$salestatistics$ntinlinepickerc$bindChange">
+    <picker wx:if="{{!$weddingsalestatistics$ntinlinepickerc$readonly}}" class="picker-common" range="{{$weddingsalestatistics$ntinlinepickerc$ntrange}}" range-key="{{$weddingsalestatistics$ntinlinepickerc$ntkey}}" bindchange="$weddingsalestatistics$ntinlinepickerc$bindChange">
       <view class="picker-common-v">
-        当前选择：{{ $salestatistics$ntinlinepickerc$ntrange[$salestatistics$ntinlinepickerc$checked_index][$salestatistics$ntinlinepickerc$ntkey] }}
+        当前选择：{{ $weddingsalestatistics$ntinlinepickerc$ntrange[$weddingsalestatistics$ntinlinepickerc$checked_index][$weddingsalestatistics$ntinlinepickerc$ntkey] }}
       </view>
     </picker>
   </view>
-  <view class="inline-tis"  wx:if="{{$salestatistics$ntinlinepickerc$ntpickertype=='date'}}">
-    {{ $salestatistics$ntinlinepickerc$checked_name }}
+  <view class="inline-tis"  wx:if="{{$weddingsalestatistics$ntinlinepickerc$ntpickertype=='date'}}">
+    {{ $weddingsalestatistics$ntinlinepickerc$checked_name }}
     <image class="common-log-arrows-c" src="../images/arrows-down.png" mode="widthFix" lazy-load="false">
     </image>
-    <picker wx:if="{{!$salestatistics$ntinlinepickerc$readonly}}" class="picker-common" mode="date" bindchange="$salestatistics$ntinlinepickerc$bindDateChange">
+    <picker wx:if="{{!$weddingsalestatistics$ntinlinepickerc$readonly}}" class="picker-common" mode="date" bindchange="$weddingsalestatistics$ntinlinepickerc$bindDateChange">
       <view class="picker-common-v">
-        当前选择：{{ $salestatistics$ntinlinepickerc$checked_name }}
+        当前选择：{{ $weddingsalestatistics$ntinlinepickerc$checked_name }}
       </view>
     </picker>
   </view>
 
           至
           
-  <view class="inline-tis"  wx:if="{{$salestatistics$ntinlinepickerb$ntpickertype!='date'}}">
-    {{ $salestatistics$ntinlinepickerb$ntrange[$salestatistics$ntinlinepickerb$checked_index][$salestatistics$ntinlinepickerb$ntkey] }}
+  <view class="inline-tis"  wx:if="{{$weddingsalestatistics$ntinlinepickerb$ntpickertype!='date'}}">
+    {{ $weddingsalestatistics$ntinlinepickerb$ntrange[$weddingsalestatistics$ntinlinepickerb$checked_index][$weddingsalestatistics$ntinlinepickerb$ntkey] }}
     <image class="common-log-arrows-c" src="../images/arrows-down.png" mode="widthFix" lazy-load="false">
     </image>
-    <picker wx:if="{{!$salestatistics$ntinlinepickerb$readonly}}" class="picker-common" range="{{$salestatistics$ntinlinepickerb$ntrange}}" range-key="{{$salestatistics$ntinlinepickerb$ntkey}}" bindchange="$salestatistics$ntinlinepickerb$bindChange">
+    <picker wx:if="{{!$weddingsalestatistics$ntinlinepickerb$readonly}}" class="picker-common" range="{{$weddingsalestatistics$ntinlinepickerb$ntrange}}" range-key="{{$weddingsalestatistics$ntinlinepickerb$ntkey}}" bindchange="$weddingsalestatistics$ntinlinepickerb$bindChange">
       <view class="picker-common-v">
-        当前选择：{{ $salestatistics$ntinlinepickerb$ntrange[$salestatistics$ntinlinepickerb$checked_index][$salestatistics$ntinlinepickerb$ntkey] }}
+        当前选择：{{ $weddingsalestatistics$ntinlinepickerb$ntrange[$weddingsalestatistics$ntinlinepickerb$checked_index][$weddingsalestatistics$ntinlinepickerb$ntkey] }}
       </view>
     </picker>
   </view>
-  <view class="inline-tis"  wx:if="{{$salestatistics$ntinlinepickerb$ntpickertype=='date'}}">
-    {{ $salestatistics$ntinlinepickerb$checked_name }}
+  <view class="inline-tis"  wx:if="{{$weddingsalestatistics$ntinlinepickerb$ntpickertype=='date'}}">
+    {{ $weddingsalestatistics$ntinlinepickerb$checked_name }}
     <image class="common-log-arrows-c" src="../images/arrows-down.png" mode="widthFix" lazy-load="false">
     </image>
-    <picker wx:if="{{!$salestatistics$ntinlinepickerb$readonly}}" class="picker-common" mode="date" bindchange="$salestatistics$ntinlinepickerb$bindDateChange">
+    <picker wx:if="{{!$weddingsalestatistics$ntinlinepickerb$readonly}}" class="picker-common" mode="date" bindchange="$weddingsalestatistics$ntinlinepickerb$bindDateChange">
       <view class="picker-common-v">
-        当前选择：{{ $salestatistics$ntinlinepickerb$checked_name }}
+        当前选择：{{ $weddingsalestatistics$ntinlinepickerb$checked_name }}
       </view>
     </picker>
   </view>
@@ -206,40 +210,40 @@
     <view class="common-title">客资统计</view>
     <view class="common-pannel">
       <view class="dep-base-box">
-        <view bindtap="$salestatistics$naviToList" data-map="{{$salestatistics$page_data.all_users.map}}" class="dep-3 dep-3-bd">
-          <view class="dep-num">{{ $salestatistics$page_data.all_users.count }}</view>
+        <view bindtap="$weddingsalestatistics$naviToList" data-map="{{$weddingsalestatistics$page_data.all_users.map}}" class="dep-3 dep-3-bd">
+          <view class="dep-num">{{ $weddingsalestatistics$page_data.all_users.count }}</view>
           <view class="dep-tip">总客资</view>
         </view>
-        <view bindtap="$salestatistics$naviToList" data-map="{{$salestatistics$page_data.online_users.map}}" class="dep-3 dep-3-bd">
-          <view class="dep-num">{{ $salestatistics$page_data.online_users.count }}</view>
+        <view bindtap="$weddingsalestatistics$naviToList" data-map="{{$weddingsalestatistics$page_data.online_users.map}}" class="dep-3 dep-3-bd">
+          <view class="dep-num">{{ $weddingsalestatistics$page_data.online_users.count }}</view>
           <view class="dep-tip">线上客资</view>
         </view>
-        <view bindtap="$salestatistics$naviToList" data-map="{{$salestatistics$page_data.offline_users.map}}" class="dep-3">
-          <view class="dep-num">{{ $salestatistics$page_data.offline_users.count }}</view>
+        <view bindtap="$weddingsalestatistics$naviToList" data-map="{{$weddingsalestatistics$page_data.offline_users.map}}" class="dep-3">
+          <view class="dep-num">{{ $weddingsalestatistics$page_data.offline_users.count }}</view>
           <view class="dep-tip">线下客资</view>
         </view>
-        <view bindtap="$salestatistics$naviToList" data-map="{{$salestatistics$page_data.nottinghill_users.map}}" class="dep-3 dep-3-bd">
-          <view class="dep-num">{{ $salestatistics$page_data.nottinghill_users.count }}</view>
+        <view bindtap="$weddingsalestatistics$naviToList" data-map="{{$weddingsalestatistics$page_data.nottinghill_users.map}}" class="dep-3 dep-3-bd">
+          <view class="dep-num">{{ $weddingsalestatistics$page_data.nottinghill_users.count }}</view>
           <view class="dep-tip">诺丁山</view>
         </view>
-        <view bindtap="$salestatistics$naviToList" data-map="{{$salestatistics$page_data.dreampark_users.map}}" class="dep-3 dep-3-bd">
-          <view class="dep-num">{{ $salestatistics$page_data.dreampark_users.count }}</view>
+        <view bindtap="$weddingsalestatistics$naviToList" data-map="{{$weddingsalestatistics$page_data.dreampark_users.map}}" class="dep-3 dep-3-bd">
+          <view class="dep-num">{{ $weddingsalestatistics$page_data.dreampark_users.count }}</view>
           <view class="dep-tip">DreamPark</view>
         </view>
-        <view bindtap="$salestatistics$naviToList" data-map="{{$salestatistics$page_data.one_stop_wedding_users.map}}" class="dep-3">
-          <view class="dep-num">{{ $salestatistics$page_data.one_stop_wedding_users.count }}</view>
+        <view bindtap="$weddingsalestatistics$naviToList" data-map="{{$weddingsalestatistics$page_data.one_stop_wedding_users.map}}" class="dep-3">
+          <view class="dep-num">{{ $weddingsalestatistics$page_data.one_stop_wedding_users.count }}</view>
           <view class="dep-tip">一站式婚宴</view>
         </view>
-        <view bindtap="$salestatistics$naviToList" data-map="{{$salestatistics$page_data.drop_customer_users.map}}" class="dep-3 dep-3-bd dep-3-bd-n">
-          <view class="dep-num">{{ $salestatistics$page_data.drop_customer_users.count }}</view>
+        <view bindtap="$weddingsalestatistics$naviToList" data-map="{{$weddingsalestatistics$page_data.drop_customer_users.map}}" class="dep-3 dep-3-bd dep-3-bd-n">
+          <view class="dep-num">{{ $weddingsalestatistics$page_data.drop_customer_users.count }}</view>
           <view class="dep-tip">退客/无效客资</view>
         </view>
-        <view bindtap="$salestatistics$naviToList" data-map="{{$salestatistics$page_data.dead_users.map}}" class="dep-3 dep-3-bd dep-3-bd-n">
-          <view class="dep-num">{{ $salestatistics$page_data.dead_users.count }}</view>
+        <view bindtap="$weddingsalestatistics$naviToList" data-map="{{$weddingsalestatistics$page_data.dead_users.map}}" class="dep-3 dep-3-bd dep-3-bd-n">
+          <view class="dep-num">{{ $weddingsalestatistics$page_data.dead_users.count }}</view>
           <view class="dep-tip">已死客资</view>
         </view>
-        <view data-map="{{$salestatistics$page_data.missing_users.map}}" class="dep-3 dep-3-bd-n" bindtap="$salestatistics$naviMissCount">
-          <view class="dep-num">{{ $salestatistics$page_data.missing_users.count }}</view>
+        <view data-map="{{$weddingsalestatistics$page_data.missing_users.map}}" class="dep-3 dep-3-bd-n" bindtap="$weddingsalestatistics$naviMissCount">
+          <view class="dep-num">{{ $weddingsalestatistics$page_data.missing_users.count }}</view>
           <view class="dep-tip dep-tip-dis">漏客数</view>
         </view>
       </view>
@@ -247,30 +251,221 @@
     <view class="common-title">成交统计</view>
     <view class="common-pannel">
       <view class="dep-base-box">
-        <view bindtap="$salestatistics$naviToList" data-map="{{$salestatistics$page_data.complate_users.map}}" class="dep-3 dep-3-bd">
-          <view class="dep-num">{{ $salestatistics$page_data.complate_users.count }}</view>
+        <view bindtap="$weddingsalestatistics$naviToList" data-map="{{$weddingsalestatistics$page_data.complate_users.map}}" class="dep-3 dep-3-bd">
+          <view class="dep-num">{{ $weddingsalestatistics$page_data.complate_users.count }}</view>
           <view class="dep-tip">成交数</view>
         </view>
         <view class="dep-3 dep-3-bd">
-          <view class="dep-num">{{ $salestatistics$page_data.complate_percent.count }}</view>
+          <view class="dep-num">{{ $weddingsalestatistics$page_data.complate_percent.count }}</view>
           <view class="dep-tip dep-tip-dis">总成交率</view>
         </view>
         <view class="dep-3">
-          <view class="dep-num">{{ $salestatistics$page_data.online_percent.count }}/{{ $salestatistics$page_data.offline_percent.count }}</view>
+          <view class="dep-num">{{ $weddingsalestatistics$page_data.online_percent.count }}/{{ $weddingsalestatistics$page_data.offline_percent.count }}</view>
           <view class="dep-tip dep-tip-dis">线上/线下成交率</view>
         </view>
-        <view bindtap="$salestatistics$naviToList" data-map="{{$salestatistics$page_data.nottinghill_complate_users.map}}" class="dep-3 dep-3-bd dep-3-bd-n">
-          <view class="dep-num">{{ $salestatistics$page_data.nottinghill_complate_users.count }}</view>
+        <view bindtap="$weddingsalestatistics$naviToList" data-map="{{$weddingsalestatistics$page_data.nottinghill_complate_users.map}}" class="dep-3 dep-3-bd dep-3-bd-n">
+          <view class="dep-num">{{ $weddingsalestatistics$page_data.nottinghill_complate_users.count }}</view>
           <view class="dep-tip">诺丁山</view>
         </view>
-        <view bindtap="$salestatistics$naviToList" data-map="{{$salestatistics$page_data.dreampark_complate_users.map}}" class="dep-3 dep-3-bd dep-3-bd-n">
-          <view class="dep-num">{{ $salestatistics$page_data.dreampark_complate_users.count }}</view>
+        <view bindtap="$weddingsalestatistics$naviToList" data-map="{{$weddingsalestatistics$page_data.dreampark_complate_users.map}}" class="dep-3 dep-3-bd dep-3-bd-n">
+          <view class="dep-num">{{ $weddingsalestatistics$page_data.dreampark_complate_users.count }}</view>
           <view class="dep-tip">DreamPark</view>
         </view>
-        <view bindtap="$salestatistics$naviToList" data-map="{{$salestatistics$page_data.one_stop_wedding_complate_users.map}}" class="dep-3 dep-3-bd-n">
-          <view class="dep-num">{{ $salestatistics$page_data.one_stop_wedding_complate_users.count }}</view>
+        <view bindtap="$weddingsalestatistics$naviToList" data-map="{{$weddingsalestatistics$page_data.one_stop_wedding_complate_users.map}}" class="dep-3 dep-3-bd-n">
+          <view class="dep-num">{{ $weddingsalestatistics$page_data.one_stop_wedding_complate_users.count }}</view>
           <view class="dep-tip">一站式婚宴</view>
         </view>
+      </view>
+    </view>
+  </view>
+
+    
+  <view class="common-wrapper"  wx:if="{{$statisticssaleartcenter$user_act.is_sale && $statisticssaleartcenter$office_line == 'artcenter'}}">
+    <view class="common-pannel-vi">
+      <view class="dep-lead-sa-vi">
+        <view class="dep-line-vi">
+          <view class="dep-date-item">
+            <view class="dep-label">时间：</view>
+            
+  <view class="inline-tis"  wx:if="{{$statisticssaleartcenter$ntinlinepickerc$ntpickertype!='date'}}">
+    {{ $statisticssaleartcenter$ntinlinepickerc$ntrange[$statisticssaleartcenter$ntinlinepickerc$checked_index][$statisticssaleartcenter$ntinlinepickerc$ntkey] }}
+    <image class="common-log-arrows-c" src="../images/arrows-down.png" mode="widthFix" lazy-load="false">
+    </image>
+    <picker wx:if="{{!$statisticssaleartcenter$ntinlinepickerc$readonly}}" class="picker-common" range="{{$statisticssaleartcenter$ntinlinepickerc$ntrange}}" range-key="{{$statisticssaleartcenter$ntinlinepickerc$ntkey}}" bindchange="$statisticssaleartcenter$ntinlinepickerc$bindChange">
+      <view class="picker-common-v">
+        当前选择：{{ $statisticssaleartcenter$ntinlinepickerc$ntrange[$statisticssaleartcenter$ntinlinepickerc$checked_index][$statisticssaleartcenter$ntinlinepickerc$ntkey] }}
+      </view>
+    </picker>
+  </view>
+  <view class="inline-tis"  wx:if="{{$statisticssaleartcenter$ntinlinepickerc$ntpickertype=='date'}}">
+    {{ $statisticssaleartcenter$ntinlinepickerc$checked_name }}
+    <image class="common-log-arrows-c" src="../images/arrows-down.png" mode="widthFix" lazy-load="false">
+    </image>
+    <picker wx:if="{{!$statisticssaleartcenter$ntinlinepickerc$readonly}}" class="picker-common" mode="date" bindchange="$statisticssaleartcenter$ntinlinepickerc$bindDateChange">
+      <view class="picker-common-v">
+        当前选择：{{ $statisticssaleartcenter$ntinlinepickerc$checked_name }}
+      </view>
+    </picker>
+  </view>
+
+          </view>
+          <view class="dep-date-item">
+            <view class="dep-label">至</view>
+            
+  <view class="inline-tis"  wx:if="{{$statisticssaleartcenter$ntinlinepickerb$ntpickertype!='date'}}">
+    {{ $statisticssaleartcenter$ntinlinepickerb$ntrange[$statisticssaleartcenter$ntinlinepickerb$checked_index][$statisticssaleartcenter$ntinlinepickerb$ntkey] }}
+    <image class="common-log-arrows-c" src="../images/arrows-down.png" mode="widthFix" lazy-load="false">
+    </image>
+    <picker wx:if="{{!$statisticssaleartcenter$ntinlinepickerb$readonly}}" class="picker-common" range="{{$statisticssaleartcenter$ntinlinepickerb$ntrange}}" range-key="{{$statisticssaleartcenter$ntinlinepickerb$ntkey}}" bindchange="$statisticssaleartcenter$ntinlinepickerb$bindChange">
+      <view class="picker-common-v">
+        当前选择：{{ $statisticssaleartcenter$ntinlinepickerb$ntrange[$statisticssaleartcenter$ntinlinepickerb$checked_index][$statisticssaleartcenter$ntinlinepickerb$ntkey] }}
+      </view>
+    </picker>
+  </view>
+  <view class="inline-tis"  wx:if="{{$statisticssaleartcenter$ntinlinepickerb$ntpickertype=='date'}}">
+    {{ $statisticssaleartcenter$ntinlinepickerb$checked_name }}
+    <image class="common-log-arrows-c" src="../images/arrows-down.png" mode="widthFix" lazy-load="false">
+    </image>
+    <picker wx:if="{{!$statisticssaleartcenter$ntinlinepickerb$readonly}}" class="picker-common" mode="date" bindchange="$statisticssaleartcenter$ntinlinepickerb$bindDateChange">
+      <view class="picker-common-v">
+        当前选择：{{ $statisticssaleartcenter$ntinlinepickerb$checked_name }}
+      </view>
+    </picker>
+  </view>
+
+          </view>
+        </view>
+        <view class="dep-line-vi">
+          
+  <view class="mulit-check">
+    <view class="label-m">{{ $statisticssaleartcenter$MultiSelecta$ntlabel }}:</view>
+    <view class="values-box">
+      <view class="checked-values" bindtap="$statisticssaleartcenter$MultiSelecta$displayPanel">
+        <block  wx:for="{{$statisticssaleartcenter$MultiSelecta$range_data}}">
+          <view class="checked-item" wx:if="{{ item.checked }}">{{ item[$statisticssaleartcenter$MultiSelecta$range_key] }}</view>
+        </block>
+        <image class="common-log-arrows-ic" src="../images/arrows-down.png" mode="widthFix" lazy-load="false"/>
+      </view>
+      <view class="values-panel"  wx:if="{{ $statisticssaleartcenter$MultiSelecta$display_panel }}">
+        <view class="values-list">
+          <view>
+            <view class="values-item" wx:for="{{$statisticssaleartcenter$MultiSelecta$range_data}}" wx:key="{{index}}" data-index="{{ index }}" bindtap="$statisticssaleartcenter$MultiSelecta$toggleCheck">
+              <view class="value-ch-box">
+                <image class="value-ch-box-img" wx:if="{{ item.checked }}" src="../images/checked-icon.png" mode="widthFix" lazy-load="false"/>
+                <!-- <checkbox checked="{{item.checked}}" disabled /> -->
+              </view>
+              <view class="value-ch-txt">{{ item[$statisticssaleartcenter$MultiSelecta$range_key] }}</view>
+            </view>
+          </view>
+        </view>
+        <view class="cancel" bindtap="$statisticssaleartcenter$MultiSelecta$cancelCheck">取消</view>
+        <view class="confirm" bindtap="$statisticssaleartcenter$MultiSelecta$confirmCheck">确定</view>
+      </view>
+    </view>
+  </view>
+
+        </view>
+        <view class="dep-line-vi">
+          
+  <view class="mulit-check">
+    <view class="label-m">{{ $statisticssaleartcenter$MultiSelectb$ntlabel }}:</view>
+    <view class="values-box">
+      <view class="checked-values" bindtap="$statisticssaleartcenter$MultiSelectb$displayPanel">
+        <block  wx:for="{{$statisticssaleartcenter$MultiSelectb$range_data}}">
+          <view class="checked-item" wx:if="{{ item.checked }}">{{ item[$statisticssaleartcenter$MultiSelectb$range_key] }}</view>
+        </block>
+        <image class="common-log-arrows-ic" src="../images/arrows-down.png" mode="widthFix" lazy-load="false"/>
+      </view>
+      <view class="values-panel"  wx:if="{{ $statisticssaleartcenter$MultiSelectb$display_panel }}">
+        <view class="values-list">
+          <view>
+            <view class="values-item" wx:for="{{$statisticssaleartcenter$MultiSelectb$range_data}}" wx:key="{{index}}" data-index="{{ index }}" bindtap="$statisticssaleartcenter$MultiSelectb$toggleCheck">
+              <view class="value-ch-box">
+                <image class="value-ch-box-img" wx:if="{{ item.checked }}" src="../images/checked-icon.png" mode="widthFix" lazy-load="false"/>
+                <!-- <checkbox checked="{{item.checked}}" disabled /> -->
+              </view>
+              <view class="value-ch-txt">{{ item[$statisticssaleartcenter$MultiSelectb$range_key] }}</view>
+            </view>
+          </view>
+        </view>
+        <view class="cancel" bindtap="$statisticssaleartcenter$MultiSelectb$cancelCheck">取消</view>
+        <view class="confirm" bindtap="$statisticssaleartcenter$MultiSelectb$confirmCheck">确定</view>
+      </view>
+    </view>
+  </view>
+
+        </view>
+      </view>
+    </view>
+    <view class="prec-tab-box">
+      <view class="prec-tab-item-ar sale-tab-item-check">客资</view>
+    </view>
+    <view class="common-pannel">
+      <view bindtap="$statisticssaleartcenter$naviToList" data-datatype="{{$statisticssaleartcenter$page_data.all_users.data_type}}" class="dep-3-c dep-3-c-bd">
+        <view class="dep-num-c">总客资</view>
+        <view class="dep-tip-c">{{ $statisticssaleartcenter$page_data.all_users.count }}</view>
+      </view>
+      <view bindtap="$statisticssaleartcenter$naviToList" data-datatype="{{$statisticssaleartcenter$page_data.online_users.data_type}}" class="dep-3-c dep-3-c-bd">
+        <view class="dep-num-c">线上客资</view>
+        <view class="dep-tip-c">{{ $statisticssaleartcenter$page_data.online_users.count }}</view>
+      </view>
+      <view bindtap="$statisticssaleartcenter$naviToList" data-datatype="{{$statisticssaleartcenter$page_data.offline_users.data_type}}" class="dep-3-c dep-3-c-bd dep-3-c-bd-n">
+        <view class="dep-num-c">线下客资</view>
+        <view class="dep-tip-c">{{ $statisticssaleartcenter$page_data.offline_users.count }}</view>
+      </view>
+      <view bindtap="$statisticssaleartcenter$naviToList" data-datatype="{{$statisticssaleartcenter$page_data.referral_users.data_type}}" class="dep-3-c dep-3-c-bd">
+        <view class="dep-num-c">转介绍客资</view>
+        <view class="dep-tip-c">{{ $statisticssaleartcenter$page_data.referral_users.count }}</view>
+      </view>
+    </view>
+    <view class="prec-tab-box">
+      <view class="prec-tab-item-ar sale-tab-item-check">进店</view>
+    </view>
+    <view class="common-pannel">
+      <view bindtap="$statisticssaleartcenter$naviToList" data-datatype="{{$statisticssaleartcenter$page_data.instore_users.data_type}}" class="dep-3-cd dep-3-c-bd">
+        <view class="dep-num-cd">{{ $statisticssaleartcenter$page_data.instore_users.count }}</view>
+        <view class="dep-num-cd">{{ $statisticssaleartcenter$page_data.instore_users.percent }} %</view>
+        <view class="dep-tip-c"><text>总客资</text></view>
+      </view>
+      <view bindtap="$statisticssaleartcenter$naviToList" data-datatype="{{$statisticssaleartcenter$page_data.online_instore.data_type}}" class="dep-3-cd dep-3-c-bd">
+        <view class="dep-num-cd">{{ $statisticssaleartcenter$page_data.online_instore.count }}</view>
+        <view class="dep-num-cd">{{ $statisticssaleartcenter$page_data.online_instore.percent }} %</view>
+        <view class="dep-tip-c"><text>线上客资</text></view>
+      </view>
+      <view bindtap="$statisticssaleartcenter$naviToList" data-datatype="{{$statisticssaleartcenter$page_data.offline_instore.data_type}}" class="dep-3-cd dep-3-c-bd dep-3-c-bd-n">
+        <view class="dep-num-cd">{{ $statisticssaleartcenter$page_data.offline_instore.count }}</view>
+        <view class="dep-num-cd">{{ $statisticssaleartcenter$page_data.offline_instore.percent }} %</view>
+        <view class="dep-tip-c"><text>线下客资</text></view>
+      </view>
+      <view bindtap="$statisticssaleartcenter$naviToList" data-datatype="{{$statisticssaleartcenter$page_data.complate_referral_users.data_type}}" class="dep-3-cd dep-3-c-bd">
+        <view class="dep-num-cd">{{ $statisticssaleartcenter$page_data.complate_referral_users.count }}</view>
+        <view class="dep-num-cd">{{ $statisticssaleartcenter$page_data.complate_referral_users.percent }} %</view>
+        <view class="dep-tip-c"><text>进店转介绍</text></view>
+      </view>
+    </view>
+    <view class="prec-tab-box">
+      <view class="prec-tab-item-ar sale-tab-item-check">成交</view>
+    </view>
+    <view class="common-pannel">
+      <view bindtap="$statisticssaleartcenter$naviToList" data-datatype="{{$statisticssaleartcenter$page_data.complate_users.data_type}}" class="dep-3-cd dep-3-c-bd">
+        <view class="dep-num-cd">{{ $statisticssaleartcenter$page_data.complate_users.count }}</view>
+        <view class="dep-num-cd">{{ $statisticssaleartcenter$page_data.complate_users.percent }} %</view>
+        <view class="dep-tip-c"><text>总客资</text></view>
+      </view>
+      <view bindtap="$statisticssaleartcenter$naviToList" data-datatype="{{$statisticssaleartcenter$page_data.online_complate.data_type}}" class="dep-3-cd dep-3-c-bd">
+        <view class="dep-num-cd">{{ $statisticssaleartcenter$page_data.online_complate.count }}</view>
+        <view class="dep-num-cd">{{ $statisticssaleartcenter$page_data.online_complate.percent }} %</view>
+        <view class="dep-tip-c"><text>线上客资</text></view>
+      </view>
+      <view bindtap="$statisticssaleartcenter$naviToList" data-datatype="{{$statisticssaleartcenter$page_data.offline_complate.data_type}}" class="dep-3-cd dep-3-c-bd dep-3-c-bd-n">
+        <view class="dep-num-cd">{{ $statisticssaleartcenter$page_data.offline_complate.count }}</view>
+        <view class="dep-num-cd">{{ $statisticssaleartcenter$page_data.offline_complate.percent }} %</view>
+        <view class="dep-tip-c"><text>线下客资</text></view>
+      </view>
+      <view bindtap="$statisticssaleartcenter$naviToList" data-datatype="{{$statisticssaleartcenter$page_data.instore_referral_users.data_type}}" class="dep-3-cd dep-3-c-bd">
+        <view class="dep-num-cd">{{ $statisticssaleartcenter$page_data.instore_referral_users.count }}</view>
+        <view class="dep-num-cd">{{ $statisticssaleartcenter$page_data.instore_referral_users.percent }} %</view>
+        <view class="dep-tip-c"><text>完成转介绍</text></view>
       </view>
     </view>
   </view>

@@ -27,8 +27,9 @@
     <view class="common-pannel">
       <view class="dep-lead-sa">
         <view class="dep-line">
-          时间：
-          
+          <view class="dep-date-item">
+            <view class="dep-label">时间：</view>
+            
   <view class="inline-tis"  wx:if="{{$statisticsserver$ntinlinepickerc$ntpickertype!='date'}}">
     {{ $statisticsserver$ntinlinepickerc$ntrange[$statisticsserver$ntinlinepickerc$checked_index][$statisticsserver$ntinlinepickerc$ntkey] }}
     <image class="common-log-arrows-c" src="../../../images/arrows-down.png" mode="widthFix" lazy-load="false">
@@ -50,8 +51,10 @@
     </picker>
   </view>
 
-          至
-          
+          </view>
+          <view class="dep-date-item">
+            <view class="dep-label">至</view>
+            
   <view class="inline-tis"  wx:if="{{$statisticsserver$ntinlinepickerb$ntpickertype!='date'}}">
     {{ $statisticsserver$ntinlinepickerb$ntrange[$statisticsserver$ntinlinepickerb$checked_index][$statisticsserver$ntinlinepickerb$ntkey] }}
     <image class="common-log-arrows-c" src="../../../images/arrows-down.png" mode="widthFix" lazy-load="false">
@@ -73,6 +76,7 @@
     </picker>
   </view>
 
+          </view>
         </view>
         <view class="dep-line">
           人员：

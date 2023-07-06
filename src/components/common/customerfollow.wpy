@@ -28,8 +28,11 @@
       <ntlistbf label="" :ntvalue.sync="ntvalue" ntkey="accept_date"></ntlistbf>
     </ntmodeab>
     <ntmodeac label="客资状态">
-      <text slot="btn" class="common-lab-btn" wx:if="{{!customer.have_drop && !readonly}}" @tap="dropCustomer">状态变更</text>
-      <text slot="btn" class="common-lab-btn" wx:if="{{customer.have_drop && !readonly}}" @tap="dropCustomer">变更审核中...</text>
+      <text slot="btn" class="common-lab-btn" wx:if="{{ !readonly }}" @tap="dropCustomer">
+        <block wx:if="{{ customer.user_status == 2 }}">查看理由</block>
+        <block wx:if="{{ customer.user_status != 2 && !customer.have_drop }}">状态变更</block>
+        <block wx:if="{{ customer.user_status != 2 && customer.have_drop }}">变更审核中...</block>
+      </text>
       <ntlistbg :ntvalue.sync="ntvalue" ntkey="status_name"></ntlistbg>
     </ntmodeac>
     <maintain label="跟进备注" :ntvalue.sync="ntvalue" ntkey="change_log">
@@ -38,8 +41,8 @@
     <ntmodead label="客资最新信息">
       <text slot="btn" class="common-lab-btn" @tap="goToEditUserMsg" wx:if="{{ !readonly }}">编辑</text>
       <ntlistbh label="新人称呼" :ntvalue.sync="ntvalue" ntkey="user_name"></ntlistbh>
-      <ntlistbi label="电话" :ntvalue.sync="ntvalue" ntkey="user_mobile"></ntlistbi>
-      <ntlistbo label="微信号" :ntvalue.sync="ntvalue" ntkey="wechat_id"></ntlistbo>
+      <ntlistbi label="电话" :is_search.sync="is_search" :ntvalue.sync="ntvalue" ntkey="user_mobile"></ntlistbi>
+      <ntlistbo label="微信号" :is_search.sync="is_search" :ntvalue.sync="ntvalue" ntkey="wechat_id"></ntlistbo>
       
       <ntlistbj label="婚期" :ntvalue.sync="ntvalue" ntkey="wedding_date"></ntlistbj>
       <ntlistbk label="结婚城市" :ntvalue.sync="ntvalue" ntkey="wedding_city_name"></ntlistbk>
@@ -68,6 +71,11 @@ export default class Index extends wepy.component {
       twoWay: true
     },
     readonly:{
+      type: Boolean,
+      default:false,
+      twoWay:true
+    },
+    is_search:{
       type: Boolean,
       default:false,
       twoWay:true

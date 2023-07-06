@@ -39,7 +39,7 @@
                         <view class="customer-log-btn">
                             <view>
                                 <view class="customer-get-btn" bindtap="takeOrder" data-index="{{index}}">接单</view>
-                                <view class="customer-get-btn" bindtap="goToDistribute" data-index="{{index}}" wx:if="{{user.is_sale_leader}}">强制分配</view>
+                                <view class="customer-get-btn" bindtap="goToDistribute" data-index="{{index}}" wx:if="{{user.is_sale_leader && item.is_distribution ==1 }}">强制分配</view>
                             </view>
                         </view>
                     </view>

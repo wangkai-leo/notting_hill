@@ -93,8 +93,10 @@
     <view class="select-top" id="top_header">
       <view class="select-box">
         <image class="select-icon" src="../images/select-icon.png" mode="widthFix" lazy-load="false"></image>
-        <input @confirm="bindInputSearch" class="select-input" value="" type="text" placeholder="请输入订单编号\客户手机\客户姓名"
-          placeholder-class="placeholder"></input>
+        <input @confirm="bindInputSearch" wx:if="{{ department=='marry' }}" class="select-input" value="" type="text" placeholder="订单编号|客户手机|客户姓名|微信号"
+          placeholder-class="placeholder" />
+          <input @confirm="bindInputSearch" wx:if="{{ department!='marry' }}" class="select-input" value="" type="text" placeholder="请输入订单编号\客户手机\客户姓名"
+          placeholder-class="placeholder" />
       </view>
     </view>
     <view class="common-top">
@@ -233,6 +235,11 @@ export default class Index extends wepy.page {
     },
     goToDetail(e) {
       let id = e.currentTarget.dataset.id;
+
+      if(this.user.uid==='ceshi'){
+        return false;
+      }
+
       if (this.user.is_server || this.user.is_server_offline) {
         wepy.navigateTo({
           url: '/pages/common/server/customer?id=' + id

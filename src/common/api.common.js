@@ -504,4 +504,10 @@ export default{
     descript: '销售情况统计',
     url:'getDataStatistics'
   },
+
+
+  getCityEmployeeList:{
+    descript: '员工城市列表',
+    url:'getCityEmployeeList'
+  }
 }

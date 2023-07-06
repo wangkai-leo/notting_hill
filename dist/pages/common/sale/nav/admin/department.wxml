@@ -42,7 +42,9 @@
                     <view class="dep-lead">{{item.employee_name}} <text class="dep-em-sta">{{item.employee_status_text}}</text><text class="{{item.online_status==1?'gray-color':'red-color'}}">({{item.online_status_text}})</text><text class="dep-em-edit" bindtap="check" data-index="{{index}}">编辑</text></view>
                     <view class="dep-base-box">
                         <view class="dep-3">
-                            <view class="dep-num">{{item.employee_now_clients}}/{{item.employee_max_clients}}</view>
+                            <view class="dep-num">
+                              <block wx:if="{{ item.employee_true_clients }}">{{item.employee_true_clients}}/</block>{{item.employee_now_clients}}/{{item.employee_max_clients}}
+                            </view>
                             <view class="dep-tip">本月客资</view>
                         </view>
                         <view class="dep-3">

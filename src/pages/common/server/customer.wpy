@@ -75,6 +75,5 @@ export default class Index extends wepy.page {
   onShow() {
     this.reflesh=new Date().getTime();
   }
-  
 }
 </script>

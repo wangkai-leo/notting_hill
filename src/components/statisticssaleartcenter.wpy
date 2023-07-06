@@ -1,0 +1,343 @@
+<template>
+  <view class="common-wrapper" wx:if="{{user_act.is_sale && office_line == 'artcenter'}}">
+    <view class="common-pannel-vi">
+      <view class="dep-lead-sa-vi">
+        <view class="dep-line-vi">
+          <view class="dep-date-item">
+            <view class="dep-label">时间：</view>
+            <ntinlinepickerc @change.user="handleBeginChange" :checked_name.sync="order_date_start" ntpickertype="date">
+            </ntinlinepickerc>
+          </view>
+          <view class="dep-date-item">
+            <view class="dep-label">至</view>
+            <ntinlinepickerb @change.user="handleEndChange" :checked_name.sync="order_date_end" ntpickertype="date">
+            </ntinlinepickerb>
+          </view>
+        </view>
+        <view class="dep-line-vi">
+          <MultiSelecta ntlabel="人员" :range_data.sync="employee_list" range_key="employee_name"
+            range_value_key="employee_id" :selected_value_array="selected_value_array"
+            @confirm.user="getNewEmployeesData"></MultiSelecta>
+        </view>
+        <view class="dep-line-vi">
+          <MultiSelectb ntlabel="城市" :range_data.sync="city_list" range_key="city_name" range_value_key="intention_city"
+            :selected_value_array="city_check_index" @confirm.user="getNewCitysData"></MultiSelectb>
+        </view>
+      </view>
+    </view>
+    <view class="prec-tab-box">
+      <view class="prec-tab-item-ar sale-tab-item-check">客资</view>
+    </view>
+    <view class="common-pannel">
+      <view @tap="naviToList" data-datatype="{{page_data.all_users.data_type}}" class="dep-3-c dep-3-c-bd">
+        <view class="dep-num-c">总客资</view>
+        <view class="dep-tip-c">{{ page_data.all_users.count }}</view>
+      </view>
+      <view @tap="naviToList" data-datatype="{{page_data.online_users.data_type}}" class="dep-3-c dep-3-c-bd">
+        <view class="dep-num-c">线上客资</view>
+        <view class="dep-tip-c">{{ page_data.online_users.count }}</view>
+      </view>
+      <view @tap="naviToList" data-datatype="{{page_data.offline_users.data_type}}"
+        class="dep-3-c dep-3-c-bd dep-3-c-bd-n">
+        <view class="dep-num-c">线下客资</view>
+        <view class="dep-tip-c">{{ page_data.offline_users.count }}</view>
+      </view>
+      <view @tap="naviToList" data-datatype="{{page_data.referral_users.data_type}}" class="dep-3-c dep-3-c-bd">
+        <view class="dep-num-c">转介绍客资</view>
+        <view class="dep-tip-c">{{ page_data.referral_users.count }}</view>
+      </view>
+    </view>
+    <view class="prec-tab-box">
+      <view class="prec-tab-item-ar sale-tab-item-check">进店</view>
+    </view>
+    <view class="common-pannel">
+      <view @tap="naviToList" data-datatype="{{page_data.instore_users.data_type}}" class="dep-3-cd dep-3-c-bd">
+        <view class="dep-num-cd">{{ page_data.instore_users.count }}</view>
+        <view class="dep-num-cd">{{ page_data.instore_users.percent }} %</view>
+        <view class="dep-tip-c"><text>总客资</text></view>
+      </view>
+      <view @tap="naviToList" data-datatype="{{page_data.online_instore.data_type}}" class="dep-3-cd dep-3-c-bd">
+        <view class="dep-num-cd">{{ page_data.online_instore.count }}</view>
+        <view class="dep-num-cd">{{ page_data.online_instore.percent }} %</view>
+        <view class="dep-tip-c"><text>线上客资</text></view>
+      </view>
+      <view @tap="naviToList" data-datatype="{{page_data.offline_instore.data_type}}"
+        class="dep-3-cd dep-3-c-bd dep-3-c-bd-n">
+        <view class="dep-num-cd">{{ page_data.offline_instore.count }}</view>
+        <view class="dep-num-cd">{{ page_data.offline_instore.percent }} %</view>
+        <view class="dep-tip-c"><text>线下客资</text></view>
+      </view>
+      <view @tap="naviToList" data-datatype="{{page_data.complate_referral_users.data_type}}"
+        class="dep-3-cd dep-3-c-bd">
+        <view class="dep-num-cd">{{ page_data.complate_referral_users.count }}</view>
+        <view class="dep-num-cd">{{ page_data.complate_referral_users.percent }} %</view>
+        <view class="dep-tip-c"><text>进店转介绍</text></view>
+      </view>
+    </view>
+    <view class="prec-tab-box">
+      <view class="prec-tab-item-ar sale-tab-item-check">成交</view>
+    </view>
+    <view class="common-pannel">
+      <view @tap="naviToList" data-datatype="{{page_data.complate_users.data_type}}" class="dep-3-cd dep-3-c-bd">
+        <view class="dep-num-cd">{{ page_data.complate_users.count }}</view>
+        <view class="dep-num-cd">{{ page_data.complate_users.percent }} %</view>
+        <view class="dep-tip-c"><text>总客资</text></view>
+      </view>
+      <view @tap="naviToList" data-datatype="{{page_data.online_complate.data_type}}" class="dep-3-cd dep-3-c-bd">
+        <view class="dep-num-cd">{{ page_data.online_complate.count }}</view>
+        <view class="dep-num-cd">{{ page_data.online_complate.percent }} %</view>
+        <view class="dep-tip-c"><text>线上客资</text></view>
+      </view>
+      <view @tap="naviToList" data-datatype="{{page_data.offline_complate.data_type}}"
+        class="dep-3-cd dep-3-c-bd dep-3-c-bd-n">
+        <view class="dep-num-cd">{{ page_data.offline_complate.count }}</view>
+        <view class="dep-num-cd">{{ page_data.offline_complate.percent }} %</view>
+        <view class="dep-tip-c"><text>线下客资</text></view>
+      </view>
+      <view @tap="naviToList" data-datatype="{{page_data.instore_referral_users.data_type}}"
+        class="dep-3-cd dep-3-c-bd">
+        <view class="dep-num-cd">{{ page_data.instore_referral_users.count }}</view>
+        <view class="dep-num-cd">{{ page_data.instore_referral_users.percent }} %</view>
+        <view class="dep-tip-c"><text>完成转介绍</text></view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from "wepy";
+import rq from '../common/utils/request';
+import dt from '../common/utils/date';
+import ntinlinepicker from './common/ntinlinepicker';
+import MultiSelect from "./multiSelect";
+export default class Index extends wepy.component {
+  props = {
+    is_request: {
+      type: Boolean,
+      twoWay: true
+    }
+  };
+  data = {
+    page_old_data: null,
+    page_data: null,
+    employee_list: [],
+    department: '',
+    order_date_start: '',
+    order_date_end: '',
+    employee_check_index: 0,
+    page_success_data: null,
+    tab_index: 0,
+    user_act: null,
+    city_list: [],
+    employee_id: 0,
+    intention_city: 0,
+    city_check_index: 0,
+    selected_value_array: [],
+    office_line:{}
+  }
+  watch = {
+    is_request() {
+      if (this.is_request) {
+        let user_act = this.user_act = wepy.getStorageSync('user');
+        let office_line = this.office_line = wepy.getStorageSync('office_line');
+        if (user_act.is_sale && office_line == 'artcenter') {
+          this.getSalesDataList();
+        }
+      }
+    }
+  }
+  components = {
+    ntinlinepickerb: ntinlinepicker,
+    ntinlinepickerc: ntinlinepicker,
+    ntinlinepickera: ntinlinepicker,
+    ntinlinepickerd: ntinlinepicker,
+    MultiSelecta: MultiSelect,
+    MultiSelectb: MultiSelect,
+  }
+  methods = {
+    getNewEmployeesData(employee_id) {
+      this.employee_id = employee_id;
+      this.getSalesDataList();
+    },
+    getNewCitysData(intention_city) {
+      this.intention_city = intention_city;
+      this.getSalesDataList();
+    },
+    toggleTab(e) {
+      this.tab_index = e.currentTarget.dataset.index;
+    },
+    handleBeginChange(date) {
+      this.order_date_start = date;
+      this.getSalesDataList();
+    },
+    handleEndChange(date) {
+      this.order_date_end = date;
+      this.getSalesDataList();
+    },
+    naviToList(e) {
+      let datatype = e.currentTarget.dataset.datatype;
+      let params = 'start_time=' + this.order_date_start + '&end_time=' + this.order_date_end + '&datatype=' + datatype + '&employee_id=' + this.employee_id + '&intention_city=' + this.intention_city;
+      wepy.navigateTo({
+        url: '/pages/artcenter/sale/statisticsfiter?' + params
+      });
+    }
+  }
+  getSalesDataList() {
+    let that = this;
+    let params = {
+      start_date: that.order_date_start,
+      end_date: that.order_date_end,
+      employee_id: that.employee_id,
+      intention_city: that.intention_city
+    }
+    wepy.showLoading({
+      title: 'Loading...', //提示的内容,
+      mask: true, //显示透明蒙层，防止触摸穿透,
+      success: res => { }
+    });
+    rq.get('getSalesUserData', {
+      200: result => {
+        that.page_data = result.data.data;
+        wepy.hideLoading()
+        that.$apply();
+      }
+    }, params)
+  }
+  onLoad() {
+    let today = new Date();
+    let year = today.getFullYear();
+    let month = today.getMonth();
+    let count_day = new Date(year, month, 0).getDate();
+    this.order_date_start = dt.dateFormat('yyyy-MM-dd', new Date(year, month, 1));
+    this.order_date_end = dt.dateFormat('yyyy-MM-dd', new Date(year, month, count_day - 1));
+
+    let that = this;
+    rq.get('getCityEmployeeList', {
+      200: result => {
+        that.employee_list = result.data.employee_list;
+        if (!that.employee_id) {
+          that.employee_list[0].checked = true;
+        }
+        if (!that.intention_city) {
+          that.city_list = result.data.city_list;
+          that.city_list.unshift({
+            city_name: "全部",
+            checked: true,
+            intention_city: 0
+          })
+          that.intention_city = 0;
+        }
+        wepy.hideLoading()
+        that.$apply();
+      }
+    }, {})
+  }
+}
+</script>
+
+<style lang="less">
+.dep-num-c {
+  font-size: 26rpx;
+  color: #86a5e6;
+  font-weight: bold;
+  text-align: center;
+}
+
+.dep-num-cd {
+  font-size: 26rpx;
+  color: #86a5e6;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10rpx;
+}
+
+.dep-tip-c {
+  font-size: 26rpx;
+  color: #555555;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 15rpx;
+}
+
+.dep-3-c {
+  position: relative;
+  padding: 10rpx 0rpx 20rpx;
+  width: 33.33%;
+  float: left;
+  border-bottom: #eaeaea solid 1rpx;
+  height: 110rpx;
+}
+
+.dep-3-cd {
+  position: relative;
+  padding: 10rpx 0rpx 20rpx;
+  width: 33.33%;
+  float: left;
+  border-bottom: #eaeaea solid 1rpx;
+  height: 170rpx;
+}
+
+.dep-3-c-bd::after {
+  content: '';
+  position: absolute;
+  display: block;
+  width: 2rpx;
+  right: 0rpx;
+  top: 0rpx;
+  height: 100%;
+  background: #ededed;
+}
+
+.common-pannel {
+  padding: 10rpx 35rpx;
+  overflow: hidden;
+  background: #fff;
+  border-radius: 10rpx;
+}
+
+.common-pannel-vi {
+  overflow: visible;
+  background: #fff;
+  border-radius: 10rpx;
+  padding: 10rpx 35rpx;
+}
+
+.dep-3-c-bd-n::after {
+  background: none;
+}
+
+.dep-lead-sa-vi {
+  font-size: 26rpx;
+  padding: 40rpx 0rpx;
+}
+
+.dep-line-vi {
+  position: relative;
+  color: #999;
+  margin-bottom: 20rpx;
+  line-height: 20px;
+}
+
+.prec-tab-item-ar {
+  position: relative;
+  padding: 10rpx 0rpx 20rpx 0rpx;
+  border-bottom: #d5d7dd solid 1rpx;
+  text-align: center;
+  font-size: 32rpx;
+  color: #999;
+  transition: 200ms linear all;
+}
+
+.prec-tab-box {
+  margin-bottom: 15px;
+  margin-top: 20px;
+  overflow: hidden;
+}
+
+.dep-date-item {
+  float: left;
+  width: 300rpx;
+}
+
+.dep-label {
+  float: left;
+}</style>

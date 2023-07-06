@@ -353,10 +353,7 @@ export default class Index extends wepy.page {
           let index = this.teams_index;
           form_data.team_id = this.teams[index].team_id;
         }
-        // if (this.department == 'artcenter') {
-        //   form_data.auto_distribution = that.auto_allot ? '1' : '0'
-        // }
-        if (this.department == 'marry' && this.team_members_index != 0) {
+        if (this.team_members_index != 0) {
           form_data['employee_id'] = this.team_members[that.team_members_index].id
         }
       }

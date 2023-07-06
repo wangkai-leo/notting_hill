@@ -5,21 +5,21 @@
     <view class="common-pannel">
       <view class="common-list">
         <input class="common-tip" value="{{filter_option.order_id_str}}" type="text" @input="bindInputOrderIdStr"
-          placeholder="请输入编号"></input>
+          placeholder="请输入编号"/>
       </view>
     </view>
     <view class="common-title">手机</view>
     <view class="common-pannel">
       <view class="common-list">
         <input class="common-tip" value="{{filter_option.user_mobile}}" type="text" @input="bindInputMobile"
-          placeholder="请输入手机号"></input>
+          placeholder="请输入手机号" />
       </view>
     </view>
     <view class="common-title">微信号</view>
     <view class="common-pannel">
       <view class="common-list">
         <input class="common-tip" value="{{filter_option.wechat_id}}" type="text" @input="bindInputwechat"
-          placeholder="请输入微信号"></input>
+          placeholder="请输入微信号" />
       </view>
     </view>
     <view class="customer-order-btn" @tap="approvalSearch">确定</view>

@@ -1,3 +1,4 @@
+@import "./../components/statisticssaleartcenter.wxss";
 @import "./../components/statisticssale.wxss";
 @import "./../components/statisticsserver.wxss";
 @import "./../components/topbar.wxss";

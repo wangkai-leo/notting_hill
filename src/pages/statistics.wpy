@@ -202,17 +202,20 @@
     <header :title="title" :isback="isback" :isopacity="isopacity"></header>
     <topbar></topbar>
     <serverstatistics :is_request.sync="is_request"></serverstatistics>
-    <salestatistics  :is_request.sync="is_request"></salestatistics>
+    <weddingsalestatistics :is_request.sync="is_request"></weddingsalestatistics>
+    <statisticssaleartcenter :is_request.sync="is_request">
+    </statisticssaleartcenter>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy';
-import rq from '../common/utils/request';
 import css from '../components/css';
 import header from '../components/header';
 import serverstatistics from '../components/statisticsserver';
-import salestatistics from '../components/statisticssale';
+import weddingsalestatistics from '../components/statisticssale';
+import statisticssaleartcenter from '../components/statisticssaleartcenter';
+
 import topbar from "../components/topbar";
 
 export default class Index extends wepy.page {
@@ -221,30 +224,24 @@ export default class Index extends wepy.page {
     header: header,
     topbar: topbar,
     serverstatistics: serverstatistics,
-    salestatistics:salestatistics
+    weddingsalestatistics: weddingsalestatistics,
+    statisticssaleartcenter: statisticssaleartcenter
   };
   data = {
     isback: false,
     isopacity: true,
     title: '统计',
-    is_request:false
+    is_request: false,
   };
   methods = {
   };
   onLoad() {
-    let that = this;
-    rq.get('getMyInfo', {
-      200: result => {
-        that.user = result.data.data;
-        that.$apply();
-      }
-    });
   }
   onShow() {
-    this.is_request=true;
+    this.is_request = true;
   }
-  onHide(){
-    this.is_request=false
+  onHide() {
+    this.is_request = false
   }
 }
 </script>

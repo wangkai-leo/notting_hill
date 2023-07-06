@@ -20,3 +20,40 @@
   border-bottom: #dad8d8 solid 1rpx;
   overflow: hidden;
 }
+.cus-rows {
+  float: left;
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  height: 28rpx;
+  line-height: 28rpx;
+  font-size: 22rpx;
+}
+.cus-0-rows {
+  width: 8%;
+}
+.cus-1-rows {
+  width: 10%;
+}
+.cus-2-rows {
+  width: 20%;
+}
+.cus-3-rows {
+  width: 30%;
+  float: left;
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  height: 28rpx;
+  line-height: 28rpx;
+  font-size: 22rpx;
+}
+.common-scroll-x {
+  position: relative;
+  overflow-x: scroll;
+}
+.common-s-cont {
+  width: 880rpx;
+}

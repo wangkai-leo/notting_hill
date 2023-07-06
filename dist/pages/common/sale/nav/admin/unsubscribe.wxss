@@ -70,6 +70,6 @@
 .full-tab-item {
   width: 50%;
 }
-.box-con {
-  margin-top: 50rpx;
+.customer-info {
+  margin: 40rpx auto 0rpx;
 }

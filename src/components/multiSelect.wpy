@@ -1,0 +1,227 @@
+<style lang="less">
+.mulit-check {
+  width: 100%;
+  height: 42rpx;
+  padding: 10rpx 0rpx;
+}
+
+.label-m {
+  font-size: 26rpx;
+  width: 100rpx;
+  float: left;
+}
+
+.values-box {
+  position: relative;
+  float: left;
+  width: 500rpx;
+  height: 42rpx;
+  border: #f0f0ff solid 1rpx;
+  line-height: 42rpx;
+  border-radius: 10rpx;
+  padding: 10rpx 0rpx;
+}
+
+.values-panel {
+  position: absolute;
+  width: 100%;
+  top: 63rpx;
+  height: 400rpx;
+  background-color: #ffffff;
+  border: #f0f0ff solid 1rpx;
+  z-index: 111;
+}
+
+.values-ite {
+  font-size: 26rpx;
+}
+
+.cancel {
+  position: absolute;
+  font-size: 28rpx;
+  width: 200rpx;
+  height: 50rpx;
+  line-height: 50rpx;
+  bottom: 10rpx;
+  text-align: center;
+  left: 20rpx;
+  border-radius: 10rpx;
+  background-color: #f0f0ff;
+}
+
+.confirm {
+  position: absolute;
+  font-size: 28rpx;
+  width: 200rpx;
+  height: 50rpx;
+  line-height: 50rpx;
+  bottom: 10rpx;
+  right: 20rpx;
+  border-radius: 10rpx;
+  text-align: center;
+  background-color: #f0f0ff;
+}
+
+.values-item {
+  padding: 5rpx 20rpx;
+}
+
+.values-list {
+  position: absolute;
+  width: 100%;
+  height: 320rpx;
+  overflow-y: scroll;
+}
+
+.values-item {
+  overflow: hidden;
+  display: block;
+}
+
+.value-ch-box {
+  float: left;
+  width: 40rpx;
+  height: 40rpx;
+  margin-right:20rpx;
+  border-radius: 5rpx;
+  background-color: #87a6e7;
+}
+
+.value-ch-box-img{
+  width: 40rpx;
+}
+
+.value-ch-txt {
+  float: left;
+}
+
+.checked-values {
+  position: absolute;
+  width: 100%;
+  overflow: hidden;
+}
+
+.checked-item {
+  display: inline-block;
+  background-color: #eaeaea;
+  border-radius: 5rpx;
+  margin: 0rpx 5rpx;
+  padding: 0rpx 5rpx;
+}
+
+.common-log-arrows-ic {
+  margin-right: 10rpx;
+  margin-top: 10rpx;
+  float: right;
+  width: 26rpx;
+}
+</style>
+
+<template>
+  <view class="mulit-check">
+    <view class="label-m">{{ ntlabel }}:</view>
+    <view class="values-box">
+      <view class="checked-values" @tap="displayPanel">
+        <block wx:for="{{range_data}}">
+          <view class="checked-item" wx:if="{{ item.checked }}">{{ item[range_key] }}</view>
+        </block>
+        <image class="common-log-arrows-ic" src="../images/arrows-down.png" mode="widthFix" lazy-load="false" />
+      </view>
+      <view class="values-panel" wx:if="{{ display_panel }}">
+        <view class="values-list">
+          <view>
+            <view class="values-item" wx:for="{{range_data}}" wx:key="{{index}}" data-index="{{ index }}"
+              @tap="toggleCheck">
+              <view class="value-ch-box">
+                <image class="value-ch-box-img" wx:if="{{ item.checked }}" src="../images/checked-icon.png" mode="widthFix" lazy-load="false" />
+                <!-- <checkbox checked="{{item.checked}}" disabled="disabled" /> -->
+              </view>
+              <view class="value-ch-txt">{{ item[range_key] }}</view>
+            </view>
+          </view>
+        </view>
+        <view class="cancel" @tap="cancelCheck">取消</view>
+        <view class="confirm" @tap="confirmCheck">确定</view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class multiSelect extends wepy.component {
+  props = {
+    ntlabel: {
+      type: String,
+      default: ''
+    },
+    range_data: {
+      type: Array,
+      twoWay: true
+    },
+    range_key: {
+      type: String,
+      twoWay: true
+    },
+    range_value_key: {
+      type: String,
+      twoWay: true
+    }
+  }
+  data = {
+    display_panel: false,
+    is_check_all: false
+  }
+  components = {}
+  methods = {
+    confirmCheck() {
+      let ids=[];
+      for (let i = 0; i < this.range_data.length; ++i) {
+        if(this.range_data[i].checked){
+          ids.push(this.range_data[i][this.range_value_key])
+        }
+      }
+      this.$emit('confirm',ids.join(','));
+      this.display_panel=false;
+    },
+    toggleCheck(e) {
+      let index = e.currentTarget.dataset.index;
+      if (index == 0) {
+        console.log(index)
+        for (let i = 0; i < this.range_data.length; ++i) {
+          this.range_data[i].checked = false;
+        }
+        this.range_data[0].checked = true;
+        return
+      }
+      this.range_data[0].checked = false;
+      if (this.range_data[index].checked) {
+        this.range_data[index].checked = false
+      } else {
+        this.range_data[index].checked = true;
+      }
+    },
+    cancelCheck() {
+      this.display_panel = false
+    },
+    toggleAll() {
+      if (this.range_data[0].checked) {
+        this.range_data[0].checked = false;
+      } else {
+        this.range_data[0].checked = true;
+      }
+    },
+    displayPanel() {
+      this.display_panel = true
+    }
+  }
+  events = {}
+  watch = {}
+  computed = {
+  }
+  onLoad() {
+  };
+  onShow() {
+  };
+}
+</script>

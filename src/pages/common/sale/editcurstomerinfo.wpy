@@ -110,7 +110,7 @@ export default class Index extends wepy.page {
         user_mobile: that.customer.user_mobile,
         wedding_date: that.customer.wedding_date,
         hotel_tables_number: that.customer.hotel_tables_number,
-        wechat_id:wechat_id,
+        wechat_id:that.customer.wechat_id,
         wedding_budget: that.customer.wedding_budget,
         wedding_province_name: that.customer.wedding_province_name,
         wedding_city_name: that.customer.wedding_city_name,

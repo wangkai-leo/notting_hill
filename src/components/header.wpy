@@ -120,18 +120,27 @@
 import wepy from 'wepy'
 export default class Header extends wepy.component {
   props = {
-    title: String,
+    title: {
+      type: String,
+      default: '',
+    },
     iphonex: Boolean,
     bounding_center_top: Number,
-    isback: Boolean,
-    isopacity: Boolean
+    isback: {
+      type: Boolean,
+      default: false
+    },
+    isopacity: {
+      type: Boolean,
+      default: true
+    }
   }
   data = {}
   components = {}
   methods = {
     backHistory() {
       let cps = getCurrentPages();
-      console.log('************')
+      // console.log('************')
       // console.log(cps)
       // console.log(cps[1])
       // console.log(cps[1].route)

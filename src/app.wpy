@@ -143,6 +143,8 @@ export default class extends wepy.app {
       'pages/artcenter/server/statistics',
       //销售
       'pages/artcenter/sale/ordermsg', //订单信息
+      'pages/artcenter/sale/statisticsfiter', //统计刷选
+      'pages/artcenter/sale/statisticfilterslist',//筛选列表
       'pages/artcenter/sale/schedule', //婚礼档期
       'pages/artcenter/sale/ordermenu', //菜单信息
       'pages/artcenter/sale/contract', //合同列表

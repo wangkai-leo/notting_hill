@@ -1,18 +1,11 @@
 {
-  "appid": "wx7e38e3128978153b",
-  "projectname": "诺丁山",
   "compileType": "miniprogram",
-  "libVersion": "2.27.3",
-  "packOptions": {
-    "ignore": [],
-    "include": []
-  },
   "condition": {},
   "setting": {
     "urlCheck": true,
     "coverView": true,
     "es6": false,
-    "postcss": false,
+    "postcss": true,
     "lazyloadPlaceholderEnable": false,
     "preloadBackgroundData": false,
     "minified": true,
@@ -36,11 +29,17 @@
     },
     "disableUseStrict": false,
     "useCompilerPlugins": false,
-    "ignoreUploadUnusedFiles": false
+    "ignoreUploadUnusedFiles": false,
+    "condition": false
   },
   "editorSetting": {
     "tabIndent": "insertSpaces",
     "tabSize": 2
   },
-  "description": "Project configuration file, more information: https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html"
+  "description": "Project configuration file, more information: https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html",
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "appid": "wx7e38e3128978153b"
 }

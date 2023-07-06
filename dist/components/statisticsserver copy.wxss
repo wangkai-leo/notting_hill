@@ -71,6 +71,7 @@
   overflow: hidden;
   color: #999;
   margin-bottom: 20rpx;
+  line-height: 20px;
 }
 .prec-tab-item {
   width: 150rpx;
@@ -86,4 +87,11 @@
 .prec-tab-box {
   margin-bottom: 15px;
   overflow: hidden;
+}
+.dep-date-item {
+  float: left;
+  width: 300rpx;
+}
+.dep-label {
+  float: left;
 }

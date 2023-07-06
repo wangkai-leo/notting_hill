@@ -88,3 +88,10 @@
   margin-bottom: 15px;
   overflow: hidden;
 }
+.dep-date-item {
+  float: left;
+  width: 300rpx;
+}
+.dep-label {
+  float: left;
+}

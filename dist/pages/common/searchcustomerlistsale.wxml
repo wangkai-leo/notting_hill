@@ -26,29 +26,56 @@
     
   <view class="common-wrapper" wx:if="{{ !display_filter }}">
     
-    <view class="common-pannel">
-      <view class="common-list-sa">
-        <view class="cus-rows cus-1-rows">{{ $statisticscustomerlistsale$total }}</view>
-        <view class="cus-rows cus-1-rows">日期</view>
-        <view class="cus-rows cus-3-rows">编号</view>
-        <view class="cus-rows cus-2-rows">渠道</view>
-        <view class="cus-rows cus-1-rows">城市</view>
-        <view class="cus-rows cus-2-rows">销售</view>
-      </view>
-      <block  wx:for="{{$statisticscustomerlistsale$list}}" wx:key="">
-        <view class="common-list-sa" bindtap="$statisticscustomerlistsale$goToDetail" data-id="{{item.user_id}}">
-          <view class="cus-rows cus-1-rows">{{ index + 1 }}</view>
-          <view class="cus-rows cus-1-rows">{{ item.create_date }}</view>
-          <view class="cus-rows cus-3-rows">{{ item.order_id }}</view>
-          <view class="cus-rows cus-2-rows">{{ item.channel_name }}</view>
-          <view class="cus-rows cus-1-rows">{{ item.intention_city_name }}</view>
-          <view class="cus-rows cus-2-rows">{{ item.sales_name }}</view>
+    <view class="common-pannel"  wx:if="{{ !$statisticscustomerlistsale$is_old }}">
+      <view class="common-scroll-x">
+        <view class="common-s-cont">
+          <view class="common-list-sa">
+            <view class="cus-rows cus-1-rows">{{ $statisticscustomerlistsale$total }}</view>
+            <view class="cus-rows cus-1-rows">日期</view>
+            <view class="cus-rows cus-3-rows">编号</view>
+            <view class="cus-rows cus-2-rows">渠道</view>
+            <view class="cus-rows cus-1-rows">城市</view>
+            <view class="cus-rows cus-2-rows">销售</view>
+          </view>
+          <block wx:for="{{$statisticscustomerlistsale$list}}" wx:key="">
+            <view class="common-list-sa" bindtap="$statisticscustomerlistsale$goToDetail" data-id="{{item.user_id}}">
+              <view class="cus-rows cus-1-rows">{{ index + 1 }}</view>
+              <view class="cus-rows cus-1-rows">{{ item.create_date }}</view>
+              <view class="cus-rows cus-3-rows">{{ item.order_id }}</view>
+              <view class="cus-rows cus-2-rows">{{ item.channel_name }}</view>
+              <view class="cus-rows cus-1-rows">{{ item.intention_city_name }}</view>
+              <view class="cus-rows cus-2-rows">{{ item.sales_name }}</view>
+            </view>
+          </block>
         </view>
-      </block>
+      </view>
+    </view>
+    <view class="common-pannel"  wx:if="{{ $statisticscustomerlistsale$is_old }}">
+
+      <view class="common-scroll-x">
+        <view class="common-s-cont">
+          <view class="common-list-sa">
+            <view class="cus-rows cus-3-rows">日期</view>
+            <view class="cus-rows cus-2-rows">渠道</view>
+            <view class="cus-rows cus-1-rows">客户</view>
+            <view class="cus-rows cus-2-rows">手机</view>
+            <view class="cus-rows cus-2-rows">微信</view>
+          </view>
+          <block wx:for="{{$statisticscustomerlistsale$list}}" wx:key="">
+            <view class="common-list-sa" bindtap="$statisticscustomerlistsale$goToDetail" data-id="{{item.user_id}}">
+              <view class="cus-rows cus-3-rows">{{ item.create_date }}</view>
+              <view class="cus-rows cus-2-rows">{{ item.channel_name }}</view>
+              <view class="cus-rows cus-1-rows">{{ item.user_name }}</view>
+              <view class="cus-rows cus-2-rows">{{ item.user_mobile }}</view>
+              <view class="cus-rows cus-2-rows">{{ item.wechat_id }}</view>
+            </view>
+          </block>
+        </view>
+      </view>
     </view>
   </view>
 
-    <view bindtap="editStatus" class="customer-order-btn"  wx:if="{{ !display_filter }}">开始查询</view>
+    <view bindtap="editStatus" class="customer-order-btn" wx:if="{{ !display_filter }}">开始查询</view>
     
   <view class="common-wrapper" wx:if="{{ display_filter }}">
     <view class="common-title">客资编号</view>

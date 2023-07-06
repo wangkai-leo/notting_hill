@@ -1,0 +1,50 @@
+
+  <view>
+    
+  <view class="leo-header-fixed {{$header$iphonex?'leo-header-fixed-x':''}} {{$header$isopacity?'leo-header-backnone':''}}">
+    <view class="leo-header-layout">
+      <view class="leo-header-left" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;"  wx:if="{{$header$isback}}">
+        <view class="leo-header-back" bindtap="$header$backHistory">
+          <image class="leo-back-nav" src="../../../images/back-btn.png" mode="scaleToFill" lazy-load="false"/>
+        </view>
+        <view class="leo-h-line"/>
+        <view class="leo-header-home" bindtap="$header$backHome">
+          <image class="leo-back-home" src="../../../images/home-btn.png" mode="scaleToFill" lazy-load="false"/>
+        </view>
+      </view>
+      <view class="leo-header-tit" style="top:{{$header$bounding_center_top-16>10?$header$bounding_center_top-16:50}}px;">{{ $header$title }}
+      </view>
+    </view>
+  </view>
+
+    
+    <view class="common-top">
+      <view class="common-content">
+      </view>
+    </view>
+
+    <view class="common-wrapper">
+      
+  <view class="common-title">{{ $ntpicker$label }}</view>
+  <view class="common-pannel">
+    <view class="common-list">
+      <view class="common-nt-full">{{ $ntpicker$checked_name?$ntpicker$checked_name:$ntpicker$ntrange[$ntpicker$checked_index][$ntpicker$ntkey] }}</view>
+      <image class="common-log-arrows" src="../../../images/arrows-right.png" mode="widthFix" lazy-load="false">
+      </image>
+      <picker  wx:if="{{!$ntpicker$readonly}}" class="picker-common" range="{{$ntpicker$ntrange}}" range-key="{{$ntpicker$ntkey}}" bindchange="$ntpicker$bindChange">
+        <view class="picker-common-v">
+          当前选择：{{ $ntpicker$ntrange[$ntpicker$checked_index] }}
+        </view>
+      </picker>
+    </view>
+  </view>
+
+      <view class="common-pannel">
+        <block  wx:for="{{list}}" wx:for-index="m" wx:key="">
+          <view class="list-date-type" bindtap="naviToList" data-channel="{{item.map}}" wx:if="{{ fitler_index==0 }}"><text class="dy-label">{{ item.city_name }}</text> <text class="dy-value">{{ item.count }}</text></view>
+          <view class="list-date-type" bindtap="naviToList" data-channel="{{item.map}}" wx:if="{{ fitler_index==1 }}"><text class="dy-label">{{ item.employee_name }}</text> <text class="dy-value">{{ item.count }}</text></view>
+          <view class="list-date-type" bindtap="naviToList" data-channel="{{item.map}}" wx:if="{{ fitler_index==2 }}"><text class="dy-label">{{ item.create_date }}</text> <text class="dy-value">{{ item.count }}</text></view>
+        </block>
+      </view>
+    </view>
+  </view>
